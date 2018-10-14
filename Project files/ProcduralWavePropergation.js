@@ -1,8 +1,8 @@
-var xlen = 250;                         //Define grid size
-var ylen = 250;
+var xlen = 10;                         //Define grid size
+var ylen = 10;
 
-var startCord = {x: 1, y: 1};          //Create cord-obj of where we are coming from and going to
-var endCord = {x: 200, y: 190};
+var startCord = {x: 3, y: 2};          //Create cord-obj of where we are coming from and going to
+var endCord = {x: 7, y: 9};
 
 var highRankCords = [];                /*Init a stack of the highest rank cords that we will know about.
                                        / We haven't found any yet so this is empty*/
@@ -84,4 +84,3 @@ while (!found) {
 }
 
 console.log(board); //Show the user the end result
-
