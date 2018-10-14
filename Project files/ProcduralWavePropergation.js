@@ -54,20 +54,23 @@ function validToAdd(x,y,value) {
 //-----------------------------MAIN PROGRAM-----------------------------
 
 found = false;
+let neighbours = [] //This should really be a local varible but it isn't in a function yet
 
 while (!found) {
     for (var i = 0; i < lowRankCords.length; i++) {
-        //Go through all the low rank items and check for a higher rank around them
+        //Go through all the low rank cords and check for a higher rank around them
         startx = lowRankCords[i].xcord;
         starty = lowRankCords[i].ycord;
-        if (
-            validToAdd(startx + 1, starty, board[startx][starty] + 1) == 'X' ||
-            validToAdd(startx, starty + 1, board[startx][starty] + 1) == 'X' ||
-            validToAdd(startx - 1, starty, board[startx][starty] + 1) == 'X' ||
-            validToAdd(startx, starty - 1, board[startx][starty] + 1) == 'X'  
-        ) 
-        //All one if statement, checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
-        {
+        //Find the x and y of the currently selected low rank cord
+
+        neighbours.push( validToAdd(startx + 1, starty, board[startx][starty] + 1));
+        neighbours.push(validToAdd(startx, starty + 1, board[startx][starty] + 1));
+        neighbours.push(validToAdd(startx - 1, starty, board[startx][starty] + 1));
+        neighbours.push(validToAdd(startx, starty - 1, board[startx][starty] + 1));
+        //checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
+        if ('X' in neighbours) { 
+        /*Note it is important that the function calls are not put in the if statement otherwise lazy evaluation
+         *May cause some errors */
             found = true;
             break;
         }
