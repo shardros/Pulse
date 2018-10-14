@@ -1,0 +1,183 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Timer:LM555 U1
+U 1 1 5BC1B3D4
+P 5050 3400
+F 0 "U1" H 5050 3978 50  0000 C CNN
+F 1 "LM555" H 5050 3887 50  0000 C CNN
+F 2 "" H 5050 3400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm555.pdf" H 5050 3400 50  0001 C CNN
+	1    5050 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5BC1B45B
+P 6300 3500
+F 0 "R3" H 6370 3546 50  0000 L CNN
+F 1 "1k" V 6300 3450 50  0000 L CNN
+F 2 "" V 6230 3500 50  0001 C CNN
+F 3 "~" H 6300 3500 50  0001 C CNN
+	1    6300 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5BC1B50B
+P 5950 2650
+F 0 "R1" H 5880 2604 50  0000 R CNN
+F 1 "4k7" V 5950 2700 50  0000 R CNN
+F 2 "" V 5880 2650 50  0001 C CNN
+F 3 "~" H 5950 2650 50  0001 C CNN
+	1    5950 2650
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5BC1B53B
+P 5950 3500
+F 0 "R2" H 6020 3546 50  0000 L CNN
+F 1 "10k" V 5950 3450 50  0000 L CNN
+F 2 "" V 5880 3500 50  0001 C CNN
+F 3 "~" H 5950 3500 50  0001 C CNN
+	1    5950 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C1
+U 1 1 5BC1B580
+P 3700 4200
+F 0 "C1" H 3818 4246 50  0000 L CNN
+F 1 "100uF" H 3818 4155 50  0000 L CNN
+F 2 "" H 3738 4050 50  0001 C CNN
+F 3 "~" H 3700 4200 50  0001 C CNN
+	1    3700 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5BC1B622
+P 4150 4200
+F 0 "C2" H 4265 4246 50  0000 L CNN
+F 1 "10n" H 4265 4155 50  0000 L CNN
+F 2 "" H 4188 4050 50  0001 C CNN
+F 3 "~" H 4150 4200 50  0001 C CNN
+	1    4150 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED_ALT D1
+U 1 1 5BC1B6A1
+P 6300 4050
+F 0 "D1" V 6338 3932 50  0000 R CNN
+F 1 "LED_ALT" V 6247 3932 50  0001 R CNN
+F 2 "" H 6300 4050 50  0001 C CNN
+F 3 "~" H 6300 4050 50  0001 C CNN
+	1    6300 4050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+9V #PWR01
+U 1 1 5BC1B715
+P 5050 2100
+F 0 "#PWR01" H 5050 1950 50  0001 C CNN
+F 1 "+9V" H 5065 2273 50  0000 C CNN
+F 2 "" H 5050 2100 50  0001 C CNN
+F 3 "" H 5050 2100 50  0001 C CNN
+	1    5050 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 5BC1B7D1
+P 5050 4750
+F 0 "#PWR02" H 5050 4500 50  0001 C CNN
+F 1 "GND" H 5055 4577 50  0000 C CNN
+F 2 "" H 5050 4750 50  0001 C CNN
+F 3 "" H 5050 4750 50  0001 C CNN
+	1    5050 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5050 2100 5050 3000
+Wire Wire Line
+	5550 3400 5800 3400
+Wire Wire Line
+	5800 3400 5800 3350
+Wire Wire Line
+	5800 3350 5950 3350
+Wire Wire Line
+	5950 3650 5800 3650
+Wire Wire Line
+	5800 3650 5800 3600
+Wire Wire Line
+	5800 3600 5550 3600
+Wire Wire Line
+	5550 3200 6300 3200
+Wire Wire Line
+	6300 3200 6300 3350
+Wire Wire Line
+	5050 2100 5950 2100
+Wire Wire Line
+	5950 2100 5950 2500
+Connection ~ 5050 2100
+Wire Wire Line
+	5950 2800 5950 3350
+Connection ~ 5950 3350
+Wire Wire Line
+	6300 3650 6300 3900
+Wire Wire Line
+	5950 3650 5950 3900
+Connection ~ 5950 3650
+Wire Wire Line
+	5050 3800 5050 4650
+Wire Wire Line
+	5950 3900 3700 3900
+Wire Wire Line
+	3700 3900 3700 4050
+Wire Wire Line
+	6300 4200 6300 4650
+Wire Wire Line
+	6300 4650 5050 4650
+Connection ~ 5050 4650
+Wire Wire Line
+	5050 4650 5050 4750
+Wire Wire Line
+	5050 4650 4150 4650
+Wire Wire Line
+	4150 4650 4150 4350
+Wire Wire Line
+	4150 4650 3700 4650
+Wire Wire Line
+	3700 4650 3700 4350
+Connection ~ 4150 4650
+Wire Wire Line
+	3700 3900 3700 3200
+Wire Wire Line
+	3700 3200 4550 3200
+Connection ~ 3700 3900
+Wire Wire Line
+	4550 3400 4150 3400
+Wire Wire Line
+	4150 3400 4150 4050
+Wire Wire Line
+	4550 3600 4450 3600
+Wire Wire Line
+	4450 3600 4450 2100
+Wire Wire Line
+	4450 2100 5050 2100
+$EndSCHEMATC

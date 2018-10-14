@@ -1,0 +1,82 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:USB_B J1
+U 1 1 5BC24440
+P 4700 2800
+F 0 "J1" H 4755 3267 50  0000 C CNN
+F 1 "USB_B" H 4755 3176 50  0000 C CNN
+F 2 "" H 4850 2750 50  0001 C CNN
+F 3 " ~" H 4850 2750 50  0001 C CNN
+	1    4700 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C1
+U 1 1 5BC24499
+P 5600 2800
+F 0 "C1" H 5715 2846 50  0000 L CNN
+F 1 "C" H 5715 2755 50  0000 L CNN
+F 2 "" H 5638 2650 50  0001 C CNN
+F 3 "~" H 5600 2800 50  0001 C CNN
+	1    5600 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5BC244FD
+P 6150 2800
+F 0 "C2" H 6265 2846 50  0000 L CNN
+F 1 "C" H 6265 2755 50  0000 L CNN
+F 2 "" H 6188 2650 50  0001 C CNN
+F 3 "~" H 6150 2800 50  0001 C CNN
+	1    6150 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5BC2455C
+P 6650 2850
+F 0 "R1" H 6720 2896 50  0000 L CNN
+F 1 "R" H 6720 2805 50  0000 L CNN
+F 2 "" V 6580 2850 50  0001 C CNN
+F 3 "~" H 6650 2850 50  0001 C CNN
+	1    6650 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_POT RV1
+U 1 1 5BC245E9
+P 5850 3350
+F 0 "RV1" H 5780 3396 50  0000 R CNN
+F 1 "R_POT" H 5780 3305 50  0000 R CNN
+F 2 "" H 5850 3350 50  0001 C CNN
+F 3 "~" H 5850 3350 50  0001 C CNN
+	1    5850 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J2
+U 1 1 5BC24655
+P 5550 2050
+F 0 "J2" H 5630 2042 50  0000 L CNN
+F 1 "Conn_01x02" H 5630 1951 50  0000 L CNN
+F 2 "" H 5550 2050 50  0001 C CNN
+F 3 "~" H 5550 2050 50  0001 C CNN
+	1    5550 2050
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
