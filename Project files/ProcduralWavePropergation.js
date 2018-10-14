@@ -66,7 +66,7 @@ while (!found) {
             validToAdd(startx - 1, starty, board[startx][starty] + 1) == 'X' ||
             validToAdd(startx, starty - 1, board[startx][starty] + 1) == 'X'  
         ) 
-        //All one if statement, checks cords above, bellow, left and right
+        //All one if statement, checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
         {
             found = true;
             break;
