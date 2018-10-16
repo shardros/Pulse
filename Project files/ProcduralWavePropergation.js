@@ -68,10 +68,11 @@ while (!found) {
         neighbours.push(validToAdd(startx - 1, starty, board[startx][starty] + 1));
         neighbours.push(validToAdd(startx, starty - 1, board[startx][starty] + 1));
         //checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
-        if ('X' in neighbours) { 
+        if (neighbours.includes('X')) { 
         /*Note it is important that the function calls are not put in the if statement otherwise lazy evaluation
          *May cause some errors */
             found = true;
+            console.log('FOUND X');
             break;
         }
     }
@@ -86,4 +87,56 @@ while (!found) {
     highRankCords = [];
 }
 
-console.log(board); //Show the user the end result
+console.log(board); //Show the user the trace
+
+
+//----------- RETRACE -----------
+
+console.log('Starting Retrace...');
+
+function minIndex(array) {
+    //Find the fist non # number in the array
+    for (var i = 0; i <= 3; i++) {
+        if (array[i] != '#') {
+            var min = array[i];
+            break;
+        }
+    }
+    
+    //Find the lowest index
+    var index = 0;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] != '#' && min > array[i]) {
+            index = i;
+        }
+    }
+    return (index);
+}
+
+function showPath(x,y) {
+
+    if (board[x][y] == 0) {
+        board[x][y] = '#';
+        console.log('ROUTE COMPLETED');
+        
+    } else {
+        board[x][y] = '#';
+
+        let neighbours = []               //Declare a varible with limited scope
+        neighbours.push(board[x + 1][y]);
+        neighbours.push(board[x][y + 1])
+        neighbours.push(board[x - 1][y]);
+        neighbours.push(board[x][y - 1]);
+
+        var smallestIndex = minIndex(neighbours);
+
+        if (smallestIndex == 0) {showPath(x + 1, y); } else
+        if (smallestIndex == 1) {showPath(x, y + 1); } else
+        if (smallestIndex == 2) {showPath(x - 1, y); } else
+        if (smallestIndex == 3) {showPath(x, y - 1); };
+    }
+}
+
+showPath(endCord.x, endCord.y);
+
+console.log(board);
