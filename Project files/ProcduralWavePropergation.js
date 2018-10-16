@@ -7,7 +7,7 @@ var endCord = {x: 7, y: 9};
 var highRankCords = [];                /*Init a stack of the highest rank cords that we will know about.
                                        / We haven't found any yet so this is empty*/
 
-var lowRankCords = [];                     //Create a stack for the highest 
+var lowRankCords = [];                 //Create a stack for the highest 
 lowRankCords.push({xcord: startCord.x, ycord: startCord.y});  
                                        /*Currently the only cord we know the rank of is the 0th one at the
                                         start so push that */ 

@@ -1,76 +1,45 @@
-xDemension = 10
-yDemension = 10
-
-class Net {
-    constructor (x1, y1, x2, y2) {
+class net {
+    constructor (x1,y1,x2,y2) {
         this.x1 = x1;
-        this.x2 = x2;
         this.y1 = y1;
+        this.x2 = x2;
         this.y2 = y2;
     }
 }
 
-class PCB {
-     constructor (x, y) {
-        var xlen = x;
-        var ylen = y;
-        this.nets = [];
-        this.board = new Array(xlen);
+class board {
+    constructor(XLen, YLen, netList) {
+        let xLen = XLen;
+        let yLen = YLen;
 
-        for (var i = 0; i < this.board.length; i++) {
-            this.board[i] = new Array(ylen);
-            for (var j = 0; j < this.board[i].length; j++) {
-                this.board[i][j] = x*y;
+        this.netList = netList;
+        this.pcb = new Array(xLen);           //Create an array to act as our board
+
+        for (var i = 0; i < this.pcb.length; i++) {
+            /* INIT the array with the correct demensions and a large value in every square.
+            This ensures that it is always bigger than the route back to the start and so 
+            will never go back the wrong way */
+            this.pcb[i] = new Array(yLen);
+            for (var j = 0; j < board[i].length; j++) {
+                this.pcb[i][j] = xLen*yLen;
             }
         }
     }
-
-    addNet (net) {
-        nets.push(net);
-        this.board[net.x1][net.y1] = 0;
-        this.board[net.x2][net.y2] = 'X'; 
-    }
 }
+
 
 class router {
-    constructor (Pcb) {
-        this.board = Pcb.board;
-    }
+    constructor (board) {
+        let pcb = board.pcb;
 
-    route () {
-        
-    }
+        let highDistCords, lowDistCords = [];
 
-    waveAround (cellx,celly) {
-        distFromStart = 0;
-        var distFromStart = this.board[cellx][celly] + 1;
-        console.log('Called WaveAround: ', distFromStart);
-        for (var x = cellx-1; x < cellx + 2; x++) {
-            for (var y = celly-1; y < celly + 2; y++) {
-                
-                if ((x >= 0) && (y >= 0)) {
-                    if (this.board[x][y] = 'X') {
-                        console.log('We Got there guys!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                    }
-                    if (this.board[x][y] > distFromStart) {
+        maxDist = Math.pow(board.pcb.length); 
 
-                        this.board[x][y] = distFromStart + 1;
-                        console.log(this.board);
-                    }     
-                } 
-            }        
-        }   
-
-
+        for (var i = 0; i < pcb.length; i++) {
+            for (var j = 0; j < pcb[i].length; j++) {
+                pcb[i][j]
+            }
+        }
     }
 }
-
-var pcb = new PCB(10,10);
-
-pcb.nets[0] = new Net(1,1,9,9); 
-
-console.log(pcb.nets);
-
-router = new router(pcb);
-
-router.waveAround(1,1);
