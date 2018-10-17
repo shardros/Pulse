@@ -7,39 +7,51 @@ class net {
     }
 }
 
-class board {
+class Board {
     constructor(XLen, YLen, netList) {
         let xLen = XLen;
         let yLen = YLen;
 
         this.netList = netList;
-        this.pcb = new Array(xLen);           //Create an array to act as our board
+        this.boardArray = new Array(xLen);            //Create an array to act as our board
 
-        for (var i = 0; i < this.pcb.length; i++) {
-            /* INIT the array with the correct demensions and a large value in every square.
-            This ensures that it is always bigger than the route back to the start and so 
-            will never go back the wrong way */
-            this.pcb[i] = new Array(yLen);
-            for (var j = 0; j < board[i].length; j++) {
-                this.pcb[i][j] = xLen*yLen;
-            }
+        for (var i = 0; i < this.boardArray.length; i++) {
+            this.boardArray[i] = new Array(yLen);
         }
     }
 }
 
-
-class router {
+class NetRouter {
     constructor (board) {
-        let pcb = board.pcb;
+        /*This constructor needs to not over write and of the stuff already on the baord array*/ 
+        var b = board; 
 
         let highDistCords, lowDistCords = [];
 
-        maxDist = Math.pow(board.pcb.length); 
+        var maxDist = XLen * YLen; 
 
-        for (var i = 0; i < pcb.length; i++) {
-            for (var j = 0; j < pcb[i].length; j++) {
-                pcb[i][j]
+        for (var i = 0; i < b.boardArray.length; i++) {
+            for (var j = 0; j < b.boardArray[i].length; j++) {
+                b.boardArray[i][j] = maxDist;
             }
         }
     }
+
+
 }
+
+
+class BoardRouter extends NetRouter {  //Subclass the board class
+
+    constructor (board) {
+        super(board);
+    }
+
+}
+
+let ANet = new net(1,1,3,3);
+let ANetList = [ANet];
+
+let r = new router(10,10,ANetList);
+
+console.log(r.pcb);
