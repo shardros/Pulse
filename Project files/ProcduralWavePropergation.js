@@ -63,7 +63,7 @@ while (!found) {
         starty = lowRankCords[i].ycord;
         //Find the x and y of the currently selected low rank cord
 
-        neighbours.push( validToAdd(startx + 1, starty, board[startx][starty] + 1));
+        neighbours.push(validToAdd(startx + 1, starty, board[startx][starty] + 1));
         neighbours.push(validToAdd(startx, starty + 1, board[startx][starty] + 1));
         neighbours.push(validToAdd(startx - 1, starty, board[startx][starty] + 1));
         neighbours.push(validToAdd(startx, starty - 1, board[startx][starty] + 1));
