@@ -175,18 +175,18 @@ class NetRouter {
 
         function showPath(x,y) {
 
-            if (board[x][y] == 0) {
-                board[x][y] = '#';
+            if (b.boardArray[x][y] == 0) {
+                b.boardArray[x][y] = '#';
                 console.log('ROUTE COMPLETED');
                 
             } else {
-                board[x][y] = '#';
+                b.boardArray[x][y] = '#';
 
                 let neighbours = []               //Declare a varible with limited scope
-                neighbours.push(board[x + 1][y]);
-                neighbours.push(board[x][y + 1])
-                neighbours.push(board[x - 1][y]);
-                neighbours.push(board[x][y - 1]);
+                neighbours.push(b.boardArray[x + 1][y]);
+                neighbours.push(b.boardArray[x][y + 1])
+                neighbours.push(b.boardArray[x - 1][y]);
+                neighbours.push(b.boardArray[x][y - 1]);
 
                 var smallestIndex = minIndex(neighbours);
 
@@ -197,9 +197,9 @@ class NetRouter {
             }
         }
 
-        showPath(endCord.x, endCord.y);
+        showPath(net.x2, net.y2);
 
-        console.log(board);
+        console.log(b.boardArray);
 
     
     }
