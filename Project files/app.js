@@ -19,7 +19,6 @@ class Net {
 
 class Board {
     constructor(XLen, YLen, netList) {
-        console.log('board constructor called with parameters XLen ', XLen, ' YLen ', YLen, ' and a netList ', netList);
         this.XLen = XLen;
         this.YLen = YLen;
 
@@ -39,7 +38,6 @@ Object.defineProperty(Board, "prop", {    //NOTE TO FUTURE ME: Work out how to i
 
 class NetRouter {
     constructor (board) {
-        console.log('Net router constructor called');
         /*This constructor needs to not over write and of the stuff already on the baord array*/ 
         this.b = board; //******NOTE TO SELF****** Should this be a private property, yes if you can make it do that. using var gives it scope to the constructor
                        //Using this is dirty.
@@ -47,9 +45,6 @@ class NetRouter {
         var maxDist = this.b.XLen * this.b.YLen; 
         //This is the worst possible and longest route that we could take on the board so set the default values of everything to that
 
-        console.log('this.b.XLen ', this.b.XLen);
-        console.log('this.b.YLen ', this.b.YLen);
-        console.log('Calculated max dist as ', maxDist); 
         for (var i = 0; i < this.b.boardArray.length; i++) {
             for (var j = 0; j < this.b.boardArray[i].length; j++) {
                 //****** NOTE TO SELF ******* This needs to be fixed to not overwrite any existing tracks
@@ -69,7 +64,6 @@ class NetRouter {
        // this is supper dirty and I hate it.
 
         let highDistCords = [], lowDistCords = [];
-        console.log('highDistcords ', highDistCords);
 
         lowDistCords.push({x: net.x1, y: net.y1});
 
@@ -77,16 +71,12 @@ class NetRouter {
         b.boardArray[net.x2][net.y2] = 'X';
         
         let validToAdd = function (x,y,value) {  //Declare a function with limited scope. I.E. local to the routeNet function 
-            console.log('We are in validToAdd function with parameteres x, ', x, ' y', y, ' value ', value);
             if (x >= 0 && y >= 0 && x <= b.XLen-1 && y <= b.YLen-1 && b.boardArray[x][y] != '#') { //Is the cordinate not on the board & and can we draw a wire here?
                 if (b.boardArray[x][y]=='X') {            //Is it the end point that we are looking for?
                     return 'X'
                 } else if (value < b.boardArray[x][y]) {
-                    console.log('Adding a value to the array and high dist cords'); 
                 // Is there a quicker way to get to that x value
                     b.boardArray[x][y] = value;
-                    console.log(b.boardArray);
-                    console.log(highDistCords);
                     highDistCords.push({x:x, y:y}); //Add it to the stack of high dist cords
                 }
             }
@@ -106,10 +96,6 @@ class NetRouter {
         
                 let NewValue = this.b.boardArray[x][y] + 1; 
 
-                console.log('this board array ', this.b.boardArray);
-
-                console.log('New Value ', NewValue);
-
                 neighbours.push(validToAdd(x + 1, y, NewValue));
                 neighbours.push(validToAdd(x, y + 1, NewValue));
                 neighbours.push(validToAdd(x - 1, y, NewValue));
@@ -121,12 +107,10 @@ class NetRouter {
                 //checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
                 if (neighbours.includes('X')) { 
                     found = true;
-                    console.log('FOUND X');
                     break;
                 }
             }
             
-            console.log('High Dist Cords', highDistCords);
             if (highDistCords.length == 0) {
                 found = true;
                 console.log('ERROR: No Route found');
@@ -136,35 +120,19 @@ class NetRouter {
             lowDistCords = highDistCords;   //Low becomes high before we loop again.
             highDistCords = [];             //Clear the high
         }
-        
-
-        //NOTE TO FUTURE ME THIS DOES NOT CURRENTLY WORK!!!!!----------------------------
-        /*########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        ########################################################
-        */
-
-        console.log('Starting Retrace...');
 
         function minIndex(array) {
             //Find the fist non # number in the array
             for (var i = 0; i <= 3; i++) {
-                if (array[i] != '#') {
+                if (array[i] != '#' && typeof array[i] !== 'undefined') {
                     var min = array[i];
+                    var index = i;
                     break;
                 }
             }
             
             //Find the lowest index
-            var index = 0;
+
             for (var i = 0; i < array.length; i++) {
                 if (array[i] != '#' && min > array[i]) {
                     index = i;
@@ -174,14 +142,14 @@ class NetRouter {
         }
 
         function showPath(x,y) {
-
+            
             if (b.boardArray[x][y] == 0) {
                 b.boardArray[x][y] = '#';
                 console.log('ROUTE COMPLETED');
                 
             } else {
                 b.boardArray[x][y] = '#';
-
+              
                 let neighbours = []               //Declare a varible with limited scope
                 neighbours.push(b.boardArray[x + 1][y]);
                 neighbours.push(b.boardArray[x][y + 1])
@@ -199,7 +167,16 @@ class NetRouter {
 
         showPath(net.x2, net.y2);
 
-        console.log(b.boardArray);
+        //Clear the board
+        for (var x in b.boardArray) {
+            for (var y in b.boardArray) {
+                if (b.boardArray[x][y] != '#') {
+                    b.boardArray[x][y] = ' ';
+                }
+            }
+        }
+
+        console.log(b.boardArray)
 
     
     }
@@ -214,7 +191,7 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 
 }
 
-let ANet = new Net(1,1,3,3);
+let ANet = new Net(1,1,7,9);
 let ANetList = [ANet];
 
 let B = new Board(10,10,ANetList);

@@ -1,8 +1,8 @@
 var xlen = 10;                         //Define grid size
 var ylen = 10;
 
-var startCord = {x: 3, y: 2};          //Create cord-obj of where we are coming from and going to
-var endCord = {x: 7, y: 9};
+var startCord = {x: 1, y: 8};          //Create cord-obj of where we are coming from and going to
+var endCord = {x: 3, y: 3};
 
 var highRankCords = [];                /*Init a stack of the highest rank cords that we will know about.
                                        / We haven't found any yet so this is empty*/
