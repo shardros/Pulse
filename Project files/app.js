@@ -18,23 +18,26 @@ class Net {
 }
 
 class Board {
-    constructor(XLen, YLen, netList) {
+    constructor(XLen, YLen) {
         this.XLen = XLen;
         this.YLen = YLen;
 
-        this.netList = netList;
+        this.netList = [];
         this.boardArray = new Array(this.XLen);            //Create an array to act as our board
 
         for (var i = 0; i < this.boardArray.length; i++) {
             this.boardArray[i] = new Array(this.YLen);
         }
     }
-}
 
-Object.defineProperty(Board, "prop", {    //NOTE TO FUTURE ME: Work out how to intergrate this into the class
-    value: "test",
-    writable: false
-});
+    set newNet(net) {
+        if (this.boardArray[net.x1][net.y1] != '#' && this.boardArray[net.x2][net.y2] != '#') {
+            this.netList.push(net);
+        } else {
+            return false
+        }
+    }
+}
 
 class NetRouter {
     constructor (board) {
@@ -176,7 +179,9 @@ class NetRouter {
             }
         }
 
-        console.log(b.boardArray)
+        console.log(b.boardArray);
+
+        
 
     
     }
