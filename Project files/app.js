@@ -50,8 +50,7 @@ class NetRouter {
 
         for (var i = 0; i < this.b.boardArray.length; i++) {
             for (var j = 0; j < this.b.boardArray[i].length; j++) {
-                //****** NOTE TO SELF ******* This needs to be fixed to not overwrite any existing tracks
-                this.b.boardArray[i][j] = maxDist;
+                if (this.b.boardArray[i][j] != 'O') { this.b.boardArray[i][j] = maxDist; } //Add the maxium distance, except for where there are existing tracks
             }
         }
     }
@@ -63,27 +62,37 @@ class NetRouter {
             - There maybe ways to refactor this to use arrow functions
         */
 
+       var BoardCopy = this.b.boardArray; 
        var b = this.b; // required to allow local function for acess the object property.
        // this is supper dirty and I hate it.
+
+        
+       /*
+       *
+       *=============---Wave Propergration phase---=============
+       *
+       */
+
 
         let highDistCords = [], lowDistCords = [];
 
         lowDistCords.push({x: net.x1, y: net.y1});
 
-        b.boardArray[net.x1][net.y1] = 0;
-        b.boardArray[net.x2][net.y2] = 'X';
+        BoardCopy[net.x1][net.y1] = 0;
+        BoardCopy[net.x2][net.y2] = 'X';
         
-        let validToAdd = function (x,y,value) {  //Declare a function with limited scope. I.E. local to the routeNet function 
-            if (x >= 0 && y >= 0 && x <= b.XLen-1 && y <= b.YLen-1 && b.boardArray[x][y] != '#') { //Is the cordinate not on the board & and can we draw a wire here?
-                if (b.boardArray[x][y]=='X') {            //Is it the end point that we are looking for?
+        let validToAdd = function (x,y,value) {  
+            //Declare a function with limited scope. I.E. local to the routeNet function 
+            //NOTE: the code ignores the values on the very edge of the array
+            if (x >= 1 && y >= 1 && x <= b.XLen-2 && y <= b.YLen-2 && BoardCopy[x][y] != '#' && BoardCopy[x][y] != 'O') { //Is the cordinate not on the board & and can we draw a wire here?
+                if (BoardCopy[x][y]=='X') {            //Is it the end point that we are looking for?
                     return 'X'
-                } else if (value < b.boardArray[x][y]) {
+                } else if (value < BoardCopy[x][y]) {
                 // Is there a quicker way to get to that x value
-                    b.boardArray[x][y] = value;
+                    BoardCopy[x][y] = value;
                     highDistCords.push({x:x, y:y}); //Add it to the stack of high dist cords
                 }
-            }
-            
+            }            
         }
         
 
@@ -91,13 +100,15 @@ class NetRouter {
         let neighbours = new Array(4);
 
         while (!found) {
+
+
             for (var i = 0; i < lowDistCords.length; i++) {
                 //Go through all the low rank cords and check for a higher rank around them
                 let x = lowDistCords[i].x;
                 let y = lowDistCords[i].y;
                 //Find the x and y of the currently selected low rank cord
         
-                let NewValue = this.b.boardArray[x][y] + 1; 
+                let NewValue = BoardCopy[x][y] + 1; 
 
                 neighbours.push(validToAdd(x + 1, y, NewValue));
                 neighbours.push(validToAdd(x, y + 1, NewValue));
@@ -124,10 +135,18 @@ class NetRouter {
             highDistCords = [];             //Clear the high
         }
 
+
+        /*
+        *
+        *=============---Trace Back---=============
+        *
+        */
+
+
         function minIndex(array) {
             //Find the fist non # number in the array
             for (var i = 0; i <= 3; i++) {
-                if (array[i] != '#' && typeof array[i] !== 'undefined') {
+                if (array[i] != '#' && array[i] != 'O') {
                     var min = array[i];
                     var index = i;
                     break;
@@ -137,7 +156,7 @@ class NetRouter {
             //Find the lowest index
 
             for (var i = 0; i < array.length; i++) {
-                if (array[i] != '#' && min > array[i]) {
+                if (array[i] != '#' && min > array[i] && array[i] != 'O') {
                     index = i;
                 }
             }
@@ -146,18 +165,18 @@ class NetRouter {
 
         function showPath(x,y) {
             
-            if (b.boardArray[x][y] == 0) {
-                b.boardArray[x][y] = '#';
+            if (BoardCopy[x][y] == 0) {
+                BoardCopy[x][y] = '#';
                 console.log('ROUTE COMPLETED');
                 
             } else {
-                b.boardArray[x][y] = '#';
-              
+                BoardCopy[x][y] = '#';
+
                 let neighbours = []               //Declare a varible with limited scope
-                neighbours.push(b.boardArray[x + 1][y]);
-                neighbours.push(b.boardArray[x][y + 1])
-                neighbours.push(b.boardArray[x - 1][y]);
-                neighbours.push(b.boardArray[x][y - 1]);
+                neighbours.push(BoardCopy[x + 1][y]);
+                neighbours.push(BoardCopy[x][y + 1])
+                neighbours.push(BoardCopy[x - 1][y]);
+                neighbours.push(BoardCopy[x][y - 1]);
 
                 var smallestIndex = minIndex(neighbours);
 
@@ -171,19 +190,15 @@ class NetRouter {
         showPath(net.x2, net.y2);
 
         //Clear the board
-        for (var x in b.boardArray) {
-            for (var y in b.boardArray) {
-                if (b.boardArray[x][y] != '#') {
-                    b.boardArray[x][y] = ' ';
+        for (var x in BoardCopy) {
+            for (var y in BoardCopy) {
+                if (BoardCopy[x][y] != '#' && BoardCopy[x][y] != 'O') {
+                    BoardCopy[x][y] = ' ';
                 }
             }
         }
-
-        console.log(b.boardArray);
-
-        
-
     
+        return BoardCopy
     }
 }
 
@@ -196,11 +211,21 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 
 }
 
-let ANet = new Net(1,1,7,9);
+let ANet = new Net(8,1,7,9);
 let ANetList = [ANet];
 
-let B = new Board(10,10,ANetList);
+let B = new Board(12,12,ANetList);
+
+for (i = 0; i < 6; i++) {
+    B.boardArray[i][4] = 'O';
+}
+
+for (i = 5; i < 11; i++) {
+    B.boardArray[i][6] = 'O';
+}
 
 let BR = new BoardRouter(B);
 
 BR.routeNet(ANet);
+
+console.log(B.boardArray)
