@@ -8,12 +8,35 @@ H   H EEEEE LLLLL LLLLL  OOO  ,,    W W   OOO  R   R LLLLL DDDD  !!
 Comment for vs code preview pane
 */
 
+/*GENERIC FUNCTIONS*/
+
+function clone(obj) {
+    var copy;
+
+    // Handle the 3 simple types, string, number or boolean, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+}
+
+/*ROUTER*/
+
+
 class Net {
     constructor (x1,y1,x2,y2) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.netRouteOnBoard = [];
     }
 }
 
@@ -62,7 +85,7 @@ class NetRouter {
             - There maybe ways to refactor this to use arrow functions
         */
 
-       var BoardCopy = this.b.boardArray; 
+       var BoardCopy = clone(this.b.boardArray); //slice is there to make this a copy of the other array. We don't want to be editing the ogingal. 
        var b = this.b; // required to allow local function for acess the object property.
        // this is supper dirty and I hate it.
 
@@ -127,7 +150,7 @@ class NetRouter {
             
             if (highDistCords.length == 0) {
                 found = true;
-                console.log('ERROR: No Route found');
+                throw new Error ("NO ROUTE FOUND");
                 //If we ever run out of high rank cords then there is no possible route
             }
         
@@ -141,7 +164,6 @@ class NetRouter {
         *=============---Trace Back---=============
         *
         */
-
 
         function minIndex(array) {
             //Find the fist non # number in the array
@@ -190,14 +212,16 @@ class NetRouter {
         showPath(net.x2, net.y2);
 
         //Clear the board
-        for (var x in BoardCopy) {
+        for (var x in BoardCopy) {  //NOTE to self there are ways to make this better https://stackoverflow.com/questions/157260/whats-the-best-way-to-loop-through-a-set-of-elements-in-javascript/157715#157715
             for (var y in BoardCopy) {
-                if (BoardCopy[x][y] != '#' && BoardCopy[x][y] != 'O') {
+                if (BoardCopy[x][y] != '#') {
                     BoardCopy[x][y] = ' ';
                 }
             }
         }
-    
+
+        net.netRouteOnBoard = BoardCopy;
+
         return BoardCopy
     }
 }
@@ -207,6 +231,12 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 
     constructor (board) {
         super(board);
+    }
+
+    routeBoard() {
+        for (var i = 0; board.NetList[i]; i++) { 
+            
+        }
     }
 
 }
@@ -226,6 +256,16 @@ for (i = 5; i < 11; i++) {
 
 let BR = new BoardRouter(B);
 
-BR.routeNet(ANet);
+console.log('===============--- B.boardArray ---===============');
+
+console.log(B.boardArray)
+
+console.log('===============--- COMPLETED ROUTE FOR NET ---===============');
+
+console.log(ANet);
+
+console.log(BR.routeNet(ANet));
+
+console.log('===============--- B.boardArray after routing ---===============');
 
 console.log(B.boardArray)
