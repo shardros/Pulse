@@ -1,3 +1,4 @@
+
 /*
 H   H EEEEE L     L      OOO       W   W  OOO  RRRR  L     DDDD  !!
 H   H E     L     L     O   O      W W W O   O R   R L     D   D !! 
@@ -41,11 +42,11 @@ class Net {
 }
 
 class Board {
-    constructor(XLen, YLen) {
+    constructor(XLen, YLen, netList) {
         this.XLen = XLen;
         this.YLen = YLen;
 
-        this.netList = [];
+        this.netList = netList;
         this.boardArray = new Array(this.XLen);            //Create an array to act as our board
 
         for (var i = 0; i < this.boardArray.length; i++) {
@@ -230,12 +231,15 @@ class NetRouter {
 class BoardRouter extends NetRouter {  //Subclass the board class
 
     constructor (board) {
-        super(board);
+        super(board); 
+        this.board = board;
+        console.log(this.board);
     }
 
     routeBoard() {
-        for (var i = 0; board.NetList[i]; i++) { 
-            
+        for (var i = 0; this.board.netList[i]; i++) {
+            console.log('routing net', this.board.netList[i]); 
+            console.log(this.routeNet(this.board.netList[i]));    
         }
     }
 
@@ -256,7 +260,7 @@ for (i = 5; i < 11; i++) {
 
 let BR = new BoardRouter(B);
 
-console.log('===============--- B.boardArray ---===============');
+/*console.log('===============--- B.boardArray ---===============');
 
 console.log(B.boardArray)
 
@@ -265,6 +269,13 @@ console.log('===============--- COMPLETED ROUTE FOR NET ---===============');
 console.log(ANet);
 
 console.log(BR.routeNet(ANet));
+
+console.log('===============--- COMPLETED ROTUER FROM BOARD ROUTER ---===============');
+*/
+
+console.log("Routing the board");
+
+BR.routeBoard();
 
 console.log('===============--- B.boardArray after routing ---===============');
 
