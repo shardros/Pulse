@@ -28,6 +28,7 @@ function clone(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
+
 /*ROUTER*/
 
 
@@ -239,8 +240,22 @@ class BoardRouter extends NetRouter {  //Subclass the board class
     routeBoard() {
         for (var i = 0; this.board.netList[i]; i++) {
             console.log('routing net', this.board.netList[i]); 
-            console.log(this.routeNet(this.board.netList[i]));    
+            let netTrack = this.routeNet(this.board.netList[i]);
+            let netReserve = this.RoutedNetReserveArea(netTrack);
+            console.log(netReserve);
+
         }
+    }
+
+    RoutedNetReserveArea(netRouteOnBoard) {
+        for (let row in netRouteOnBoard) { 
+            for (let cell in netRouteOnBoard[row]) {
+                if (netRouteOnBoard[row][cell] == '#') {
+                    netRouteOnBoard[row][cell] = 'O';
+                }
+            }
+        }
+        return netRouteOnBoard
     }
 
 }
