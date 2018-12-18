@@ -28,6 +28,25 @@ function clone(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
+function mergeArrays(ArrayTo, ArrayFrom, MergeChar) {
+    if (ArrayTo.length == ArrayFrom.length) {
+        
+        for (let item in ArrayFrom) {
+        
+            if (ArrayFrom[item] instanceof Array) {
+                mergeArrays(ArrayTo[item], ArrayFrom[item], MergeChar);
+            } else if (ArrayFrom[item] == MergeChar) {
+                ArrayTo[item] = ArrayFrom[item];
+            }
+        
+        }
+
+        return ArrayTo
+
+    } else {
+        throw new Error("Can not merge arrrays. Arrays of different length")        
+    }
+}
 
 /*ROUTER*/
 
@@ -124,6 +143,8 @@ class NetRouter {
         let found = false;
         let neighbours = new Array(4);
 
+        console.log('Begining search, for route.')
+
         while (!found) {
 
 
@@ -146,6 +167,7 @@ class NetRouter {
                 //checks cords above, bellow, left and right to see if we can lower their rank or if they are the finish
                 if (neighbours.includes('X')) { 
                     found = true;
+                    console.log('Found end point')
                     break;
                 }
             }
@@ -211,7 +233,12 @@ class NetRouter {
             }
         }
 
+        console.log('Beinging trace back');
+        console.time('traceBack');
+
         showPath(net.x2, net.y2);
+
+        console.timeEnd('traceBack');
 
         //Clear the board
         for (var x in BoardCopy) {  //NOTE to self there are ways to make this better https://stackoverflow.com/questions/157260/whats-the-best-way-to-loop-through-a-set-of-elements-in-javascript/157715#157715
@@ -239,11 +266,13 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 
     routeBoard() {
         for (var i = 0; this.board.netList[i]; i++) {
+            console.time('Route');
             console.log('routing net', this.board.netList[i]); 
             let netTrack = this.routeNet(this.board.netList[i]);
+            //console.log(netTrack);
             let netReserve = this.RoutedNetReserveArea(netTrack);
-            console.log(netReserve);
-
+            mergeArrays(this.board.boardArray, netReserve, 'O');  //Because of the way JS handels arrays we never need to assign the result of this function
+            console.timeEnd('Route');
         }
     }
 
@@ -260,18 +289,12 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 
 }
 
-let ANet = new Net(8,1,7,9);
-let ANetList = [ANet];
+let NewNetList = [];
+NewNetList.push(new Net(10,10,50,80));
+NewNetList.push(new Net(20,20,40,90));
 
-let B = new Board(12,12,ANetList);
 
-for (i = 0; i < 6; i++) {
-    B.boardArray[i][4] = 'O';
-}
-
-for (i = 5; i < 11; i++) {
-    B.boardArray[i][6] = 'O';
-}
+let B = new Board(120,120,NewNetList);
 
 let BR = new BoardRouter(B);
 
@@ -294,4 +317,13 @@ BR.routeBoard();
 
 console.log('===============--- B.boardArray after routing ---===============');
 
-console.log(B.boardArray)
+
+for (var x in B.boardArray) {  //NOTE to self there are ways to make this better https://stackoverflow.com/questions/157260/whats-the-best-way-to-loop-through-a-set-of-elements-in-javascript/157715#157715
+    for (var y in B.boardArray) {
+        if (B.boardArray[x][y] != 'O') {
+            B.boardArray[x][y] = ' ';
+        }
+    }
+}
+
+//console.log(B.boardArray)
