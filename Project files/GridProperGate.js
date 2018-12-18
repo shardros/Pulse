@@ -261,7 +261,6 @@ class BoardRouter extends NetRouter {  //Subclass the board class
     constructor (board) {
         super(board); 
         this.board = board;
-        console.log(this.board);
     }
 
     routeBoard() {
@@ -290,11 +289,11 @@ class BoardRouter extends NetRouter {  //Subclass the board class
 }
 
 let NewNetList = [];
-NewNetList.push(new Net(10,10,50,80));
-NewNetList.push(new Net(20,20,40,90));
+NewNetList.push(new Net(1,1,5,5));
+NewNetList.push(new Net(2,2,4,9));
 
 
-let B = new Board(120,120,NewNetList);
+let B = new Board(12,12,NewNetList);
 
 let BR = new BoardRouter(B);
 
@@ -317,6 +316,7 @@ BR.routeBoard();
 
 console.log('===============--- B.boardArray after routing ---===============');
 
+console.log(B.boardArray);
 
 for (var x in B.boardArray) {  //NOTE to self there are ways to make this better https://stackoverflow.com/questions/157260/whats-the-best-way-to-loop-through-a-set-of-elements-in-javascript/157715#157715
     for (var y in B.boardArray) {
