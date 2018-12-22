@@ -1,7 +1,7 @@
 var ADT = require('./test')
 
 //All all of the Cell class to be acessed from other files
-exports.Cell = class {
+Cell = class {
     /**
      * A Cell in the grid
      * This class holds the information about a single Cell on the grid
@@ -24,7 +24,7 @@ exports.Cell = class {
         /**
          * @type {boolean}
          */
-        this.routeable = (routeable === undefined ? true : walkable);
+        this.routeable = (routeable === undefined ? true : routeable);
 
         /**
          * If the Cell has a track going through it.
@@ -32,11 +32,14 @@ exports.Cell = class {
          * @type {boolean}
          */
         this.tracked = false;
+
+        //Maybe slow if this needs to be reset accross the whole board each time.
+        this.tracked = false;
     }
 }
 
 //Alow all of the Net class to be acessed from other files
-exports.Net = class {
+Net = class {
     /**
      * A net for a single track. 
      * This class holds the information about a single net
@@ -59,7 +62,7 @@ exports.Net = class {
 }
 
 //Allow all of the board class to be accessed from other files
-class Board {
+Board = class {
     /**
      * The Class that holds all of the infomation about the board
      * @constructor
@@ -67,7 +70,7 @@ class Board {
      * @param {number} boardHeight The height of the board 
      * @param {Array<Array<number|boolean>>} routeMask An boolean grid showing all the places that the route can not go
      */
-    constructor(boardWidth, boardHeight, routeMask) {
+    constructor(boardWidth, boardHeight, routeMask=[[]]) {
         
         /**
          * @type {number}
@@ -86,10 +89,10 @@ class Board {
         this.grid = new Array(this.height);
 
         for (let y = 0; y < this.height; y++) {
-            grid[y] = new Array(this.width);
+            this.grid[y] = new Array(this.width);
 
             for (let x = 0; x < this.width; x++) {
-                grid[y][x] = new Cell(x, y);
+                this.grid[y][x] = new Cell(x, y);
             }
 
         }
@@ -156,5 +159,19 @@ class Board {
             neighbours[3] = this.grid[cell.y][cell.x + 1]
         };
     }
+
+    /**
+     * Gets the manhattan distance (the smallest distance possible) between two cells
+     * @param {BoardObject.Cell} cell1 Cells for distance to be found between
+     * @param {BoardObject.Cell} cell2 Cells for distance to be found between
+     */
+    getManhattan(cell1, cell2) {
+        //Pythagouses theorem to get the distance
+        Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
+    }
 }
+
+console.log(new Board(10,10));
+
+module.exports = Cell, Board, Net;
 

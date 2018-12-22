@@ -6,7 +6,7 @@ const right = i => (i + 1) << 1;
 this._heap = [];
 this._comparator = (a, b) => (a < b);
 
-exports.PriorityQueue = class {
+PriorityQueue = class {
   constructor(comparator = (a, b) => a > b) {
     this._heap = [];
     this._comparator = comparator;
@@ -20,14 +20,14 @@ exports.PriorityQueue = class {
   peek() {
     return this._heap[top];
   }
-  push(...values) {
+  enqueue(...values) {
     values.forEach(value => {
       this._heap.push(value);
       this._siftUp();
     });
     return this.size();
   }
-  pop() {
+  dequeue() {
     const poppedValue = this.peek();
     const bottom = this.size() - 1;
     if (bottom > top) {
@@ -68,6 +68,8 @@ exports.PriorityQueue = class {
     }
   }
 }
+
+module.exports = PriorityQueue;
 
 /**
 // Default comparison semantics
