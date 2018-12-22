@@ -1,6 +1,7 @@
-import {PriorityQueue} from 'adt';
+var ADT = require('./test')
 
-class Cell {
+//All all of the Cell class to be acessed from other files
+exports.Cell = class {
     /**
      * A Cell in the grid
      * This class holds the information about a single Cell on the grid
@@ -34,7 +35,8 @@ class Cell {
     }
 }
 
-class Net {
+//Alow all of the Net class to be acessed from other files
+exports.Net = class {
     /**
      * A net for a single track. 
      * This class holds the information about a single net
@@ -56,6 +58,7 @@ class Net {
     }
 }
 
+//Allow all of the board class to be accessed from other files
 class Board {
     /**
      * The Class that holds all of the infomation about the board
