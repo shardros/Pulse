@@ -8,12 +8,12 @@ class netRouter {
      * and it will return the path the net will be routed along.
      * @param {Array<Array<Board>>} board A board conataining all the tracks that aren't routed.  
      * @param {Net} net The net to be routed
-     * @param {Number} huristicWeight the weight of the huristic
+     * @param {Number} heuristicWeight the weight of the heuristic
      */
-    constructor(board, net, huristicWeight) {   
+    constructor(board, net, heuristicWeight) {   
         this.board = board;
         this.net = net;
-        this.huristicWeight = huristicWeight; 
+        this.heuristicWeight = heuristicWeight; 
 
         this._toCheck = new Heap(function(cellA, cellB) {
             return cellA.f - cellB.f;
@@ -74,7 +74,7 @@ class netRouter {
                     neighbour.super = cell;
                     
                     neighbour.g = ng;
-                    neighbour.h = this.huristicWeight * B.getManhattan(neighbour, this.endCell); 
+                    neighbour.h = this.heuristicWeight * B.getManhattan(neighbour, this.endCell); 
                     neighbour.f = neighbour.g + neighbour.h;
                     
                     neighbour.checked = true;
