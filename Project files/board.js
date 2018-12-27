@@ -32,9 +32,6 @@ Cell = class {
          * @type {boolean}
          */
         this.tracked = false;
-
-        //Maybe slow if this needs to be reset accross the whole board each time.
-        this.tracked = false;
     }
 }
 
@@ -121,7 +118,10 @@ Board = class {
      * @param {Cell} Cell 
      */
     validCell(Cell) {
-        return Cell.routeable && (cell.x >= 0 && cell.x < this.width) && (cell.y >= 0 && cell.y < this.height)
+        return Cell.routeable 
+        && (Cell.x >= 0 && Cell.x < this.width)
+        && (Cell.y >= 0 && Cell.y < this.height)
+        && !Cell.checked
     }
 
     /**
@@ -141,23 +141,25 @@ Board = class {
      */
     getNeighbours(Cell) {
 
-        neighbours = [null,null,null,null];
-        
-        if (this.validCell(this.grid[cell.y + 1][cell.x])) {
-            neighbours[0] = this.grid[cell.y + 1][cell.x]
+        let neighbours = new Array;
+
+        if (this.validCell(this.grid[Cell.y + 1][Cell.x])) {
+            neighbours.push(this.grid[Cell.y + 1][Cell.x]);
         };
 
-        if (this.validCell(this.grid[cell.y][cell.x + 1])) {
-            neighbours[1] = this.grid[cell.y][cell.x + 1]
+        if (this.validCell(this.grid[Cell.y][Cell.x + 1])) {
+            neighbours.push(this.grid[Cell.y][Cell.x + 1]);
         };
 
-        if (this.validCell(this.grid[cell.y - 1][cell.x])) {
-            neighbours[2] = this.grid[cell.y - 1][cell.x]
+        if (this.validCell(this.grid[Cell.y - 1][Cell.x])) {
+            neighbours.push(this.grid[Cell.y - 1][Cell.x]);
         };
 
-        if (this.validCell(this.grid[cell.y][cell.x + 1])) {
-            neighbours[3] = this.grid[cell.y][cell.x + 1]
+        if (this.validCell(this.grid[Cell.y][Cell.x - 1])) {
+            neighbours.push(this.grid[Cell.y][Cell.x - 1]);
         };
+
+        return neighbours;
     }
 
     /**
@@ -167,11 +169,9 @@ Board = class {
      */
     getManhattan(cell1, cell2) {
         //Pythagouses theorem to get the distance
-        Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
+        return Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
     }
 }
-
-console.log(new Board(10,10));
 
 module.exports = Cell, Board, Net;
 
