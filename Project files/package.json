@@ -1,0 +1,10 @@
+{
+    "name" : "pulse",
+    "description" : "JavaScript's PCB autorouting software.",
+    "author" : "Edwin Shepherd <shardros@gmail.com>",
+    "contributors" : [],
+    "dependencies" : [],
+    "repository" : {"type": "git", "url": "git://github.com/shardros/Pulse.git"},
+    "main" : "boardRouter.js",
+    "version" : "0.2"
+  }
