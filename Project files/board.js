@@ -55,6 +55,8 @@ Net = class {
          * @type {Cell}
          */
         this.endCell = end;
+
+        this.trace = new Array;
     }
 }
 
