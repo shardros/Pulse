@@ -1,5 +1,5 @@
-var NetRouter = require('./netrouter');
-var Board = require('./board');
+var nr = require('./netrouter');
+var b = require('./board');
 
 class BoardRouter {
     /**
@@ -9,18 +9,28 @@ class BoardRouter {
      */
     constructor (board, netList) {
         this.board = board;
-        this.netlist = netList;
+        this.netList = netList;
     }
 
     route() {
+        let tracks = new Array;
+        for (var i = 0; i < this.netList.length; i++) {
+            let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
+            tracks.push(myNetRouter.route());
+        }
 
+        return tracks;
     }
 }
 
-board = new Board(10,10);
+module
 
-start = new Cell(2,2);
-end = new Cell(4,4);
+var size = 10;
+
+board = new Board(size,size);
+
+start = board.grid[2][2];
+end = board.grid[4][4];
 
 net = new Net(start, end);
 
@@ -28,4 +38,11 @@ netlist = [net];
 
 BoardRouter = new BoardRouter(board, netlist);
 
-console.log(BoardRouter.route());
+tracks = BoardRouter.route();
+
+for (let i = 0; i < tracks.length; i++) {
+    for (let j = 0; j < tracks[i].length; j++) {
+
+    }
+}
+

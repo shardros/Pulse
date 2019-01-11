@@ -1,0 +1,32 @@
+{
+  "name": "pcb-autorouter",
+  "version": "0.2.0",
+  "description": "Software for autorouting of PCB's",
+  "main": "main.js",
+  "dependencies": {
+    "heap": "^0.2.6",
+    "paper": "^0.12.0",
+    "svg-builder": "^1.0.0",
+    "svg.js": "^2.7.1"
+  },
+  "devDependencies": {
+    "electron": "^4.0.1"
+  },
+  "scripts": {
+    "test": "node boardRouter.js",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shardros/Pulse.git"
+  },
+  "keywords": [
+    "pcb"
+  ],
+  "author": "Edwin Shepherd",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shardros/Pulse/issues"
+  },
+  "homepage": "https://github.com/shardros/Pulse#readme"
+}

@@ -2,7 +2,7 @@ var BoardObject = require('./board');
 var ADT = require('./test');
 var Heap = require('heap');
 
-class netRouter {
+NetRouter = class {
     /**
      * A class for performing the routing of a net. A board of where the net can go is passed to it
      * and it will return the path the net will be routed along.
@@ -61,7 +61,7 @@ class netRouter {
                 return this.net.trace;
                 
             }
-            
+
             let neighbours = B.getNeighbours(cell);
             
             let neightbourLength = neighbours.length;
@@ -91,3 +91,4 @@ class netRouter {
     }
 }
 
+module.exports = NetRouter;
