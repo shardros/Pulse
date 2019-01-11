@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="2000px" height="1000px">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+const b = require('D:\Documents\My Documents (Edwin)\School-work\HRSFC\Computer Science\Project\Pulse\Project files\board.js');
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+for (let x = 0; x < 10; x++) {
+  for (let y = 0; y < 10; y++) {
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "red";
+    ctx.rect(21*x, 21*y, 20, 20); 
+    ctx.stroke();
+  }
+}
+
+
+
+</script> 
+
+</body>
+</html>

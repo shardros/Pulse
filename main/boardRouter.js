@@ -23,26 +23,4 @@ class BoardRouter {
     }
 }
 
-module
-
-var size = 10;
-
-board = new Board(size,size);
-
-start = board.grid[2][2];
-end = board.grid[4][4];
-
-net = new Net(start, end);
-
-netlist = [net];
-
-BoardRouter = new BoardRouter(board, netlist);
-
-tracks = BoardRouter.route();
-
-for (let i = 0; i < tracks.length; i++) {
-    for (let j = 0; j < tracks[i].length; j++) {
-
-    }
-}
-
+module.exports = BoardRouter;
