@@ -1,4 +1,5 @@
 var http = require('http');
+var fs = require('fs');
 
 Colour = class {
     constructor (red, green, blue) {
@@ -53,6 +54,11 @@ class svgRectange extends svgShape {
 }
 
 svgMaker = class {
+    /**
+     * A Class used to store an array of SVG entities and generate them into valid DOM
+     * @param {Number} _width 
+     * @param {Number} _height 
+     */
     constructor (_width="300", _height="200") {
         this.header = "<svg version='1.1'"
                    + "baseProfile='full'"
@@ -81,18 +87,32 @@ svgMaker = class {
     }
 }
 
-http.createServer(function (req, res) {
 
-    mySvgMaker = new svgMaker;
-    res.write('<html><body>');
+let mode = "http"
+
+if (mode == "http") {
+    http.createServer(function (req, res) {
+
+        mySvgMaker = new svgMaker;
+        res.write('<html><body>');
+        myRect = new svgRectange(10,10,100,100);
+        mySvgMaker.addElement(myRect);
+        res.write(mySvgMaker.getImage());
+        res.write('</body></html>');
+        res.end();
+        console.log('page loaded')
+        
+    }).listen(8080);
+} else if (mode == "fs") {
     myRect = new svgRectange(10,10,100,100);
     mySvgMaker.addElement(myRect);
-    res.write(mySvgMaker.getImage());
-    res.write('</body></html>');
-    res.end();
-    console.log('page loaded')
-    
-}).listen(8080);
+
+    fs.writeFile('route.svg', mySvgMaker.getImage(), function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+    });
+}
+
 
 console.log('server listening on port 8080')
 
