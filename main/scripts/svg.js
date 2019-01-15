@@ -35,6 +35,9 @@ svgShape = class {
     }
 }
 
+//svgRectangle inherits from svgShape
+var svgRectange = Object.create(svgShape);
+
 class svgRectange extends svgShape {
     constructor (xPos = 0, yPos = 0, xLen = 10, yLen = 10) {
         super(xPos,yPos);
@@ -87,22 +90,33 @@ svgMaker = class {
     }
 }
 
-
+/**
 let mode = "http"
 
 if (mode == "http") {
+    console.log('Creating server');
+
     http.createServer(function (req, res) {
 
         mySvgMaker = new svgMaker;
         res.write('<html><body>');
+        
         myRect = new svgRectange(10,10,100,100);
         mySvgMaker.addElement(myRect);
-        res.write(mySvgMaker.getImage());
+        let anotherRect = new svgRectange(20,20,80,80);
+        anotherRect.fillColour = new Colour(0,255,255);
+        mySvgMaker.addElement(anotherRect);
+        let DOM = mySvgMaker.getImage()
+        res.write(DOM);
+
         res.write('</body></html>');
+        
         res.end();
         console.log('page loaded')
         
     }).listen(8080);
+
+
 } else if (mode == "fs") {
     myRect = new svgRectange(10,10,100,100);
     mySvgMaker.addElement(myRect);
@@ -113,7 +127,6 @@ if (mode == "http") {
     });
 }
 
+console.log('server listening on port 8080')*/
 
-console.log('server listening on port 8080')
-
-module.exports = {svgMaker}
+module.exports = {svgMaker, svgRectange}

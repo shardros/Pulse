@@ -1,7 +1,7 @@
 var nr = require('./netrouter');
 var b = require('./board');
 
-class BoardRouter {
+BoardRouter = class {
     /**
      * The class for routing a whole board
      * @param {Array<Array<Board.Cell>>} board 
@@ -22,5 +22,6 @@ class BoardRouter {
         return tracks;
     }
 }
+
 
 module.exports = BoardRouter;

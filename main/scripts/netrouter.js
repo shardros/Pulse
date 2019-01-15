@@ -1,5 +1,5 @@
 var BoardObject = require('./board');
-var ADT = require('./test');
+//var ADT = require('./test');
 var Heap = require('heap');
 
 NetRouter = class {
@@ -15,6 +15,11 @@ NetRouter = class {
         this.net = net;
         this.heuristicWeight = heuristicWeight; 
 
+        /** Create a new heap which sorts the entities by the difference in their f values,
+         *  where f = g + h
+         *  g - Shortest known path from start
+         *  h - Manhattan distance
+         */ 
         this._toCheck = new Heap(function(cellA, cellB) {
             return cellA.f - cellB.f;
         })
@@ -28,6 +33,7 @@ NetRouter = class {
      * The function that performs the path finding for a single net 
      */
     route() {
+        //I can't be bothered to write this.board all the time
         let B = this.board;
         
         this.startCell.g = 0;
@@ -40,13 +46,10 @@ NetRouter = class {
         while (!this._toCheck.empty()) {
             
             let cell = this._toCheck.pop();
-            
-            console.log(cell);
-            
+                        
             cell.checked = true;
             
             if (cell.x == this.endCell.x && this.endCell.y == cell.y) {
-                console.log('routed');
                 let current = cell; 
 
                 this.net.trace.push(current);

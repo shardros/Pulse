@@ -1,4 +1,4 @@
-var ADT = require('./test')
+//var ADT = require('./test')
 
 //All all of the Cell class to be acessed from other files
 Cell = class {
