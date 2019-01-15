@@ -4,20 +4,20 @@ var b = require('./board');
 var svg = require('./svg'); 
 var http = require('http');
 
-board = new Board(10,10);
+board = new b.Board(10,10);
 
-start = new Cell(2,2);
-end = new Cell(7,5);
+start = new b.Cell(2,2);
+end = new b.Cell(7,5);
 
-net = new Net(start, end);
+net = new b.Net(start, end);
 
 netList = [net]
 
-BR = new BoardRouter(board, netList);
+BR = new br.BoardRouter(board, netList);
 
 let tracks = BR.route();
 
-var SvgMaker = new svg.svgMaker; 
+var SvgMaker = new svg.Maker; 
 //Note to future me work out why this needs to be implemented like this.
 
 for (var track = 0; track < tracks.length; track++) {
@@ -25,7 +25,7 @@ for (var track = 0; track < tracks.length; track++) {
         let x = tracks[track][cell].x;
         let y = tracks[track][cell].y;
 
-        let Rect = new svg.svgRectange(x*10,y*10,10,10);
+        let Rect = new svg.Rectangle(x*10,y*10,10,10);
         SvgMaker.addElement(Rect);
     }
 }
