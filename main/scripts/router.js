@@ -4,10 +4,10 @@ var b = require('./board');
 var svg = require('./svg'); 
 var http = require('http');
 
-board = new b.Board(10,10);
+board = new b.Board(100,100);
 
 start = new b.Cell(2,2);
-end = new b.Cell(7,5);
+end = new b.Cell(70,50);
 
 net = new b.Net(start, end);
 
@@ -34,7 +34,6 @@ http.createServer(function (req, res) {
     console.log('responding to a call');
 
     res.write('<html><body>');
-    res.write('Edwins AutoRouter')
 
     let DOM = SvgMaker.getImage();
     res.write(DOM);

@@ -22,7 +22,7 @@ Colour.prototype.toHexString = function() {
  * @param {Number} xPos 
  * @param {Number} yPos 
  */
-var svgShape = function() {
+var svgShape = function(x, y) {
     //Make it so that the svgShape class is abstract
     if (new.target === svgShape) {
         throw new TypeError("Cannot construct Abstract instance of svgShape directly");
@@ -33,6 +33,8 @@ var svgShape = function() {
         throw new TypeError("Must override generateSVGString method of the abstract class svgShape");
     }
 
+    this.xPos = x;
+    this.yPos = y;
     this.nameOf = "svgShape";
 }
 
