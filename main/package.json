@@ -4,11 +4,7 @@
   "description": "Software for autorouting of PCB's",
   "main": "main.js",
   "dependencies": {
-    "browserify": "^16.2.3",
     "heap": "^0.2.6",
-    "paper": "^0.12.0",
-    "svg-builder": "^1.0.0",
-    "svg.js": "^2.7.1"
   },
   "devDependencies": {
     "electron": "^4.0.1"
