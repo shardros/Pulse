@@ -110,7 +110,6 @@ Maker.prototype.getImage = function() {
             DOM += this.entities[i]
         } else if (this.entities[i].nameOf == "svgShape") {
             DOM += this.entities[i].generateSVGString();
-            console.log(DOM);
         } else {
             throw new TypeError("Unknown object passed to Maker");       
         }
@@ -124,9 +123,11 @@ Maker.prototype.getImage = function() {
                 MaxY = this.entities[i].getCordinatesOfBottomRight().yCord;
             }
         }
+        this.width = MaxX;
+        this.height = MaxY;
     };
     return (this.generateHeader() + DOM + this.footer);
 }
 
 
-module.exports = {Maker, Rectangle}
+module.exports = {Maker, Rectangle, Colour}

@@ -114,14 +114,22 @@ function Board (boardWidth, boardHeight, routeMask=[[]]) {
 };
 
 /**
+ * Checks if a cell is on the board
+ * @param {Cell} Cell 
+ */
+Board.prototype.CellOnBoard = function(Cell) {
+    return (Cell.x >= 0 && Cell.x < this.width)
+    && (Cell.y >= 0 && Cell.y < this.height);
+}
+
+/**
  * Checks weather we can route a track through a given Cell
  * @param {Cell} Cell 
  */
 Board.prototype.validCell = function (Cell) {
     return Cell.routeable 
-    && (Cell.x >= 0 && Cell.x < this.width)
-    && (Cell.y >= 0 && Cell.y < this.height)
-    && !Cell.checked
+            && this.CellOnBoard(Cell)
+            && !Cell.checked
 }
 
 /**
@@ -139,7 +147,7 @@ Board.prototype.validCell = function (Cell) {
  * 
  * @param {Cell} Cell 
  */
-Board.prototype.getNeighbours = function (Cell){
+Board.prototype.getValidNeighbours = function (Cell){
 
     let neighbours = new Array;
 
@@ -160,6 +168,27 @@ Board.prototype.getNeighbours = function (Cell){
     };
 
     return neighbours;
+}
+
+/**
+ * Gets the neighbours of a cell including diagonals
+ * @param {Cell} Cell
+ */
+Board.prototype.getCellAndAllNeighbours = function(Cell) {
+    let cells = new Array
+
+    for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+            
+            if (this.CellOnBoard(this.grid[Cell.y + y][Cell.x + x])
+             && !(x == 0 && y == 0)) {
+                
+                cells.push(this.grid[Cell.y + y][Cell.x + x]);
+            }
+        }
+    }
+    
+    return cells;
 }
 
 /**

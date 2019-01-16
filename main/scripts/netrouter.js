@@ -41,7 +41,7 @@ NetRouter = class {
 
         this.startCell.checked = true;
         
-        this._toCheck.push(net.startCell);
+        this._toCheck.push(this.net.startCell);
 
         while (!this._toCheck.empty()) {
             
@@ -53,6 +53,13 @@ NetRouter = class {
                 let current = cell; 
 
                 this.net.trace.push(current);
+
+                //Mark the cell and all of its neigbours as not routeable
+                let CellAndNeighbours = B.getCellAndAllNeighbours(current);
+                for (let i = 0; i < CellAndNeighbours.length; i++) {
+                    CellAndNeighbours[i].routeable = false;
+                }
+                
                 current.tracked = true;
 
                 do {
@@ -65,7 +72,7 @@ NetRouter = class {
                 
             }
 
-            let neighbours = B.getNeighbours(cell);
+            let neighbours = B.getValidNeighbours(cell);
             
             let neightbourLength = neighbours.length;
             for (let i = 0; i < neightbourLength; i++) {
