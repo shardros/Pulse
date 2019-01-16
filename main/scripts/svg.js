@@ -33,6 +33,10 @@ var svgShape = function(x, y) {
         throw new TypeError("Must override generateSVGString method of the abstract class svgShape");
     }
 
+    if (this.getCordinatesOfBottomRight === undefined) {
+        throw new TypeError("Must override getCordinatesOfBottomRight method of the abstract class svgShape");
+    }
+
     this.xPos = x;
     this.yPos = y;
     this.nameOf = "svgShape";
@@ -54,22 +58,43 @@ class Rectangle extends svgShape {
 Rectangle.prototype.generateSVGString = function() {
     return '<rect x=' + this.xPos + ' y=' + this.yPos + ' width=' + this.xLen + ' height=' + this.yLen
     + ' style="fill:' + this.fillColour.toHexString() + ' ;, stroke:' + this.borderColour.toHexString()
-    + ';, stroke-width: ' + this.borderWidth + '" />';
+    + ';, stroke-width: ' + this.borderWidth + '"></rect>';
+}
+
+Rectangle.prototype.getCordinatesOfBottomRight = function() {
+    return {
+        xCord: this.xPos + this.xLen,
+        yCord: this.yPos + this.yLen 
+    }
 }
 
 /**
  * A Class used to store an array of SVG entities and generate them into valid DOM
  * @param {Number} _width 
  * @param {Number} _height 
+ * @param {Boolean} overflows Controlls weather the SVG resizes to make sure that none of its elements overflow.
  */
-var Maker = function(_width="300", _height="200") {
-        this.header = "<svg version='1.1'"
-                   + "baseProfile='full'"
-                   + "width='400' height='500'"
-                   + "xmlns=http://www.w3.org/2000/svg>"
+var Maker = function(_width=500, _height=500, overflows=true) {
         this.footer = "</svg>"
+
+        /**
+         * @type {svgShape}
+         */
         this.entities = [];
+
+        this.width = _width;
+        this.height = _height;
+
+        this.overflows = overflows;
+
     }
+
+Maker.prototype.generateHeader = function () {
+    return "<svg version='1.1'"
+                   + "baseProfile='full'"
+                   + "width='" + this.width.toString() + "' height='" + this.height.toString() + "'"
+                   + "xmlns=http://www.w3.org/2000/svg>";
+}
 
 Maker.prototype.addElement = function (element) {
         this.entities.push(element)
@@ -77,16 +102,30 @@ Maker.prototype.addElement = function (element) {
 
 Maker.prototype.getImage = function() {
     let DOM = ''
+    let MaxX = this.width
+    let MaxY = this.height
+
     for (let i = 0; i < this.entities.length; i++) {
         if (typeof this.entities[i] == "string") {
             DOM += this.entities[i]
         } else if (this.entities[i].nameOf == "svgShape") {
             DOM += this.entities[i].generateSVGString();
+            console.log(DOM);
         } else {
             throw new TypeError("Unknown object passed to Maker");       
         }
+        
+        if (this.overflows) {
+            if (MaxX < this.entities[i].getCordinatesOfBottomRight().xCord) {
+                MaxX = this.entities[i].getCordinatesOfBottomRight().xCord;
+            }
+            
+            if (MaxY < this.entities[i].getCordinatesOfBottomRight().yCord) {
+                MaxY = this.entities[i].getCordinatesOfBottomRight().yCord;
+            }
+        }
     };
-    return (this.header + DOM + this.footer);
+    return (this.generateHeader() + DOM + this.footer);
 }
 
 

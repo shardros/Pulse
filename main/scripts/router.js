@@ -4,10 +4,10 @@ var b = require('./board');
 var svg = require('./svg'); 
 var http = require('http');
 
-board = new b.Board(100,100);
+board = new b.Board(10,10);
 
 start = new b.Cell(2,2);
-end = new b.Cell(70,50);
+end = new b.Cell(7,5    );
 
 net = new b.Net(start, end);
 
@@ -25,7 +25,7 @@ for (var track = 0; track < tracks.length; track++) {
         let x = tracks[track][cell].x;
         let y = tracks[track][cell].y;
 
-        let Rect = new svg.Rectangle(x*10,y*10,10,10);
+        let Rect = new svg.Rectangle(x*1,y*1,1,1);
         SvgMaker.addElement(Rect);
     }
 }
