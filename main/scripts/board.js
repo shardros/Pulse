@@ -182,7 +182,6 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
             
             if (this.CellOnBoard(this.grid[Cell.y + y][Cell.x + x])
              && !(x == 0 && y == 0)) {
-                
                 cells.push(this.grid[Cell.y + y][Cell.x + x]);
             }
         }

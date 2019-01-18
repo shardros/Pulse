@@ -54,16 +54,19 @@ NetRouter = class {
 
                 this.net.trace.push(current);
 
-                //Mark the cell and all of its neigbours as not routeable
-                let CellAndNeighbours = B.getCellAndAllNeighbours(current);
-                for (let i = 0; i < CellAndNeighbours.length; i++) {
-                    CellAndNeighbours[i].routeable = false;
-                }
-                
-                current.tracked = true;
-
                 do {
+                    
+                    for (let x = -1; x <= 1; x++) {
+                        for (let y = -1; y <= 1; y++) {
+                            if (B.CellOnBoard(B.grid[current.x][current.y])) {
+                                B.grid[current.x + x][current.y + y].routeable = false;
+                                console.log('x: ', current.x + x, 'y: ', current.y + y);                 
+                            }
+                        }
+                    }
+                    
                     current = current.super;
+                    
                     current.tracked = true;
                     this.net.trace.push(current);
                 } while (current.x != this.startCell.x || current.y != this.startCell.y)
