@@ -6,8 +6,10 @@ var http = require('http');
 
 console.log('Initalizing router');
 
-var trackWidth = 10;
+//Set the constants for the routing
+const trackWidth = 10;
 
+//Create all of the objects that represent the exact problem that we are truing to solve
 board = new b.Board(100,100);
 
 let start1 = new b.Cell(70,10);
@@ -33,6 +35,7 @@ console.log('Begining draw');
 
 var SvgMaker = new svg.Maker; 
 
+//This is for debug, shows the area on the board which have been marked as not routeable
 for (var x = 0; x < board.width; x++) {
     for (var y = 0; y < board.height; y++) {
         if (!board.grid[x][y].routeable) {
@@ -46,6 +49,7 @@ for (var x = 0; x < board.width; x++) {
 console.log('Built non routeable sections');
 
 //Note to future me work out why this needs to be implemented like this.
+//Display the areas on the board which represent the tracks
 for (var track = 0; track < tracks.length; track++) {
     for (var cell = 0; cell < tracks[track].length; cell++) {
         let x = tracks[track][cell].x;
@@ -59,6 +63,7 @@ for (var track = 0; track < tracks.length; track++) {
 console.log('Built routes');
 console.log('Attempting to create a server');
 
+//Create a server to send our SVG data over
 http.createServer(function (req, res) {
     console.log('responding to a call');
 
