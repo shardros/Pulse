@@ -55,12 +55,11 @@ NetRouter = class {
                 this.net.trace.push(current);
 
                 do {
-                    
                     for (let x = -1; x <= 1; x++) {
                         for (let y = -1; y <= 1; y++) {
-                            if (B.CellOnBoard(B.grid[current.x][current.y])) {
-                                B.grid[current.x + x][current.y + y].routeable = false;
-                                console.log('x: ', current.x + x, 'y: ', current.y + y);                 
+                            if (B.CordsOnBoard(current.y, current.x)) {
+                                //potentially too tight an interface coupling
+                                B.grid[current.y + y][current.x + x].routeable = false;                 
                             }
                         }
                     }

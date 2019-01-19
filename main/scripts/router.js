@@ -17,12 +17,8 @@ let end1 = new b.Cell(20,50);
 
 net1 = new b.Net(start1, end1);
 
-let start2 = new b.Cell(20,10);
-let end2 = new b.Cell(70,70);
 
-net2 = new b.Net(start2, end2);
-
-netList = [net1, net2]
+netList = [net1]
 
 BR = new br.BoardRouter(board, netList);
 

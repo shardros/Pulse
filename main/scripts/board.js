@@ -117,9 +117,9 @@ function Board (boardWidth, boardHeight, routeMask=[[]]) {
  * Checks if a cell is on the board
  * @param {Cell} Cell 
  */
-Board.prototype.CellOnBoard = function(Cell) {
-    return (Cell.x >= 0 && Cell.x < this.width)
-    && (Cell.y >= 0 && Cell.y < this.height);
+Board.prototype.CordsOnBoard = function(x ,y) {
+    return (x >= 0 && x < this.width)
+    && (y >= 0 && y < this.height);
 }
 
 /**
@@ -127,9 +127,7 @@ Board.prototype.CellOnBoard = function(Cell) {
  * @param {Cell} Cell 
  */
 Board.prototype.validCell = function (Cell) {
-    return Cell.routeable 
-            && this.CellOnBoard(Cell)
-            && !Cell.checked
+    return Cell.routeable && !Cell.checked
 }
 
 /**
@@ -151,20 +149,28 @@ Board.prototype.getValidNeighbours = function (Cell){
 
     let neighbours = new Array;
 
-    if (this.validCell(this.grid[Cell.y + 1][Cell.x])) {
-        neighbours.push(this.grid[Cell.y + 1][Cell.x]);
+    if (this.CordsOnBoard(Cell.x + 1, Cell.y)
+        && this.validCell(this.grid[Cell.y + 1][Cell.x])) {
+        
+            neighbours.push(this.grid[Cell.y + 1][Cell.x]);
     };
 
-    if (this.validCell(this.grid[Cell.y][Cell.x + 1])) {
-        neighbours.push(this.grid[Cell.y][Cell.x + 1]);
+    if (this.CordsOnBoard(Cell.x, Cell.y + 1)
+        && this.validCell(this.grid[Cell.y][Cell.x + 1])) {
+        
+            neighbours.push(this.grid[Cell.y][Cell.x + 1]);
     };
 
-    if (this.validCell(this.grid[Cell.y - 1][Cell.x])) {
-        neighbours.push(this.grid[Cell.y - 1][Cell.x]);
+    if (this.CordsOnBoard(Cell.x, Cell.y -1)
+        && this.validCell(this.grid[Cell.y - 1][Cell.x])) {
+        
+            neighbours.push(this.grid[Cell.y - 1][Cell.x]);
     };
 
-    if (this.validCell(this.grid[Cell.y][Cell.x - 1])) {
-        neighbours.push(this.grid[Cell.y][Cell.x - 1]);
+    if (this.CordsOnBoard(Cell.x, Cell.y - 1)
+        && this.validCell(this.grid[Cell.y][Cell.x - 1])) {
+        
+            neighbours.push(this.grid[Cell.y][Cell.x - 1]);
     };
 
     return neighbours;
@@ -180,7 +186,7 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
     for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
             
-            if (this.CellOnBoard(this.grid[Cell.y + y][Cell.x + x])
+            if (this.CordsOnBoard(Cell.x + x,Cell.y + y)
              && !(x == 0 && y == 0)) {
                 cells.push(this.grid[Cell.y + y][Cell.x + x]);
             }
