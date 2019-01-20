@@ -33,6 +33,9 @@ var svgShape = function(x, y) {
         throw new TypeError("Must override generateSVGString method of the abstract class svgShape");
     }
 
+    /**Ensure that all subclasses implement the getCordinatesOfBottomRight method
+     * Used in working out weather to exand the size of the svgShape.
+     */
     if (this.getCordinatesOfBottomRight === undefined) {
         throw new TypeError("Must override getCordinatesOfBottomRight method of the abstract class svgShape");
     }
@@ -42,7 +45,7 @@ var svgShape = function(x, y) {
     this.nameOf = "svgShape";
 }
 
-
+//Sub-class svgShape
 class Rectangle extends svgShape {
     constructor (xPos = 0, yPos = 0, xLen = 10, yLen = 10) {
         super(xPos, yPos);

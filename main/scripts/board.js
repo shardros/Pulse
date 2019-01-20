@@ -133,7 +133,8 @@ Board.prototype.validCell = function (Cell) {
 /**
  * Returns a list of the Neighbours of a Cell, if the cell is valid it will return the cell's neighbours object
  * if not it will return null in the place of the list
- * The function returns an list with the indexs as follows.
+ * The function returns an list with the indexs as follows 
+ * assuming that all the neighbouring cells are valid.
  * 
  * +---+---+---+
  * |   | 0 |   |
@@ -204,6 +205,21 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
 Board.prototype.getManhattan = function(cell1, cell2) {
     //Pythagouses theorem to get the Manhattan distance
     return Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
+}
+
+/**
+ * Finds all of the cells which are neighbours (that are also on the)
+ * board and marks them and all of their neighours as not routeable.
+ */
+Board.prototype.markCellAndNeighboursAsUnrouteable = function(Cell) {
+    for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+            //maybe do this with error handeling
+            if (this.CordsOnBoard(Cell.x, Cell.y)) {
+                this.grid[Cell.y + y][Cell.x + x].routeable = false;                 
+            }
+        }
+    }
 }
 
 module.exports = {Cell, Board, Net};

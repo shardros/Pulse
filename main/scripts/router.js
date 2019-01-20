@@ -8,15 +8,17 @@ console.log('Initalizing router');
 
 //Set the constants for the routing
 const trackWidth = 10;
+const boardWidth = 100;
+const boardHeight = 100;
+const numberOfLayers = 1;
 
 //Create all of the objects that represent the exact problem that we are truing to solve
-board = new b.Board(100,100);
+board = new b.Board(boardWidth,boardHeight);
 
 let start1 = new b.Cell(70,10);
 let end1 = new b.Cell(20,50);
 
 net1 = new b.Net(start1, end1);
-
 
 netList = [net1]
 
@@ -34,7 +36,7 @@ var SvgMaker = new svg.Maker;
 //This is for debug, shows the area on the board which have been marked as not routeable
 for (var x = 0; x < board.width; x++) {
     for (var y = 0; y < board.height; y++) {
-        if (!board.grid[x][y].routeable) {
+        if (!board.grid[y][x].routeable) {
             let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
             Rect.fillColour = new svg.Colour(0,255,255);
             SvgMaker.addElement(Rect); 

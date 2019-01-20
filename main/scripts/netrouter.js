@@ -33,47 +33,50 @@ NetRouter = class {
      * The function that performs the path finding for a single net 
      */
     route() {
-        //I can't be bothered to write this.board all the time
         let B = this.board;
         
         this.startCell.g = 0;
         this.startCell.f = 0;
 
         this.startCell.checked = true;
-        
+
         this._toCheck.push(this.net.startCell);
 
+        //While there are still possible cells that there could be a route for.
         while (!this._toCheck.empty()) {
             
             let cell = this._toCheck.pop();
-                        
             cell.checked = true;
             
+            //Have we found the endCell yet?
             if (cell.x == this.endCell.x && this.endCell.y == cell.y) {
+                
                 let current = cell; 
-
                 this.net.trace.push(current);
-
+                
+                /** Starting from the endCell perform a trace back to
+                 *  the start, adding the cells that are on the trace to a list and marking 
+                 *  all of the neighbours as unrouteable
+                 */ 
                 do {
-                    for (let x = -1; x <= 1; x++) {
-                        for (let y = -1; y <= 1; y++) {
-                            if (B.CordsOnBoard(current.y, current.x)) {
-                                //potentially too tight an interface coupling
-                                B.grid[current.y + y][current.x + x].routeable = false;                 
-                            }
-                        }
-                    }
+                    B.markCellAndNeighboursAsUnrouteable(current);
                     
                     current = current.super;
                     
                     current.tracked = true;
                     this.net.trace.push(current);
-                } while (current.x != this.startCell.x || current.y != this.startCell.y)
+                    
+                } while (current != this.startCell)
+                
+                B.markCellAndNeighboursAsUnrouteable(this.startCell);
                 
                 return this.net.trace;
                 
             }
 
+            /**We've not found the end yet.
+             * Lets work out work out which cell to expand into next
+             */
             let neighbours = B.getValidNeighbours(cell);
             
             let neightbourLength = neighbours.length;
@@ -81,11 +84,8 @@ NetRouter = class {
                 
                 let neighbour = neighbours[i];
                 let ng = cell.g + 1;
-                
-                if (neighbour.checked) {
-                    continue; //Break for one iteration of the for loop
-                }
-                
+
+                //Is there a route to that cell that we don't know about
                 if (!neighbour.checked || ng < neighbour.g) {
                     neighbour.super = cell;
                     
@@ -100,6 +100,9 @@ NetRouter = class {
                 } 
             }
         }
+
+        throw Error("No route found");
+        
     }
 }
 

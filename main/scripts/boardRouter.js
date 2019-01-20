@@ -12,7 +12,7 @@ BoardRouter = function (board, netList) {
 }
 
 /**
- * A class to decide which order the nets are to be routed in
+ * A function decide which order the nets are to be routed in
  */
 BoardRouter.prototype.route = function() {
     let tracks = new Array;
