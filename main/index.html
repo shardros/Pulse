@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
 
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-
+    <!-- production version, optimized for size and speed
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
 </head>
 
 <body>
 
-<canvas id="myCanvas" width="2000px" height="1000px">
-Your browser does not support the HTML5 canvas tag.</canvas>
+    <h1>Edwin's AutoRouter</h1>
 
-<link rel="script" type="text/script" href="./">
-<script>
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
+    <div id="app">
+        {{ mousePos }}
+    </div>
 
-for (let x = 0; x < 10; x++) {
-  for (let y = 0; y < 10; y++) {
-    ctx.beginPath();
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = "red";
-    ctx.rect(21*x, 21*y, 20, 20); 
-    ctx.stroke();
-  }
-}
+    <canvas onmousemove="draw(event)" style="margin:0;padding:0;" id="Canvas"
+            class="canvasView" width="1920" height="1080"></canvas>
 
-
-
-</script> 
-
+    <script src="main.js"></script>
 </body>
 </html>
