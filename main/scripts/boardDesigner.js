@@ -23,13 +23,10 @@ class BD {
     }
 
     getMousePos(evt) {
-        var rect = this.c.getBoundingClientRect(), // abs. size of element
-            scaleX = this.c.width / rect.width,    // relationship bitmap vs. element for X
-            scaleY = this.c.height / rect.height;  // relationship bitmap vs. element for Y
-
+        console.log(evt.clientX);
         return {
-            x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-            y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+            x: evt.clientX,   // scale mouse coordinates after they have
+            y: evt.clientY     // been adjusted to be relative to element
         }
     }
 

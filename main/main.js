@@ -15,9 +15,9 @@ let boardDesigner = new BD(c);
 
 function draw(evt) {
 
-    var pos = boardDesigner.getMousePos(c, evt);
+    var pos = boardDesigner.getMousePos(evt);
 
-    app.message = pos;
+    app.message = boardDesigner.getMousePos(evt);
 
     boardDesigner.drawRect(pos.x, pos.y, gridSize, gridSize);
 }
