@@ -8,6 +8,10 @@
 
     <!-- production version, optimized for size and speed
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+    <!-- Other JS that we need-->
+    <script src="scripts/boardDesigner.js"></script>
+    <script src="scripts/colour.js"></script>
 </head>
 
 <body>
@@ -15,7 +19,7 @@
     <h1>Edwin's AutoRouter</h1>
 
     <div id="app">
-        {{ mousePos }}
+        {{ message }}
     </div>
 
     <canvas onmousemove="draw(event)" style="margin:0;padding:0;" id="Canvas"
