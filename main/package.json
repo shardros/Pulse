@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/shardros/Pulse/issues"
   },
-  "homepage": "https://github.com/shardros/Pulse#readme"
+  "homepage": "https://github.com/shardros/Pulse#readme",
+  "dependencies": {
+    "browserfy": "^1.0.0"
+  }
 }

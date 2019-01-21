@@ -50,10 +50,40 @@ BoardRouter.prototype.createKeepOut = function(cell1, cell2, borderOnly = true) 
         //Mark the whole areas as unrouteable
         for (let x = smallX; x < bigX; x++) {
             for (let y = smallY; y < bigY; y++) {
-                this.board.markCordsAsUnrouteable(x,y)    
+                this.board.markCordsAsUnrouteable(x,y);    
             }
         }
     }
+}
+
+/**
+ * Floods all of the cells possible from a cell
+ * 
+ * TODO: look at making this recusive and propergate like a flood as you would expect  
+ */
+BoardRouter.prototype.flood = function(Cell) {
+    if (typeof(Cell) == undefined) {
+        throw Error ("Flood method passed undefined cell");
+    } 
+    unchecked = [];
+    flood = [];
+    current = Cell;
+    while (current) {
+        if (current.routeable) {
+            this.board.getNeighbours(current).forEach(cell => {
+                if (cell.routeable) {unchecked.push(cell)}
+            });
+            
+            current.routeable = false;
+            current.tracked = true;
+            
+            flood.push(current);   
+        }
+
+        current = unchecked.pop();
+    }
+
+    return flood;
 }
 
 /**

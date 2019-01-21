@@ -9,37 +9,54 @@ console.log('Initalizing router');
 
 //Set the constants for the routing
 const trackWidth = 10;
-const boardWidth = 100;
-const boardHeight = 100;
+const boardWidth = 190;
+const boardHeight = 90;
 const numberOfLayers = 1;
 
 //Create all of the objects that represent the exact problem that we are truing to solve
 board = new b.Board(boardWidth,boardHeight);
 
-let start1 = new b.Cell(70,10);
-let end1 = new b.Cell(20,50);
+netList = []
 
-net1 = new b.Net(start1, end1);
 
-netList = [net1]
+let start = new b.Cell(50,2);
+let end = new b.Cell(80,80);
+
+netList.push(new b.Net(start, end));
+
+start = new b.Cell(70,10);
+end = new b.Cell(20,50);
+
+netList.push(new b.Net(start, end));
+
 
 BR = new br.BoardRouter(board, netList);
 
-let cell1 = new b.Cell(3,3)
-let cell2 = new b.Cell(9,9)
+let topLeft = new b.Cell(0,0);
+let bottomRight = new b.Cell(boardWidth-1,boardHeight-1);
 
-BR.createKeepOut(cell1,cell2);
+BR.createKeepOut(topLeft,bottomRight);
+
+
 
 console.log('Routing')
+console.time('RoutingTime');
 
 let tracks = BR.route();
 
-console.log('Routed');
+console.timeEnd('RoutingTime')
+
+console.log('Flooding');
+
+let myCell = new b.Cell(2,2);
+
+tracks.push(BR.flood(myCell));
+
 console.log('Begining draw');
 
 var SvgMaker = new svg.Maker; 
 
-//This is for debug, shows the area on the board which have been marked as not routeable
+//Shows the area on the board which have been marked as not routeable
 for (var x = 0; x < board.width; x++) {
     for (var y = 0; y < board.height; y++) {
         if (!board.grid[y][x].routeable) {
@@ -51,6 +68,7 @@ for (var x = 0; x < board.width; x++) {
 }
 
 console.log('Built non routeable sections');
+
 
 //Note to future me work out why this needs to be implemented like this.
 //Display the areas on the board which represent the tracks

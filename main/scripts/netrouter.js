@@ -59,7 +59,7 @@ NetRouter = class {
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markCellAndNeighboursAsUnrouteable(current);
+                    B.markNeighboursAsUnrouteable(current);
                     
                     current = current.super;
                     
@@ -68,9 +68,11 @@ NetRouter = class {
                     
                 } while (current != this.startCell)
                 
-                B.markCellAndNeighboursAsUnrouteable(this.startCell);
+                B.markNeighboursAsUnrouteable(this.startCell);
+
+                this.cleanUp();
                 
-                return this.net.trace;
+                return this.net.trace
                 
             }
 
@@ -83,7 +85,7 @@ NetRouter = class {
             for (let i = 0; i < neightbourLength; i++) {
                 
                 let neighbour = neighbours[i];
-                let ng = cell.g + 1;
+                let ng = cell.g + 1; //neighbough g => ng
 
                 //Is there a route to that cell that we don't know about
                 if (!neighbour.checked || ng < neighbour.g) {
@@ -101,8 +103,21 @@ NetRouter = class {
             }
         }
 
+        this.cleanUp()
+
         throw Error("No route found");
         
+    }
+
+    /**
+     * Maybe replace this by taking a copy of the board object?
+     */
+    cleanUp() {
+        for (let x = 0; x < this.board.length; x++) {
+            for (let y = 0; y < this.board.height; y++) {
+                this.board.getCell(x,y).checked = false;
+            }
+        }
     }
 }
 

@@ -130,6 +130,37 @@ Board.prototype.validCell = function (Cell) {
     return Cell.routeable && !Cell.checked
 }
 
+Board.prototype.validCord = function (x,y) {
+    return this.grid[y][x].routeable && !this.grid[y][x].checked
+}
+
+
+/**
+ * Maybe use this to make the rest of the methods in this class functional using reduce
+ * Need to ensure though that we do not hit a significant performace penalty
+ */
+Board.prototype.getNeighbours = function(Cell) {
+    let neighbours = new Array;
+
+    if (this.CordsOnBoard(Cell.x + 1, Cell.y)) {
+        neighbours.push(this.grid[Cell.y + 1][Cell.x]);
+    };
+
+    if (this.CordsOnBoard(Cell.x, Cell.y + 1)) {
+        neighbours.push(this.grid[Cell.y][Cell.x + 1]);
+    };
+
+    if (this.CordsOnBoard(Cell.x, Cell.y -1)) {
+        neighbours.push(this.grid[Cell.y - 1][Cell.x]);
+    };
+
+    if (this.CordsOnBoard(Cell.x, Cell.y - 1)) {
+        neighbours.push(this.grid[Cell.y][Cell.x - 1]);
+    };
+    
+    return neighbours
+}
+
 /**
  * Returns a list of the Neighbours of a Cell, if the cell is valid it will return the cell's neighbours object
  * if not it will return null in the place of the list
@@ -211,19 +242,20 @@ Board.prototype.getManhattan = function(cell1, cell2) {
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
  */
-Board.prototype.markCellAndNeighboursAsUnrouteable = function(Cell) {
-    for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
-            //maybe do this with error handeling
-            if (this.CordsOnBoard(Cell.x, Cell.y)) {
-                this.grid[Cell.y + y][Cell.x + x].routeable = false;                 
-            }
-        }
-    }
+Board.prototype.markNeighboursAsUnrouteable = function(Cell) {
+    this.getValidNeighbours(Cell).forEach(neighbour => {neighbour.routeable = false});
 }
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {
     this.grid[y][x].routeable = false;
+}
+
+Board.prototype.markCordsAsTracked = function(x,y) {
+    this.grid[y][x].tracked = true;
+}
+
+Board.prototype.getCell = function(x,y) {
+    return this.grid[y][x];
 }
 
 module.exports = {Cell, Board, Net};
