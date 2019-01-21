@@ -1,4 +1,4 @@
-var colour = require('colour');
+var Colour = require('./colour');
 
 /**
  * An Abstract prototype for SVG shapes
@@ -34,8 +34,8 @@ class Rectangle extends svgShape {
         super(xPos, yPos);
         this.xLen = xLen;
         this.yLen = yLen;
-        this.fillColour = new Colour(255,0,0);
-        this.borderColour = new Colour(255,255,255);
+        this.fillColour = new Colour.colour(255,0,0);
+        this.borderColour = new Colour.colour(255,255,255);
         this.borderWidth = 5;    
     }
 }
@@ -116,4 +116,4 @@ Maker.prototype.getImage = function() {
 }
 
 
-module.exports = {Maker, Rectangle, Colour}
+module.exports = {Maker, Rectangle}

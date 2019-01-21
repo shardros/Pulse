@@ -222,5 +222,9 @@ Board.prototype.markCellAndNeighboursAsUnrouteable = function(Cell) {
     }
 }
 
+Board.prototype.markCordsAsUnrouteable = function(x,y) {
+    this.grid[y][x].routeable = false;
+}
+
 module.exports = {Cell, Board, Net};
 

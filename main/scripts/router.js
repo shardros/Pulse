@@ -2,6 +2,7 @@ var nr = require('./netrouter');
 var br = require('./boardRouter')
 var b = require('./board');
 var svg = require('./svg'); 
+var Colour = require('./colour');
 var http = require('http');
 
 console.log('Initalizing router');
@@ -24,6 +25,11 @@ netList = [net1]
 
 BR = new br.BoardRouter(board, netList);
 
+let cell1 = new b.Cell(3,3)
+let cell2 = new b.Cell(9,9)
+
+BR.createKeepOut(cell1,cell2);
+
 console.log('Routing')
 
 let tracks = BR.route();
@@ -38,7 +44,7 @@ for (var x = 0; x < board.width; x++) {
     for (var y = 0; y < board.height; y++) {
         if (!board.grid[y][x].routeable) {
             let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
-            Rect.fillColour = new svg.Colour(0,255,255);
+            Rect.fillColour = new Colour.colour(0,255,255);
             SvgMaker.addElement(Rect); 
         }
     }
