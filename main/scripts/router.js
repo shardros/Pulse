@@ -50,7 +50,7 @@ console.log('Flooding');
 
 let myCell = new b.Cell(2,2);
 
-//tracks.push(BR.flood(myCell));
+tracks.push(BR.flood(myCell));
 
 console.log('Begining draw');
 
