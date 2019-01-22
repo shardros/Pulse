@@ -24,10 +24,9 @@ let end = new b.Cell(84,80);
 
 netList.push(new b.Net(start, end));
 
-
-start = new b.Cell(54,4);
-end = new b.Cell(88,80);
-
+ start = new b.Cell(54,4);
+ end = new b.Cell(88,80);
+ 
 netList.push(new b.Net(start, end));
 
 
@@ -35,7 +34,6 @@ start = new b.Cell(58,4);
 end = new b.Cell(92,80);
 
 netList.push(new b.Net(start, end));
-
 
 start = new b.Cell(62,4);
 end = new b.Cell(96,80);
@@ -47,13 +45,11 @@ end = new b.Cell(20,20);
 
 netList.push(new b.Net(start, end));
 
-start = new b.Cell(70,10);
-end = new b.Cell(20,24);
 
-
+start = new b.Cell(150,10);
+end = new b.Cell(20,74);
 
 netList.push(new b.Net(start, end));
-
 
 BR = new br.BoardRouter(board, netList);
 
@@ -88,6 +84,19 @@ for (var x = 0; x < board.width; x++) {
         if (!board.grid[y][x].routeable) {
             let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
             Rect.fillColour = new Colour.colour(0,255,255);
+            SvgMaker.addElement(Rect); 
+        }
+    }
+}
+
+
+//Shows the area on the board marked as checked
+for (var x = 0; x < board.width; x++) {
+    for (var y = 0; y < board.height; y++) {
+        //----> THIS SHOULDN'T BE A GLOBAL FIX IT <----
+        if (board.grid[y][x].checked) {
+            let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+            Rect.fillColour = new Colour.colour(44, 127, 25);
             SvgMaker.addElement(Rect); 
         }
     }

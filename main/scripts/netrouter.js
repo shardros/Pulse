@@ -110,10 +110,10 @@ NetRouter = class {
     }
 
     /**
-     * Maybe replace this by taking a copy of the board object?
+     * This can be made more efficent by pushing the checked items to a list
      */
     cleanUp() {
-        for (let x = 0; x < this.board.length; x++) {
+        for (let x = 0; x < this.board.width; x++) {
             for (let y = 0; y < this.board.height; y++) {
                 this.board.getCell(x,y).checked = false;
             }

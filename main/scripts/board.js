@@ -6,9 +6,10 @@
  * 
  * @param {Number} x 
  * @param {Number} y 
+ * @param {Number} layer
  * @param {Boolean} routeable 
  */
-function Cell (x,y,routeable) {
+function Cell (x,y,layer,routeable=true) {
         
         /**
          * @type {number}
@@ -21,10 +22,14 @@ function Cell (x,y,routeable) {
         this.y = y;
 
         /**
+         * @type {number}
+         */
+        this.layer = layer;
+
+        /**
          * @type {boolean}
          */
-        this.routeable = (routeable === undefined ? true : routeable);
-
+        this.routeable = routeable;
         /**
          * If the Cell has a track going through it.
          * Defaults to false because at start of day we have no tracks
@@ -38,7 +43,6 @@ function Cell (x,y,routeable) {
 /**
  * A net for a single track. 
  * This class holds the information about a single net
- * @constructor
  * @param {Cell} start The start of the net
  * @param {Cell} end   The end of the net
  */
@@ -57,6 +61,14 @@ function Net (start, end) {
     this.trace = new Array;
 }
 
+/**
+ * This maybe too similar to the get manhattan distance board method
+ * and theere may be a way of subcalssing these to make more sense
+ */
+Net.prototype.manhattanLength = function() {
+    return Math.sqrt(Math.pow(this.startCell.x-this.endCell.x, 2) + Math.pow(this.startCell.y-this.endCell.y, 2));
+
+}
 
 //Allow all of the board class to be accessed from other files
 

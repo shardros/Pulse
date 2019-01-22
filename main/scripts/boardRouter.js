@@ -92,9 +92,20 @@ BoardRouter.prototype.flood = function(Cell) {
 BoardRouter.prototype.route = function() {
     let tracks = new Array;
 
-    for (var i = 0; i < this.netList.length; i++) {
-        let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
-        tracks.push(myNetRouter.route());
+    this.netList.sort((cellA, cellB) =>
+        cellA.manhattanLength() - cellB.manhattanLength()
+    );
+
+    console.log(netList);
+
+    for (var i = 0; i < this.netList.length; i++) {        
+        try {
+            let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
+            tracks.push(myNetRouter.route());
+        } catch {
+            throw err
+        }
+        
     }
 
     return tracks;
