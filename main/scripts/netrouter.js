@@ -59,7 +59,7 @@ NetRouter = class {
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markNeighboursAsUnrouteable(current);
+                    B.markNeighboursAsUnrouteable(current, true);
                     
                     current = current.super;
                     
@@ -68,7 +68,7 @@ NetRouter = class {
                     
                 } while (current != this.startCell)
                 
-                B.markNeighboursAsUnrouteable(this.startCell);
+                B.markNeighboursAsUnrouteable(this.startCell, true);
 
                 this.cleanUp();
                 
@@ -85,7 +85,7 @@ NetRouter = class {
             for (let i = 0; i < neightbourLength; i++) {
                 
                 let neighbour = neighbours[i];
-                let ng = cell.g + 1; //neighbough g => ng
+                let ng = cell.g + 1; //neighbough g -> ng
 
                 //Is there a route to that cell that we don't know about
                 if (!neighbour.checked || ng < neighbour.g) {

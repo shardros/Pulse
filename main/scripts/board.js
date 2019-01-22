@@ -136,10 +136,11 @@ Board.prototype.validCord = function (x,y) {
 
 
 /**
+ * TODO:
  * Maybe use this to make the rest of the methods in this class functional using reduce
  * Need to ensure though that we do not hit a significant performace penalty
  */
-Board.prototype.getNeighbours = function(Cell) {
+Board.prototype.getNeighbours = function(Cell, diagonals) {
     let neighbours = new Array;
 
     if (this.CordsOnBoard(Cell.x + 1, Cell.y)) {
@@ -154,10 +155,28 @@ Board.prototype.getNeighbours = function(Cell) {
         neighbours.push(this.grid[Cell.y - 1][Cell.x]);
     };
 
-    if (this.CordsOnBoard(Cell.x, Cell.y - 1)) {
+    if (this.CordsOnBoard(Cell.x - 1, Cell.y)) {
         neighbours.push(this.grid[Cell.y][Cell.x - 1]);
     };
     
+    if (diagonals) {
+        if (this.CordsOnBoard(Cell.x + 1, Cell.y + 1)) {
+            neighbours.push(this.grid[Cell.y + 1][Cell.x + 1]);
+        };
+    
+        if (this.CordsOnBoard(Cell.x - 1, Cell.y + 1)) {
+            neighbours.push(this.grid[Cell.y + 1][Cell.x - 1]);
+        };
+    
+        if (this.CordsOnBoard(Cell.x + 1, Cell.y -1)) {
+            neighbours.push(this.grid[Cell.y - 1][Cell.x + 1]);
+        };
+    
+        if (this.CordsOnBoard(Cell.x - 1, Cell.y - 1)) {
+            neighbours.push(this.grid[Cell.y - 1][Cell.x - 1]);
+        };    
+    } 
+
     return neighbours
 }
 
@@ -242,8 +261,8 @@ Board.prototype.getManhattan = function(cell1, cell2) {
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
  */
-Board.prototype.markNeighboursAsUnrouteable = function(Cell) {
-    this.getValidNeighbours(Cell).forEach(neighbour => {neighbour.routeable = false});
+Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = false});
 }
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {

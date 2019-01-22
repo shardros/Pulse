@@ -50,7 +50,7 @@ console.log('Flooding');
 
 let myCell = new b.Cell(2,2);
 
-tracks.push(BR.flood(myCell));
+//tracks.push(BR.flood(myCell));
 
 console.log('Begining draw');
 
@@ -59,6 +59,7 @@ var SvgMaker = new svg.Maker;
 //Shows the area on the board which have been marked as not routeable
 for (var x = 0; x < board.width; x++) {
     for (var y = 0; y < board.height; y++) {
+        //----> THIS SHOULDN'T BE A GLOBAL FIX IT <----
         if (!board.grid[y][x].routeable) {
             let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
             Rect.fillColour = new Colour.colour(0,255,255);
