@@ -19,13 +19,38 @@ board = new b.Board(boardWidth,boardHeight);
 netList = []
 
 
-let start = new b.Cell(50,2);
-let end = new b.Cell(80,80);
+let start = new b.Cell(50,4);
+let end = new b.Cell(84,80);
+
+netList.push(new b.Net(start, end));
+
+
+start = new b.Cell(54,4);
+end = new b.Cell(88,80);
+
+netList.push(new b.Net(start, end));
+
+
+start = new b.Cell(58,4);
+end = new b.Cell(92,80);
+
+netList.push(new b.Net(start, end));
+
+
+start = new b.Cell(62,4);
+end = new b.Cell(96,80);
+
+netList.push(new b.Net(start, end));
+
+start = new b.Cell(40,80);
+end = new b.Cell(20,20);
 
 netList.push(new b.Net(start, end));
 
 start = new b.Cell(70,10);
-end = new b.Cell(20,50);
+end = new b.Cell(20,24);
+
+
 
 netList.push(new b.Net(start, end));
 
@@ -50,7 +75,7 @@ console.log('Flooding');
 
 let myCell = new b.Cell(2,2);
 
-tracks.push(BR.flood(myCell));
+//tracks.push(BR.flood(myCell));
 
 console.log('Begining draw');
 
