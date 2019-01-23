@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<head>
+
 <style>
 #mydiv {
   position: absolute;
@@ -10,18 +12,23 @@
 }
 
 #mydivheader {
-  padding: 50px;
+  padding: 25px;
   cursor: move;
   z-index: 10;
   background-color: #890da1;
   color: #fff;
 }
 </style>
+
+
+  <script type="text/javascript" src=scripts/router.js'></script>
+  <link type="text/css" rel="stylesheet" href="styles/index.css"/>
+
+
+</head>
 <body>
 
-<h1>Draggable DIV Element</h1>
-
-<p>Click and hold the mouse button down while moving the DIV element</p>
+<h1>Edwin's autorouter</h1>
 
 <div id="mydiv">
   <div id="mydivheader"></div>
@@ -72,11 +79,11 @@ function dragElement(elmnt) {
     document.onmousemove = null;
   }
 
-  function getRoundedMouseX (event, roundToNearest = 100) {
+  function getRoundedMouseX (event, roundToNearest = 50) {
       return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
   }
 
-  function getRoundedMouseY (event, roundToNearest = 100) {
+  function getRoundedMouseY (event, roundToNearest = 50) {
       return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
   }
 }

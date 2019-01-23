@@ -135,7 +135,7 @@ http.createServer(function (req, res) {
     
     res.end();
     console.log('page loaded')
-    
+        
 }).listen(1337);
 
 console.log('server listening on port 1337');

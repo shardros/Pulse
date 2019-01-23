@@ -1,6 +1,6 @@
 var BoardObject = require('./board');
 //var ADT = require('./test');
-var Heap = require('../Modules/heap');
+var Heap = require('../Modules/Heap');
 
 NetRouter = class {
     /**
