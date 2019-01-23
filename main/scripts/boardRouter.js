@@ -1,9 +1,9 @@
-var nr = require('./netrouter');
-var b = require('./board');
+import { NetRouter } from 'netRouter';
+import { Board } from 'board';
 
 /**
  * The class for routing a whole board
- * @param {Array<Array<Board.Cell>>} board 
+ * @param {Board} board
  * @param {Array<Board.Net>} netList 
  */
 BoardRouter = function (board, netList) {

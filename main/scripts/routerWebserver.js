@@ -1,4 +1,4 @@
-var nr = require('./netrouter');
+var nr = require('./netRouter');
 var br = require('./boardRouter')
 var b = require('./board');
 var svg = require('./svg'); 

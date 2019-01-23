@@ -9,7 +9,7 @@
  * @param {Number} layer
  * @param {Boolean} routeable 
  */
-function Cell (x,y,layer,routeable=true) {
+function Cell (x,y,layer=1,routeable=true) {
         
         /**
          * @type {number}

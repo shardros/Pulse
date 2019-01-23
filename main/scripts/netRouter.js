@@ -121,4 +121,4 @@ NetRouter = class {
     }
 }
 
-module.exports = NetRouter;
+module.exports = {NetRouter};

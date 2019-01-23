@@ -17,27 +17,34 @@ const fileTypes = {
  */
 let server = http.createServer(function (req, res) {
 
-    console.log('url requested', req.url);
+    console.log('Requested: ', req.url);
 
-    fs.readFile('./' + req.url, function(err, data) {
-        if (err) {
-            console.log ('file not found: ' + req.url);
-            res.writeHead(404, "Not Found");
-            res.end();
-        } else {
-            //There was no error
-            let dotPosFromEnd = req.url.lastIndexOf('.');
-            let mimetype = 'text/plain';
-            if (!(dotPosFromEnd == -1)) {
-                mimetype = req.url.substr(dotPosFromEnd);
+    if (req.url == '/') {
+        fs.readFile('./index.html', function(err, indexFile) {
+            if (err) throw err;
+
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.write(indexFile);
+        })
+    } else {
+        fs.readFile('./' + req.url, function(err, data) {
+            if (err) {
+                console.log ('file not found: ' + req.url);
+                res.writeHead(404, "Not Found");
+                res.end();
+            } else {
+                //There was no error
+                let dotPosFromEnd = req.url.lastIndexOf('.');
+                let mimetype = 'text/plain';
+                if (!(dotPosFromEnd == -1)) {
+                    mimetype = req.url.substr(dotPosFromEnd);
+                }
+
+                res.setHeader('Content-type' , mimetype);
+                res.end(data);
             }
-
-            res.setHeader('Content-type' , mimetype);
-            res.end(data);
-            console.log( res.url, mimetype );
-
-        }
-    });
+        });
+    }
 }).listen(port);
 
 console.log('Sever listening on port ', port);
