@@ -96,14 +96,12 @@ BoardRouter.prototype.route = function() {
         cellA.manhattanLength() - cellB.manhattanLength()
     );
 
-    console.log(netList);
-
     for (var i = 0; i < this.netList.length; i++) {        
         try {
             let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
             tracks.push(myNetRouter.route());
-        } catch {
-            throw err
+        } finally {
+            let nothing = 'nothing';
         }
         
     }
