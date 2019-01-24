@@ -10,18 +10,28 @@ body {
     text-align: center;
 }
 
-#mydiv {
+
+.endPoint {
     position: absolute;
     z-index: 9;
     background-color: #f1f1f1;
     text-align: center;
-    border: 1px solid #d3d3d3;
 }
-
-#mydivheader {
+  
+.endPointPadder {
     padding: 25px;
     cursor: move;
     z-index: 10;
-    background-color: #890da1;
-    color: #fff;
+}
+
+#endPadding {
+    left: 200px;
+    top: 200px;
+    background-color: #b6211a;
+}
+  
+#startPadding {
+    left: 100px;
+    top: 100px;
+    background-color: #10af0a;
 }

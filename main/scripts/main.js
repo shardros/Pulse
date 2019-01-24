@@ -1,8 +1,11 @@
-import {BoardRouter} from 'boardRouter';
+const BoardRouter = require('./boardRouter');
+
+import {BoardRouter} from './scripts/boardRouter';
 import {Board, Cell, Net} from 'board';
 import NetRouter from 'netRouter';
 import Colour from 'colour';
 import {Maker, Rectangle} from 'svg';
+
 
 console.log('Initalizing router');
 

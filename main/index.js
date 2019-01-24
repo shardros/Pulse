@@ -25,6 +25,7 @@ let server = http.createServer(function (req, res) {
 
             res.writeHead(200, {"Content-Type": "text/html"});
             res.write(indexFile);
+            res.end();
         })
     } else {
         fs.readFile('./' + req.url, function(err, data) {
@@ -37,8 +38,9 @@ let server = http.createServer(function (req, res) {
                 let dotPosFromEnd = req.url.lastIndexOf('.');
                 let mimetype = 'text/plain';
                 if (!(dotPosFromEnd == -1)) {
-                    mimetype = req.url.substr(dotPosFromEnd);
-                }
+                    //Perform a look up for the text using the suffix in a dictionary
+                    mimetype = fileTypes[req.url.substr(dotPosFromEnd)];
+                }   
 
                 res.setHeader('Content-type' , mimetype);
                 res.end(data);
