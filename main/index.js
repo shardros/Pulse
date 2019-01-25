@@ -34,7 +34,19 @@ let server = http.createServer(function (req, res) {
             break;
 
         case '/route':
-            console.log('route API called with parameters: ', parsedURL.query)
+            console.log('route API called with parameters: ', parsedURL.query);
+            console.log('Getting body contents');
+
+            let body = '';
+            req.on('data', chunk => {
+                body += chunk.toString(); // convert Buffer to string
+            });
+            req.on('end', () => {
+                console.log(body);
+                res.end('ok');
+            });
+
+            console.log(body)
 
             break;
         default:

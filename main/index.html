@@ -25,74 +25,24 @@
 
 
 <script>
-  //Make the DIV element draggagle:
-  dragElement(document.getElementById("startnode"));
-  dragElement(document.getElementById("endnode"),200,200);
+//Define some classes for use just here 
 
-  function dragElement(elmnt, startx = 100, starty = 100) {
-    var newXPos = 0, newYPos = 0,
-        oldXPos = 0, oldYPos = 0;
-      document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
-      elmnt.style.top = (starty) + "px";
-      elmnt.style.left = (startx) + "px";
-
-    function dragMouseDown(e) {
-      e = e || window.event;
-      e.preventDefault();   //Prevents the default method from running
-
-      // get the mouse cursor position at startup:
-      oldXPos = getRoundedMouseX(e);
-      oldYPos = getRoundedMouseY(e);
-
-      document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
-
-      document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
-    }
-
-    function elementDrag(e) {
-      e = e || window.event;
-      e.preventDefault();
-    
-      // calculate the new cursor position:
-      newXPos = oldXPos - getRoundedMouseX(e);
-      newYPos = oldYPos - getRoundedMouseY(e);
-      
-      // set the element's new position:
-      elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
-      elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
-    
-      //Update the old positions
-      oldXPos = getRoundedMouseX(e);
-      oldYPos = getRoundedMouseY(e);
-  }
-
-    function closeDragElement() {
-      /* stop moving when mouse button is released:*/
-      document.onmouseup = null;
-      document.onmousemove = null;
-    }
-
-    function getRoundedMouseX (event, roundToNearest = 25) {
-        return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
-    }
-
-    function getRoundedMouseY (event, roundToNearest = 25) {
-        return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
-    }
-  }
-
-class clientSideNet {
-  /**
-  * @pram {html} startNode
-  * @pram {html} endNode
-  */
-  constructor (startNode, endNode) {
-    this.startNode = startNode;
-    this.endNode = endNode;
-  }
+clientSideCell = function(x,y){
+  this.x = x;
+  this.y = y;
 }
 
-class grid {
+clientSideNet = function(start, end) {
+  this.start = start;
+  this.end = end;
+}
+
+class Grid {
+  /**
+  @pram {Number} width the width cell units
+  @pram {Number} width the height in cell units
+  @pram {Number} cellSize the size in cell units
+  */
   constructor (width, height, cellSize) {
     this.width = width;
     this.height = height;
@@ -105,12 +55,93 @@ class grid {
   }
 
   update() {
-    fetch('route?test="test"')
+    (async () => {
+      const rawResponse = await fetch('route', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({a: 1, b: 'Textual content'})
+        });
+      const content = await rawResponse.json();
+
+      console.log(content);
+    })(); 
   }
 }
 
-let test = new grid(10,10,10);
-test.update();
+//------------MAIN------------
+
+let start = new clientSideCell(2,2);
+let end = new clientSideCell(2,2);
+let net = new clientSideNet(start,end);
+
+var grid = new Grid(10,10,10);
+
+grid.addNet(net);
+
+grid.update();
+
+//Make the DIV element draggagle:
+
+dragElement(document.getElementById("startnode"));
+dragElement(document.getElementById("endnode"),200,200);
+
+function dragElement(elmnt, startx = 100, starty = 100) {
+  var newXPos = 0, newYPos = 0,
+      oldXPos = 0, oldYPos = 0;
+    document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
+    elmnt.style.top = (starty) + "px";
+    elmnt.style.left = (startx) + "px";
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();   //Prevents the default method from running
+
+    // get the mouse cursor position at startup:
+    oldXPos = getRoundedMouseX(e);
+    oldYPos = getRoundedMouseY(e);
+
+    document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
+
+    document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+  
+    // calculate the new cursor position:
+    newXPos = oldXPos - getRoundedMouseX(e);
+    newYPos = oldYPos - getRoundedMouseY(e);
+    
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
+  
+    //Update the old positions
+    oldXPos = getRoundedMouseX(e);
+    oldYPos = getRoundedMouseY(e);
+}
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+
+  function getRoundedMouseX (event, roundToNearest = 25) {
+      return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
+  }
+
+  function getRoundedMouseY (event, roundToNearest = 25) {
+      return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
+  }
+}
+
+
+
 </script>
 
 </body>
