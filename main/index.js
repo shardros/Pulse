@@ -1,6 +1,5 @@
 const http = require('http');
 const fs = require('fs');
-const url = require('url');
 
 const port = 8080;
 
@@ -19,6 +18,7 @@ let server = http.createServer(function (req, res) {
 
     console.log('Requested: ', req.url);
 
+    //Alows assignment specific urls to files. 
     switch (req.url) {
         case '/':
             fs.readFile('./index.html', function(err, indexFile) {
@@ -33,11 +33,21 @@ let server = http.createServer(function (req, res) {
                 if (err) {
                     console.log ('file not found: ' + req.url);
                     res.writeHead(404, "Not Found");
+                    res.write('THERE WAS A 404')
                     res.end();
-                } else {
-                    //There was no error
+                } else { //There was no error
+
+                    /**
+                     * We now need to automatically seve the file however
+                     * we don't know what mimetype (e.g. is it a text/html)
+                     * this gets the file extentsion and assumes that is the
+                     * value of the sign we want. We can do this by finding the 
+                     * last dot in the file name, then looking that extention
+                     * up in a dictionary.
+                     */ 
                     let dotPosFromEnd = req.url.lastIndexOf('.');
                     let mimetype = 'text/plain';
+                    
                     if (!(dotPosFromEnd == -1)) {
                         //Perform a look up for the text using the suffix in a dictionary
                         mimetype = fileTypes[req.url.substr(dotPosFromEnd)];

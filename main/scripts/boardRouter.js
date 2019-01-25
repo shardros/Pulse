@@ -58,18 +58,28 @@ BoardRouter.prototype.createKeepOut = function(cell1, cell2, borderOnly = true) 
 
 /**
  * Floods all of the cells possible from a cell
- * 
- * TODO: look at making this recusive and propergate like a flood as you would expect  
+ * This could have been made recursively in theory however
+ * JS doesn't support tail optimaisation and so it would have caused
+ * StackOver Flows left right and center
+ * @param {Cell} Cell Where we start the flood from
+ * @returns {<Cell>} Returns list of cells in the flood
  */
 BoardRouter.prototype.flood = function(Cell) {
+    
+    //Must check this as we use weather cell is defined in the while loop later
     if (typeof(Cell) == undefined) {
         throw Error ("Flood method passed undefined cell");
     } 
+    
     unchecked = [];
     flood = [];
     current = Cell;
+    
+    //Check if we can still pop items from the stack
     while (current) {
         if (current.routeable) {
+            //Gets the routeable neighbours and pushes them to the unchecked list
+
             this.board.getNeighbours(current).forEach(cell => {
                 if (cell.routeable) {unchecked.push(cell)}
             });
