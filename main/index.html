@@ -3,10 +3,7 @@
 <head>
 
   <link type="text/css" rel="stylesheet" href="styles/index.css"/>
-  <!--<script type="text/javascript" src="./scripts/main.js" type="module"></script>
-  <script src="./scripts/boardRouter.js"></script>
-  <script src="./scripts/board.js"></script>
-  -->
+  <script src="/scripts/main.js"></script>
 
 
 </head>
@@ -24,60 +21,61 @@
 </div>
 
 <script>
-//Make the DIV element draggagle:
-dragElement(document.getElementById("start"));
-dragElement(document.getElementById("end"));
+  //Make the DIV element draggagle:
+  dragElement(document.getElementById("start"));
+  dragElement(document.getElementById("end"));
 
 
-function dragElement(elmnt) {
-  var newXPos = 0, newYPos = 0,
-      oldXPos = 0, oldYPos = 0;
-    document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
+  function dragElement(elmnt) {
+    var newXPos = 0, newYPos = 0,
+        oldXPos = 0, oldYPos = 0;
+      document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
 
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();   //Prevents the default method from running
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();   //Prevents the default method from running
 
-    // get the mouse cursor position at startup:
-    oldXPos = getRoundedMouseX(e);
-    oldYPos = getRoundedMouseY(e);
+      // get the mouse cursor position at startup:
+      oldXPos = getRoundedMouseX(e);
+      oldYPos = getRoundedMouseY(e);
 
-    document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
+      document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
 
-    document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
-  }
+      document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
+    }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-  
-    // calculate the new cursor position:
-    newXPos = oldXPos - getRoundedMouseX(e);
-    newYPos = oldYPos - getRoundedMouseY(e);
+    function elementDrag(e) {
+      e = e || window.event;
+      e.preventDefault();
     
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
-  
-    //Update the old positions
-    oldXPos = getRoundedMouseX(e);
-    oldYPos = getRoundedMouseY(e);
-}
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
+      // calculate the new cursor position:
+      newXPos = oldXPos - getRoundedMouseX(e);
+      newYPos = oldYPos - getRoundedMouseY(e);
+      
+      // set the element's new position:
+      elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
+      elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
+    
+      //Update the old positions
+      oldXPos = getRoundedMouseX(e);
+      oldYPos = getRoundedMouseY(e);
   }
 
-  function getRoundedMouseX (event, roundToNearest = 50) {
-      return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
-  }
+    function closeDragElement() {
+      /* stop moving when mouse button is released:*/
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
 
-  function getRoundedMouseY (event, roundToNearest = 50) {
-      return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
+    function getRoundedMouseX (event, roundToNearest = 50) {
+        return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
+    }
+
+    function getRoundedMouseY (event, roundToNearest = 50) {
+        return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
+    }
   }
-}
 </script>
+
 </body>
 </html>

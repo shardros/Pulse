@@ -1,5 +1,5 @@
-import { NetRouter } from 'netRouter';
-import { Board } from 'board';
+const nr = require('./netRouter');
+const b = require('./board');
 
 /**
  * The class for routing a whole board

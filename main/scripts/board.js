@@ -79,51 +79,51 @@ Net.prototype.manhattanLength = function() {
  * @param {number} boardHeight The height of the board 
  * @param {Array<Array<number|boolean>>} routeMask An boolean grid showing all the places that the route can not go
  */
-function Board (boardWidth, boardHeight, routeMask=[[]]) {
-    
-    /**
-     * @type {number}
-     */
-    this.width = boardWidth;
-    
-    /**
-     * @type {number}
-     */
-    this.height = boardHeight;
+var Board = function(boardWidth, boardHeight, routeMask=[[]]) {
+        
+        /**
+         * @type {number}
+         */
+        this.width = boardWidth;
+        
+        /**
+         * @type {number}
+         */
+        this.height = boardHeight;
 
-    /**Create a matrix for the grid to be stored in then go through and 
-     * populate it with cells
-     */        
+        /**Create a matrix for the grid to be stored in then go through and 
+         * populate it with cells
+         */        
 
-    this.grid = new Array(this.height);
+        this.grid = new Array(this.height);
 
-    for (let y = 0; y < this.height; y++) {
-        this.grid[y] = new Array(this.width);
+        for (let y = 0; y < this.height; y++) {
+            this.grid[y] = new Array(this.width);
 
-        for (let x = 0; x < this.width; x++) {
-            this.grid[y][x] = new Cell(x, y);
+            for (let x = 0; x < this.width; x++) {
+                this.grid[y][x] = new Cell(x, y);
+            }
+
         }
 
-    }
+        /**
+         * Check if each of the cells are routeable according to the inputted routing guide.
+         */
 
-    /**
-     * Check if each of the cells are routeable according to the inputted routing guide.
-     */
+        if ((routeMask != undefined)
+        && (routeMask.length > this.height)
+        && (routeMask[0].length > this.width)) {
 
-    if ((routeMask != undefined)
-    && (routeMask.length > this.height)
-    && (routeMask[0].length > this.width)) {
+            //NOTE TO SELF - Possibly look at merging this and the for loop above together
 
-        //NOTE TO SELF - Possibly look at merging this and the for loop above together
+            for (let y = 0; y < routeMask.length; y++) {
+                for (let x = 0; x < routeMask[y].length; x++) {
+                    if (routeMask[x][y] = 1) grid[y][x].routeable = false;
+                }
+            } 
+        }
 
-        for (let y = 0; y < routeMask.length; y++) {
-            for (let x = 0; x < routeMask[y].length; x++) {
-                if (routeMask[x][y] = 1) grid[y][x].routeable = false;
-            }
-        } 
-    }
-
-};
+    };
 
 /**
  * Checks if a cell is on the board
@@ -250,7 +250,7 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
         for (let y = -1; y <= 1; y++) {
             
             if (this.CordsOnBoard(Cell.x + x,Cell.y + y)
-             && !(x == 0 && y == 0)) {
+            && !(x == 0 && y == 0)) {
                 cells.push(this.grid[Cell.y + y][Cell.x + x]);
             }
         }
@@ -288,6 +288,7 @@ Board.prototype.markCordsAsTracked = function(x,y) {
 Board.prototype.getCell = function(x,y) {
     return this.grid[y][x];
 }
+
 
 module.exports = {Cell, Board, Net};
 
