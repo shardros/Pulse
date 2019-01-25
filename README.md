@@ -3,13 +3,8 @@ Computer Science Coursework
 
 At somepoint there will hopefully be software he to perform autorouting of PCB's
 
-Note to future me, you will need to let npm install packages by using
+## Notes
 
-```npm config set cafile "<path HR Proxy Cert>"```
-
-https://developer.mozilla.org/bm/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
-
-this is a test
-
-https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_draggable
-
+Okay so the current plan is to have the drag able end points client side move 
+over a grid that we will refresh as often as we can. The rendering of this 
+grid using the SVG libarry will all be done server side. 

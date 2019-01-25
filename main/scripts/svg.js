@@ -1,11 +1,31 @@
-var Colour = require('./colour');
+class colour {
+    /**
+     * A prototype that allows storage and manipulation of colour objects
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
+    constructor(red, green, blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+    };
+
+    /** Add the colour values up in decimal, shifting the bits for each colour value to the left then adding them together
+     *  The hex value is then converted to a string and the leading value is lost as it was just put there to absorb overflows
+     *  @returns {string} returns 7 Char string with the first char being a #
+     */
+    toHexString() {
+        return '#' + (0x10000 * this.red + 0x100 * this.green + this.blue + 0x1000000).toString(16).substr(1);
+    };
+}
 
 /**
  * An Abstract prototype for SVG shapes
  * @param {Number} x
  * @param {Number} y
  */
-var svgShape = function(x, y) {
+var svgShape = function(x, y, id, DOMClass) {
     //Make it so that the svgShape class is abstract
     if (new.target === svgShape) {
         throw new TypeError("Cannot construct Abstract instance of svgShape directly");
@@ -14,7 +34,7 @@ var svgShape = function(x, y) {
     //Ensure that all subclasses implement the generateSVGString method
     if (this.generateSVGString === undefined) {
         throw new TypeError("Must override generateSVGString method of the abstract class svgShape");
-    }
+    }   
 
     /**Ensure that all subclasses implement the getCordinatesOfBottomRight method
      * Used in working out weather to exand the size of the svgShape.
@@ -25,7 +45,12 @@ var svgShape = function(x, y) {
 
     this.xPos = x;
     this.yPos = y;
+
+    this.id = id;
+    this.DOMClass = DOMClass
+
     this.nameOf = "svgShape";
+    
 }
 
 //Sub-class svgShape
@@ -37,9 +62,10 @@ class Rectangle extends svgShape {
      * @param {Number} yPos The y position of the top left coner
      * @param {Number} xLen The length of the shape in the x direction
      * @param {Number} yLen The length of the shape in the y direction
+     * @param {String} id   The id of the rectangle. 
      */
-    constructor (xPos = 0, yPos = 0, xLen = 10, yLen = 10) {
-        super(xPos, yPos);
+    constructor (xPos = 0, yPos = 0, xLen = 10, yLen = 10, id, DOMClass="Rect") {
+        super(xPos, yPos, id, DOMClass);
         this.xLen = xLen;
         this.yLen = yLen;
         this.fillColour = new Colour.colour(255,0,0);
@@ -53,9 +79,16 @@ class Rectangle extends svgShape {
  * @returns {String} returns valid svg DOM
  */
 Rectangle.prototype.generateSVGString = function() {
-    return '<rect x=' + this.xPos + ' y=' + this.yPos + ' width=' + this.xLen + ' height=' + this.yLen
-    + ' style="fill:' + this.fillColour.toHexString() + ' ;, stroke:' + this.borderColour.toHexString()
-    + ';, stroke-width: ' + this.borderWidth + '"></rect>';
+    return  '<rect id="#' + this.id +
+            '" class="' + this.DOMClass +
+            '" x=' + this.xPos +
+            ' y=' + this.yPos +
+            ' width=' + this.xLen +
+            ' height=' + this.yLen +
+            ' style="fill:' + this.fillColour.toHexString() + 
+            ';, stroke:' + this.borderColour.toHexString() +
+            ';, stroke-width: ' + this.borderWidth +
+            '"></rect>';
 }
 
 /**

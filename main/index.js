@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const url = require('url');
 
 const port = 8080;
 
@@ -16,18 +17,26 @@ const fileTypes = {
  */
 let server = http.createServer(function (req, res) {
 
-    console.log('Requested: ', req.url);
+    var parsedURL = url.parse(req.url, true);
+    console.log('Requested: ', parsedURL.pathname);
 
     //Alows assignment specific urls to files. 
-    switch (req.url) {
+    switch (parsedURL.pathname) {
         case '/':
-            fs.readFile('./index.html', function(err, indexFile) {
+            
+            fs.readFile('./index.html', function read(err, indexFile) {
                 if (err) throw err;
-
                 res.writeHead(200, {"Content-Type": "text/html"});
                 res.write(indexFile);
                 res.end();
-            })
+            });
+
+            break;
+
+        case '/route':
+            console.log('route API called with parameters: ', parsedURL.query)
+
+            break;
         default:
             fs.readFile('./' + req.url, function(err, data) {
                 if (err) {

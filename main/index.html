@@ -3,33 +3,38 @@
 <head>
 
   <link type="text/css" rel="stylesheet" href="styles/index.css"/>
-  <script src="/scripts/main.js"></script>
-
 
 </head>
 <body>
 
 <h1>Edwin's autorouter</h1>
 
-<!--Work out why this needs a container-->
-<div class="endPoint" id="start">
-  <div class="endPointPadder" id="startPadding"></div>
+<div id="grid">
+
 </div>
 
-<div class="endPoint" id="end">
-  <div class="endPointPadder" id="endPadding"></div>
+<!--Work out why this needs a container-->
+<div class="endPoint" id="startnode">
+  <div class="endPointPadder" id="startnodePadding"></div>
 </div>
+
+<div class="endPoint" id="endnode">
+  <div class="endPointPadder" id="endnodePadding"></div>
+</div>
+
+
 
 <script>
   //Make the DIV element draggagle:
-  dragElement(document.getElementById("start"));
-  dragElement(document.getElementById("end"));
+  dragElement(document.getElementById("startnode"));
+  dragElement(document.getElementById("endnode"),200,200);
 
-
-  function dragElement(elmnt) {
+  function dragElement(elmnt, startx = 100, starty = 100) {
     var newXPos = 0, newYPos = 0,
         oldXPos = 0, oldYPos = 0;
       document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
+      elmnt.style.top = (starty) + "px";
+      elmnt.style.left = (startx) + "px";
 
     function dragMouseDown(e) {
       e = e || window.event;
@@ -67,14 +72,45 @@
       document.onmousemove = null;
     }
 
-    function getRoundedMouseX (event, roundToNearest = 50) {
+    function getRoundedMouseX (event, roundToNearest = 25) {
         return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
     }
 
-    function getRoundedMouseY (event, roundToNearest = 50) {
+    function getRoundedMouseY (event, roundToNearest = 25) {
         return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
     }
   }
+
+class clientSideNet {
+  /**
+  * @pram {html} startNode
+  * @pram {html} endNode
+  */
+  constructor (startNode, endNode) {
+    this.startNode = startNode;
+    this.endNode = endNode;
+  }
+}
+
+class grid {
+  constructor (width, height, cellSize) {
+    this.width = width;
+    this.height = height;
+    this.cellSize = cellSize;
+    this.netList = [];    
+  }
+
+  addNet(net) {
+    this.netList.push(net)
+  }
+
+  update() {
+    fetch('route?test="test"')
+  }
+}
+
+let test = new grid(10,10,10);
+test.update();
 </script>
 
 </body>

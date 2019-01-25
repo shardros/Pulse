@@ -3,8 +3,8 @@
 html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
 
 body {
-    background: #eee;
-    color: #333;
+    background: rgb(240, 240, 240);
+    color: rgb(49, 49, 49);
     font-family: 'Ubuntu', sans-serif;
     position: relative;
     text-align: center;
@@ -19,19 +19,15 @@ body {
 }
   
 .endPointPadder {
-    padding: 25px;
+    padding: 12.5px;
     cursor: move;
     z-index: 10;
 }
 
-#endPadding {
-    left: 200px;
-    top: 200px;
+#endnodePadding {
     background-color: #b6211a;
 }
   
-#startPadding {
-    left: 100px;
-    top: 100px;
+#startnodePadding {
     background-color: #10af0a;
 }
