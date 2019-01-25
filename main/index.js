@@ -24,7 +24,7 @@ let server = http.createServer(function (req, res) {
     switch (parsedURL.pathname) {
         case '/':
             
-            fs.readFile('./index.html', function read(err, indexFile) {
+            fs.readFile('./main/index.html', function read(err, indexFile) {
                 if (err) throw err;
                 res.writeHead(200, {"Content-Type": "text/html"});
                 res.write(indexFile);
@@ -34,19 +34,23 @@ let server = http.createServer(function (req, res) {
             break;
 
         case '/route':
-            console.log('route API called with parameters: ', parsedURL.query);
+            console.log('Route API called with parameters: ', parsedURL.query);
             console.log('Getting body contents');
 
-            let body = '';
+            let requestBody = new String;
             req.on('data', chunk => {
-                body += chunk.toString(); // convert Buffer to string
+                requestBody += chunk.toString(); // convert Buffer to string
             });
+            
             req.on('end', () => {
-                console.log(body);
-                res.end('ok');
+                //The request has ended lets give them their new route
+                console.log(requestBody);
+
+                let reqObject = JSON.parse(requestBody);
+
+                res.end(JSON.stringify({a: 1, "content": 'recived'}));
             });
 
-            console.log(body)
 
             break;
         default:
@@ -82,19 +86,3 @@ let server = http.createServer(function (req, res) {
 }).listen(port);
 
 console.log('Sever listening on port ', port);
-
-
-
-/**http.createServer(function (req, res) {
-    //Open a file on the server and return its content:
-    fs.readFile('index.html', function(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        return res.end();
-    });
-}).listen(port);
-
- console.log('Listening on port ', port);
- */
-
-

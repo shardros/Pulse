@@ -55,6 +55,7 @@ class Grid {
   }
 
   update() {
+    
     (async () => {
       const rawResponse = await fetch('route', {
         method: 'POST',
@@ -62,11 +63,11 @@ class Grid {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-          body: JSON.stringify({a: 1, b: 'Textual content'})
+          body: JSON.stringify(this.netList)
         });
-      const content = await rawResponse.json();
+      const gridJSON = await rawResponse.json();
 
-      console.log(content);
+      console.log(gridJSON);
     })(); 
   }
 }
@@ -74,7 +75,7 @@ class Grid {
 //------------MAIN------------
 
 let start = new clientSideCell(2,2);
-let end = new clientSideCell(2,2);
+let end = new clientSideCell(4,4);
 let net = new clientSideNet(start,end);
 
 var grid = new Grid(10,10,10);
