@@ -1,4 +1,4 @@
-class colour {
+class Colour {
     /**
      * A prototype that allows storage and manipulation of colour objects
      * @param {Number} red
@@ -19,4 +19,4 @@ class colour {
         return '#' + (0x10000 * this.red + 0x100 * this.green + this.blue + 0x1000000).toString(16).substr(1);
     };
     }
-module.exports = {colour}
+module.exports = {Colour}

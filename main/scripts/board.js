@@ -149,8 +149,8 @@ Board.prototype.validCord = function (x,y) {
 
 /**
  * TODO:
- * Maybe use this to make the rest of the methods in this class functional using reduce
- * Need to ensure though that we do not hit a significant performace penalty
+ * ?Maybe use this to make the rest of the methods in this class functional using reduce
+ * ?Need to ensure though that we do not hit a significant performace penalty
  */
 Board.prototype.getNeighbours = function(Cell, diagonals) {
     let neighbours = new Array;

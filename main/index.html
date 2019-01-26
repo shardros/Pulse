@@ -43,7 +43,8 @@ class Grid {
   @pram {Number} width the height in cell units
   @pram {Number} cellSize the size in cell units
   */
-  constructor (width, height, cellSize) {
+  constructor (element, width, height, cellSize) {
+    this.element = element;
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -57,20 +58,26 @@ class Grid {
   update() {
     
     (async () => {
-      const rawResponse = await fetch('route', {
+      fetch('route', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
+          //'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
           body: JSON.stringify(this.netList)
-        });
-      const gridJSON = await rawResponse.json();
+      }).then(function (response) {
+        console.log(response);
+        response.text().then(function(body) {
 
-      console.log(gridJSON);
+          console.log(text);
+
+        });
+      });
+      
     })(); 
   }
 }
+
 
 //------------MAIN------------
 

@@ -2,13 +2,117 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 
+const nr = require('./scripts/netRouter');
+const br = require('./scripts/boardRouter')
+const b = require('./scripts/board');
+const svg = require('./scripts/svg'); 
+const colour = require('./scripts/colour');
+
 const port = 8080;
+const debug = false;
 
 const fileTypes = {
     '.html' : 'text/html',
     '.css' : 'text/css',
     '.js' : 'text/javascript'
 };
+
+/**
+ * Converts a JSON netlist into an SVG represenation of the routed board.
+ * @param {JSON} JSONData 
+ */
+var routeJSON = function(JSONData) {
+
+    let JSONnetList = JSON.parse(JSONData);
+    
+    const trackWidth = 10;
+    const boardWidth = 190;
+    const boardHeight = 90;
+    const numberOfLayers = 1;
+
+    /**If all goes to plan then this should be an array but we don't know
+     * Maybe someone evil is using the API
+     */
+    try {
+
+        var netList = []
+        let length = JSONnetList.length;
+
+        for (i = 0; i < length; i++) {
+            let start = new b.Cell( JSONnetList[i].start.x,
+                                    JSONnetList[i].start.y);
+            
+            let end = new b.Cell(   JSONnetList[i].end.x,
+                                    JSONnetList[i].end.y);
+
+            netList.push(new b.Net(start, end));
+        }
+
+    } catch {
+        throw err
+    }
+
+    board = new b.Board(boardWidth,boardHeight);
+
+    BR = new br.BoardRouter(board, netList);
+
+    let topLeft = new b.Cell(0,0);
+    let bottomRight = new b.Cell(boardWidth-1,boardHeight-1);
+
+    BR.createKeepOut(topLeft,bottomRight);
+
+    let tracks = BR.route();
+
+    var SvgMaker = new svg.Maker; 
+
+    //Shows the area on the board which have been marked as not routeable
+    for (var x = 0; x < board.width; x++) {
+        for (var y = 0; y < board.height; y++) {
+            if (!board.getCell(x,y).routeable) {
+                let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+                Rect.fillColour = new colour.Colour(0,255,255);
+                SvgMaker.addElement(Rect); 
+            }
+        }
+    }
+
+    //!For debug
+    if (debug) {
+        //Shows the area on the board marked as checked
+        for (var x = 0; x < board.width; x++) {
+            for (var y = 0; y < board.height; y++) {
+                if (board.getCell(x,y).checked) {
+                    let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+                    Rect.fillColour = new Colour.colour(44, 127, 25);
+                    SvgMaker.addElement(Rect); 
+                }
+            }
+        }
+
+        console.log('Built non routeable sections');
+    }
+
+    //Note to future me work out why this needs to be implemented like this.
+    //Display the areas on the board which represent the tracks
+    for (var track = 0; track < tracks.length; track++) {
+        for (var cell = 0; cell < tracks[track].length; cell++) {
+            let x = tracks[track][cell].x;
+            let y = tracks[track][cell].y;
+
+            let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+            SvgMaker.addElement(Rect);
+        }
+    }
+
+    return SvgMaker.getImage();
+    
+}
+
+/**
+ * ===========SERVER===========
+ */
+
+
 
 /**
  * This serves all the files in the directories located beneath the server, not great for security but I don't care so
@@ -24,7 +128,7 @@ let server = http.createServer(function (req, res) {
     switch (parsedURL.pathname) {
         case '/':
             
-            fs.readFile('./main/index.html', function read(err, indexFile) {
+            fs.readFile('./index.html', function read(err, indexFile) {
                 if (err) throw err;
                 res.writeHead(200, {"Content-Type": "text/html"});
                 res.write(indexFile);
@@ -46,9 +150,11 @@ let server = http.createServer(function (req, res) {
                 //The request has ended lets give them their new route
                 console.log(requestBody);
 
-                let reqObject = JSON.parse(requestBody);
+                let svgRes = routeJSON(requestBody);
 
-                res.end(JSON.stringify({a: 1, "content": 'recived'}));
+                console.log(svgRes);
+
+                res.end(svgRes);
             });
 
 
