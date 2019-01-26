@@ -43,8 +43,8 @@ class Grid {
   @pram {Number} width the height in cell units
   @pram {Number} cellSize the size in cell units
   */
-  constructor (element, width, height, cellSize) {
-    this.element = element;
+  constructor (gridID, width, height, cellSize) {
+    this.grid = document.getElementById(gridID);
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -55,22 +55,25 @@ class Grid {
     this.netList.push(net)
   }
 
-  update() {
-    
+  update(
     (async () => {
       fetch('route', {
+      
         method: 'POST',
         headers: {
           //'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
           body: JSON.stringify(this.netList)
+      
       }).then(function (response) {
+      
         console.log(response);
         response.text().then(function(body) {
-
-          console.log(text);
-
+          //!!!!!!!!!!-----------!!!!!!!!!!!!!
+          //USE THIS RETURN TO UPDATE THE body
+          //!!!!!!!!!!-----------!!!!!!!!!!!!
+          return body;
         });
       });
       
@@ -85,7 +88,7 @@ let start = new clientSideCell(2,2);
 let end = new clientSideCell(4,4);
 let net = new clientSideNet(start,end);
 
-var grid = new Grid(10,10,10);
+var grid = new Grid("grid",10,10,10);
 
 grid.addNet(net);
 
