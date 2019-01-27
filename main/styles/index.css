@@ -10,6 +10,10 @@ body {
     text-align: center;
 }
 
+#grid {
+    position: absolute;
+    top: 100px;
+}
 
 .endPoint {
     position: absolute;
@@ -19,7 +23,7 @@ body {
 }
   
 .endPointPadder {
-    padding: 12.5px;
+    padding: 5px;
     cursor: move;
     z-index: 10;
 }

@@ -21,11 +21,11 @@ const fileTypes = {
  * Converts a JSON netlist into an SVG represenation of the routed board.
  * @param {JSON} JSONData 
  */
-var routeJSON = function(JSONData) {
+var routeJSON = function(JSONData, cellSize) {
 
     let JSONnetList = JSON.parse(JSONData);
     
-    const trackWidth = 10;
+    const trackWidth = cellSize;
     const boardWidth = 190;
     const boardHeight = 90;
     const numberOfLayers = 1;
@@ -148,11 +148,8 @@ let server = http.createServer(function (req, res) {
             
             req.on('end', () => {
                 //The request has ended lets give them their new route
-                console.log(requestBody);
 
-                let svgRes = routeJSON(requestBody);
-
-                console.log(svgRes);
+                let svgRes = routeJSON(requestBody, parsedURL.query.cellSize);
 
                 res.end(svgRes);
             });

@@ -53,44 +53,51 @@ class Grid {
 
   addNet(net) {
     this.netList.push(net)
+    return this.netList.length - 1;
   }
 
-  update(
-    (async () => {
-      fetch('route', {
-      
-        method: 'POST',
-        headers: {
-          //'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-          body: JSON.stringify(this.netList)
-      
-      }).then(function (response) {
-      
-        console.log(response);
-        response.text().then(function(body) {
-          //!!!!!!!!!!-----------!!!!!!!!!!!!!
-          //USE THIS RETURN TO UPDATE THE body
-          //!!!!!!!!!!-----------!!!!!!!!!!!!
-          return body;
-        });
-      });
-      
-    })(); 
+  //This is quite hacky and not very OOP should fix at somepoint
+  net(id, contents) {
+    this.netList[id] = contents; 
+  }
+
+  async update() {
+    //Fetch the SVG DOM from the server but store the value as a promise
+    let resGrid = fetch('/route?cellSize=' + this.cellSize, {
+    
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.netList)
+    
+    })
+    
+    //Await for the promise to be fullied when it is set the value of the dom to be that
+    this.grid.innerHTML = await resGrid.then(response => response.text());
   }
 }
 
 
 //------------MAIN------------
 
+const cellSize = 10;
+const gridWidth = 10;
+const gridHeight = 10;
+const gridID = "grid";
+
 let start = new clientSideCell(2,2);
 let end = new clientSideCell(4,4);
 let net = new clientSideNet(start,end);
 
-var grid = new Grid("grid",10,10,10);
+var grid = new Grid(gridID,gridWidth,gridHeight,cellSize);
 
 grid.addNet(net);
+
+net.start.x = 10;
+net.start.y = 10;
+
+grid.net(0, net);
 
 grid.update();
 
@@ -142,11 +149,11 @@ function dragElement(elmnt, startx = 100, starty = 100) {
     document.onmousemove = null;
   }
 
-  function getRoundedMouseX (event, roundToNearest = 25) {
+  function getRoundedMouseX (event, roundToNearest = cellSize) {
       return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
   }
 
-  function getRoundedMouseY (event, roundToNearest = 25) {
+  function getRoundedMouseY (event, roundToNearest = cellSize) {
       return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
   }
 }
