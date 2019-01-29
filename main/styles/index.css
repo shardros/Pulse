@@ -10,11 +10,6 @@ body {
     text-align: center;
 }
 
-#grid {
-    position: absolute;
-    top: 100px;
-}
-
 .endPoint {
     position: absolute;
     z-index: 9;

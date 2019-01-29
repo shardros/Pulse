@@ -25,6 +25,8 @@ var routeJSON = function(JSONData, cellSize) {
 
     let JSONnetList = JSON.parse(JSONData);
     
+    console.log(JSONnetList);
+
     const trackWidth = cellSize;
     const boardWidth = 190;
     const boardHeight = 90;
@@ -48,7 +50,7 @@ var routeJSON = function(JSONData, cellSize) {
             netList.push(new b.Net(start, end));
         }
 
-    } catch {
+    } catch (err) {
         throw err
     }
 

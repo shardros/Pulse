@@ -7,8 +7,6 @@
 </head>
 <body>
 
-<h1>Edwin's autorouter</h1>
-
 <div id="grid">
 
 </div>
@@ -25,20 +23,60 @@
 
 
 <script>
-//Define some classes for use just here 
+//Define some functions for use just here 
+//Does cellsize work up here?
+function getRoundedMouseX (event, roundToNearest = cellSize) {
+  return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
+}
 
+function getRoundedMouseY (event, roundToNearest = cellSize) {
+  return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
+}
+
+//Make this just a data strucuture
 class clientSideCell {
-  constructor(x,y, elementID){
+  constructor(x,y,elementID){
     this.x = x;
-    this.y = y;
+    this.y = y; 
     this.elementID = elementID;
     this.el = document.getElementById(elementID);
   }
+}
 
-  dragElement(elmnt, startx = 100, starty = 100) {
-  var newXPos = 0, newYPos = 0,
+//Make this just a data strucuture
+class clientSideNet {
+  constructor(start, end, id) {
+    this.start = start;
+    this.end = end;
+    this.id = id;
+  }
+}
+
+class Grid {
+  /**
+  @pram {Number} width the width cell units
+  @pram {Number} width the height in cell units
+  @pram {Number} cellSize the size in cell units
+  */
+  constructor (gridID, width, height, cellSize) {
+    this.grid = document.getElementById(gridID);
+    this.width = width;
+    this.height = height;
+    this.cellSize = cellSize;
+    this.netList = [];    
+  }
+
+   makeDragable(cell) {
+    console.log(cell)
+    var grid = this;
+
+    var startx = cell.x * this.cellSize;
+    var starty = cell.y * this.cellSize;
+    var newXPos = 0, newYPos = 0,
       oldXPos = 0, oldYPos = 0;
-    document.getElementById(elmnt.id + "Padding").onmousedown = dragMouseDown;
+    var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
+
+    document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
     elmnt.style.top = (starty) + "px";
     elmnt.style.left = (startx) + "px";
 
@@ -62,7 +100,7 @@ class clientSideCell {
       // calculate the new cursor position:
       newXPos = oldXPos - getRoundedMouseX(e);
       newYPos = oldYPos - getRoundedMouseY(e);
-      
+        
       // set the element's new position:
       elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
       elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
@@ -76,37 +114,30 @@ class clientSideCell {
       /* stop moving when mouse button is released:*/
       document.onmouseup = null;
       document.onmousemove = null;
-    }
 
-    function getRoundedMouseX (event, roundToNearest = cellSize) {
-        return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
-    }
+      //update the cells position.
+      cell.x = Math.ceil(elmnt.offsetLeft/grid.cellSize);
+      cell.y = Math.ceil(elmnt.offsetTop/grid.cellSize);
 
-    function getRoundedMouseY (event, roundToNearest = cellSize) {
-        return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
+      grid.update();
     }
   }
-}
 
-clientSideNet = function(start, end) {
-  this.start = start;
-  this.end = end;
-}
-
-class Grid {
   /**
-  @pram {Number} width the width cell units
-  @pram {Number} width the height in cell units
-  @pram {Number} cellSize the size in cell units
-  */
-  constructor (gridID, width, height, cellSize) {
-    this.grid = document.getElementById(gridID);
-    this.width = width;
-    this.height = height;
-    this.cellSize = cellSize;
-    this.netList = [];    
-  }
+   * Inalizes a net
+   */
+  createNet(startx,starty,startEl,endx,endy,endEl) {
+    let start = new clientSideCell(startx, starty, startEl);
+    let end = new clientSideCell(endx, endy, endEl);
+    
+    this.makeDragable(start);
+    this.makeDragable(end);
 
+    let net = new clientSideNet(start,end,this.netList.length);
+    
+    this.netList.push(net);
+  }
+  
   addNet(net) {
     this.netList.push(net)
     return this.netList.length - 1;
@@ -142,18 +173,12 @@ const gridWidth = 10;
 const gridHeight = 10;
 const gridID = "grid";
 
-let start = new clientSideCell(2,2,"startnode");
-let end = new clientSideCell(4,4,"endndoe");
-let net = new clientSideNet(start,end);
+const startEl = "startnode";
+const endEl = "endnode";
 
 var grid = new Grid(gridID,gridWidth,gridHeight,cellSize);
 
-grid.addNet(net);
-
-net.start.x = 10;
-net.start.y = 10;
-
-grid.net(0, net);
+grid.createNet(2,2,startEl,3,8,endEl)
 
 grid.update();
 
