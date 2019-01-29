@@ -12,15 +12,22 @@
 </div>
 
 <!--Work out why this needs a container-->
-<div class="endPoint" id="startnode">
-  <div class="endPointPadder" id="startnodePadding"></div>
+<div class="startPoint" id="start1node">
+  <div class="startPointPadder" id="start1nodePadding"></div>
 </div>
 
-<div class="endPoint" id="endnode">
-  <div class="endPointPadder" id="endnodePadding"></div>
+<div class="endPoint" id="end1node">
+  <div class="endPointPadder" id="end1nodePadding"></div>
 </div>
 
+<!--Work out why this needs a container-->
+<div class="startPoint" id="start2node">
+  <div class="startPointPadder" id="start2nodePadding"></div>
+</div>
 
+<div class="endPoint" id="end2node">
+  <div class="endPointPadder" id="end2nodePadding"></div>
+</div>
 
 <script>
 //Define some functions for use just here 
@@ -173,12 +180,16 @@ const gridWidth = 10;
 const gridHeight = 10;
 const gridID = "grid";
 
-const startEl = "startnode";
-const endEl = "endnode";
+const startE1 = "start1node";
+const endE1 = "end1node";
+
+const startE2 = "start2node";
+const endE2 = "end2node";
 
 var grid = new Grid(gridID,gridWidth,gridHeight,cellSize);
 
-grid.createNet(2,2,startEl,3,8,endEl)
+grid.createNet(2,2,startE1,3,8,endE1)
+grid.createNet(8,8,startE2,10,10,endE2)
 
 grid.update();
 

@@ -16,6 +16,13 @@ body {
     background-color: #f1f1f1;
     text-align: center;
 }
+
+.startPoint {
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    text-align: center;
+}
   
 .endPointPadder {
     padding: 5px;
@@ -23,10 +30,16 @@ body {
     z-index: 10;
 }
 
-#endnodePadding {
+.startPointPadder {
+    padding: 5px;
+    cursor: move;
+    z-index: 10;
+}
+
+.endPointPadder {
     background-color: #b6211a;
 }
   
-#startnodePadding {
-    background-color: #10af0a;
+.startPointPadder {
+    background-color: #076803;
 }
