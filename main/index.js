@@ -28,8 +28,8 @@ var routeJSON = function(JSONData, cellSize) {
     console.log(JSONnetList);
 
     const trackWidth = cellSize;
-    const boardWidth = 190;
-    const boardHeight = 90;
+    const boardWidth = 10;
+    const boardHeight = 9;
     const numberOfLayers = 1;
 
     /**If all goes to plan then this should be an array but we don't know

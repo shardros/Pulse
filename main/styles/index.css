@@ -10,11 +10,15 @@ body {
     text-align: center;
 }
 
+button {
+    margin: 1vh;
+    padding: 1vh;
+    width: 10vw; 
+}
+
 .control-pannel {
-    position: absolute;
-    left: 0;
     margin: auto;
-    background: #a1788b
+    background: #df8fb4
 }
 
 .endPoint {
@@ -54,7 +58,8 @@ body {
 @supports (display: grid) {
     .grid-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 5fr;
+        grid-template-rows: 1fr auto;
         grid-template-areas:
         "titleHeader titleHeader"
         "controlPannel boardGrid";
@@ -62,13 +67,20 @@ body {
 
     .control-pannel {
         grid-area: controlPannel;
+        width: 100%;
+        height: 90vh;
     }
 
     .board {
         grid-area: boardGrid;
+        background: #dada86;
+        z-index: -9;
+        max-width: 50%;
+        max-height: 50%;
     }
 
     .title {
         grid-area: titleHeader;
+        background: #c0ffee;
     }
 }
