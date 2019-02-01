@@ -11,6 +11,8 @@ const colour = require('./scripts/colour');
 const port = 8080;
 const debug = false;
 
+const indexLocation = "./index.html"
+
 const fileTypes = {
     '.html' : 'text/html',
     '.css' : 'text/css',
@@ -130,7 +132,7 @@ let server = http.createServer(function (req, res) {
     switch (parsedURL.pathname) {
         case '/':
             
-            fs.readFile('./index.html', function read(err, indexFile) {
+            fs.readFile(indexLocation, function read(err, indexFile) {
                 if (err) throw err;
                 res.writeHead(200, {"Content-Type": "text/html"});
                 res.write(indexFile);
@@ -151,7 +153,7 @@ let server = http.createServer(function (req, res) {
             req.on('end', () => {
                 //The request has ended lets give them their new route
 
-                let svgRes = routeJSON(requestBody, parsedURL.query.cellSize);
+                let svgRes = routeJSON(requestBody, parseInt(parsedURL.query.cellSize));
 
                 res.end(svgRes);
             });

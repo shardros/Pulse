@@ -88,7 +88,7 @@ Rectangle.prototype.getCordinatesOfBottomRight = function() {
  * @param {Number} _height 
  * @param {Boolean} overflows Controlls weather the SVG resizes to make sure that none of its elements overflow.
  */
-var Maker = function(_width=500, _height=500, overflows=false) {
+var Maker = function(_width=500, _height=500, overflows=true) {
     this.footer = "</svg>"
 
     /**
