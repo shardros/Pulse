@@ -110,7 +110,7 @@ BoardRouter.prototype.route = function() {
         try {        
             let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
             tracks.push(myNetRouter.route());
-        } catch {
+        } catch (err) {
             console.log('Net Route Failed');
         }
     }
