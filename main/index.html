@@ -3,30 +3,42 @@
 <head>
 
   <link type="text/css" rel="stylesheet" href="styles/index.css"/>
-
+  <meta charset="utf-8"/>
 </head>
 <body>
 
-<div id="grid">
+  
+<div class="grid-container">
+  
+  <div class="title">
+    <h1>Edwin's autorouter</h1>
+  </div>
 
-</div>
+  <div class="control-pannel">
+    <h2>Control-pannel</h2>
+  </div>
 
-<!--Work out why this needs a container-->
-<div class="startPoint" id="start1node">
-  <div class="startPointPadder" id="start1nodePadding"></div>
-</div>
+  <div id="board">
 
-<div class="endPoint" id="end1node">
-  <div class="endPointPadder" id="end1nodePadding"></div>
-</div>
+  </div>
 
-<!--Work out why this needs a container-->
-<div class="startPoint" id="start2node">
-  <div class="startPointPadder" id="start2nodePadding"></div>
-</div>
+  <!--Work out why this needs a container-->
+  <div class="startPoint" id="start1node">
+    <div class="startPointPadder" id="start1nodePadding"></div>
+  </div>
 
-<div class="endPoint" id="end2node">
-  <div class="endPointPadder" id="end2nodePadding"></div>
+  <div class="endPoint" id="end1node">
+    <div class="endPointPadder" id="end1nodePadding"></div>
+  </div>
+
+  <!--Work out why this needs a container-->
+  <div class="startPoint" id="start2node">
+    <div class="startPointPadder" id="start2nodePadding"></div>
+  </div>
+
+  <div class="endPoint" id="end2node">
+    <div class="endPointPadder" id="end2nodePadding"></div>
+  </div>
 </div>
 
 <script>
@@ -84,7 +96,7 @@ class Grid {
     var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
 
     document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
-    elmnt.style.top = (starty) + "px";
+    elmnt.style.top = (starty) + 37 + "px";
     elmnt.style.left = (startx) + "px";
 
     function dragMouseDown(e) {
@@ -124,7 +136,7 @@ class Grid {
 
       //update the cells position.
       cell.x = Math.ceil(elmnt.offsetLeft/grid.cellSize);
-      cell.y = Math.ceil(elmnt.offsetTop/grid.cellSize);
+      cell.y = Math.ceil(elmnt.offsetTop/grid.cellSize) - 4;
 
       grid.update();
     }
@@ -178,7 +190,7 @@ class Grid {
 const cellSize = 10;
 const gridWidth = 10;
 const gridHeight = 10;
-const gridID = "grid";
+const gridID = "board";
 
 const startE1 = "start1node";
 const endE1 = "end1node";

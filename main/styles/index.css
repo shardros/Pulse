@@ -10,6 +10,13 @@ body {
     text-align: center;
 }
 
+.control-pannel {
+    position: absolute;
+    left: 0;
+    margin: auto;
+    background: #a1788b
+}
+
 .endPoint {
     position: absolute;
     z-index: 9;
@@ -42,4 +49,26 @@ body {
   
 .startPointPadder {
     background-color: #076803;
+}
+
+@supports (display: grid) {
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        grid-template-areas:
+        "titleHeader titleHeader"
+        "controlPannel boardGrid";
+    }
+
+    .control-pannel {
+        grid-area: controlPannel;
+    }
+
+    .board {
+        grid-area: boardGrid;
+    }
+
+    .title {
+        grid-area: titleHeader;
+    }
 }
