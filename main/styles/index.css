@@ -3,7 +3,7 @@
 html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
 
 body {
-    background: rgb(240, 240, 240);
+    background: rgb(49, 49, 49);
     color: rgb(49, 49, 49);
     font-family: 'Ubuntu', sans-serif;
     position: relative;
@@ -21,38 +21,31 @@ button {
     background: #df8fb4
 }
 
-.endPoint {
-    position: absolute;
-    z-index: 9;
-    background-color: #f1f1f1;
-    text-align: center;
-}
-
-.startPoint {
+.Point {
     position: absolute;
     z-index: 9;
     background-color: #f1f1f1;
     text-align: center;
 }
   
-.endPointPadder {
+.PointPadder {
     padding: 5px;
     cursor: move;
     z-index: 10;
 }
 
-.startPointPadder {
+.PointPadder {
     padding: 5px;
     cursor: move;
     z-index: 10;
 }
 
 .endPointPadder {
-    background-color: #b6211a;
+    background-color: #2ec011;
 }
   
 .startPointPadder {
-    background-color: #076803;
+    background-color: #18aa13;
 }
 
 svg {

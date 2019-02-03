@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-  <link type="text/css" rel="stylesheet" href="styles/index.css"/>
   <meta charset="utf-8"/>
+  <link type="text/css" rel="stylesheet" href="styles/index.css"/>
 </head>
 <body>
 
@@ -25,24 +24,10 @@
 
   </div>
 
-
-  <!--Work out why this needs a container-->
-  <div class="startPoint" id="start1node">
-    <div class="startPointPadder" id="start1nodePadding"></div>
+  <div id="node-container">
+    <!--Work out why the cells need a container/padder-->
   </div>
 
-  <div class="endPoint" id="end1node">
-    <div class="endPointPadder" id="end1nodePadding"></div>
-  </div>
-
-  <!--Work out why this needs a container-->
-  <div class="startPoint" id="start2node">
-    <div class="startPointPadder" id="start2nodePadding"></div>
-  </div>
-
-  <div class="endPoint" id="end2node">
-    <div class="endPointPadder" id="end2nodePadding"></div>
-  </div>
 </div>
 
 <script>
@@ -58,11 +43,27 @@ function getRoundedMouseY (event, roundToNearest = cellSize) {
 
 //Make this just a data strucuture
 class clientSideCell {
-  constructor(x,y,elementID){
+  constructor(x,y){
+    //Initalize parameters
     this.x = x;
     this.y = y; 
+  }
+
+  buildDOM (elementID) {
+    var cellPadder = document.createElement("div");
+    cellPadder.className = "PointPadder";
+    cellPadder.id = elementID + "Padding";
+
+    var cell = document.createElement("div");
+    cell.className = "Point";
+    cell.id = elementID;
+
+    cell.appendChild(cellPadder);
+    
+    this.el = cell;
     this.elementID = elementID;
-    this.el = document.getElementById(elementID);
+
+    return cell;
   }
 }
 
@@ -75,14 +76,17 @@ class clientSideNet {
   }
 }
 
+//The names of the local varibles in this class are messy, this.grid describes the board etc.
 class Grid {
   /**
   @pram {Number} width the width cell units
   @pram {Number} width the height in cell units
   @pram {Number} cellSize the size in cell units
   */
-  constructor (gridID, width, height, cellSize) {
+  constructor (gridID, endPointContainerID, width, height, cellSize) {
     this.grid = document.getElementById(gridID);
+    console.log(endPointContainerID)
+    this.endPointContainer = document.getElementById(endPointContainerID);
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -90,7 +94,6 @@ class Grid {
   }
 
    makeDragable(cell) {
-    console.log(cell)
     var grid = this;
 
     var startx = cell.x * this.cellSize;
@@ -155,10 +158,18 @@ class Grid {
   /**
    * Inalizes a net
    */
-  createNet(startx,starty,startEl,endx,endy,endEl) {
-    let start = new clientSideCell(startx, starty, startEl);
-    let end = new clientSideCell(endx, endy, endEl);
+  createNet(startx,starty,endx,endy) {
+    let start = new clientSideCell(startx, starty);
+    let end = new clientSideCell(endx, endy);
+
+    this.endPointContainer.appendChild(
+      start.buildDOM("start" + this.netList.length));
     
+    this.endPointContainer.appendChild(
+    end.buildDOM("end" + this.netList.length));
+
+    console.log(this.endPointContainer)
+
     this.makeDragable(start);
     this.makeDragable(end);
 
@@ -200,18 +211,13 @@ class Grid {
 const cellSize = 10;
 const gridWidth = 100;
 const gridHeight = 100;
+const nodeContainerID = "node-container";
 const gridID = "board";
 
-const startE1 = "start1node";
-const endE1 = "end1node";
+var grid = new Grid(gridID,nodeContainerID,gridWidth,gridHeight,cellSize);
 
-const startE2 = "start2node";
-const endE2 = "end2node";
-
-var grid = new Grid(gridID,gridWidth,gridHeight,cellSize);
-
-grid.createNet(2,2,startE1,3,8,endE1)
-grid.createNet(8,8,startE2,10,10,endE2)
+grid.createNet(2,2,3,8)
+grid.createNet(8,8,10,10)
 
 grid.update();
 

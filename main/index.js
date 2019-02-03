@@ -75,7 +75,7 @@ var routeJSON = function(JSONData, cellSize) {
         for (var y = 0; y < board.height; y++) {
             if (!board.getCell(x,y).routeable) {
                 let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
-                Rect.fillColour = new colour.Colour(0,255,255);
+                Rect.fillColour = new colour.Colour(0,124,174);
                 SvgMaker.addElement(Rect); 
             }
         }
@@ -105,6 +105,7 @@ var routeJSON = function(JSONData, cellSize) {
             let y = tracks[track][cell].y;
 
             let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+            Rect.fillColour = new colour.Colour(0,0,124)
             SvgMaker.addElement(Rect);
         }
     }
