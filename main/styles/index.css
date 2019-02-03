@@ -34,20 +34,6 @@ button {
     z-index: 10;
 }
 
-.PointPadder {
-    padding: 5px;
-    cursor: move;
-    z-index: 10;
-}
-
-.endPointPadder {
-    background-color: #2ec011;
-}
-  
-.startPointPadder {
-    background-color: #18aa13;
-}
-
 svg {
     position: relative;
     float: left;
