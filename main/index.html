@@ -100,8 +100,14 @@ class Grid {
     var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
 
     document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
-    elmnt.style.top = (starty) + 37 + "px";
-    elmnt.style.left = (startx) + "px";
+    
+    elmnt.style.top = (starty)
+                    + this.grid.getBoundingClientRect().top
+                    + "px";
+    
+    elmnt.style.left = (startx)
+                    + this.grid.getBoundingClientRect().left
+                    + "px";
 
     function dragMouseDown(e) {
       e = e || window.event;
@@ -140,7 +146,7 @@ class Grid {
 
       //update the cells position.
       cell.x = Math.ceil(elmnt.offsetLeft/grid.cellSize);
-      cell.y = Math.ceil(elmnt.offsetTop/grid.cellSize) - 4;
+      cell.y = Math.ceil(elmnt.offsetTop/grid.cellSize);
 
       grid.update();
     }
@@ -192,8 +198,8 @@ class Grid {
 //------------MAIN------------
 
 const cellSize = 10;
-const gridWidth = 10;
-const gridHeight = 10;
+const gridWidth = 100;
+const gridHeight = 100;
 const gridID = "board";
 
 const startE1 = "start1node";

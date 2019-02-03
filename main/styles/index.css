@@ -55,6 +55,11 @@ button {
     background-color: #076803;
 }
 
+svg {
+    position: relative;
+    float: left;
+}
+
 @supports (display: grid) {
     .grid-container {
         display: grid;

@@ -30,8 +30,9 @@ var routeJSON = function(JSONData, cellSize) {
     console.log(JSONnetList);
 
     const trackWidth = cellSize;
-    const boardWidth = 10;
-    const boardHeight = 9;
+    //Make this come from client side
+    const boardWidth = 80;
+    const boardHeight = 80;
     const numberOfLayers = 1;
 
     /**If all goes to plan then this should be an array but we don't know
