@@ -266,6 +266,11 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
  */
 Board.prototype.getManhattan = function(cell1, cell2) {
     //Pythagouses theorem to get the Manhattan distance
+    console.log(abs(cell1.x-cell2.x) + abs(cell1.y-cell2.y));
+    return (abs(cell1.x-cell2.x) + abs(cell1.y-cell2.y));
+}
+
+Board.prototype.getEuclidean = function(cell1, cell2) {
     return Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
 }
 
