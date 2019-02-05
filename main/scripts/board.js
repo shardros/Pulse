@@ -38,7 +38,7 @@ function Cell (x,y,layer=1,routeable=true) {
      */
     this.tracked = false;
 
-    this.controllingNetID = null;
+    this.controllingNetID = new Array;
 }
 
 
@@ -282,7 +282,10 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, co
 }
 
 Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false) {
-    this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = true});
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+        neighbour.routeable = true
+
+    });
 }
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {
