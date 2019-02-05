@@ -10,32 +10,35 @@
  * @param {Boolean} routeable 
  */
 function Cell (x,y,layer=1,routeable=true) {
-        
-        /**
-         * @type {number}
-         */
-        this.x = x;
-        
-        /**
-         * @type {number}
-         */
-        this.y = y;
+    
+    /**
+     * @type {number}
+     */
+    this.x = x;
+    
+    /**
+     * @type {number}
+     */
+    this.y = y;
 
-        /**
-         * @type {number}
-         */
-        this.layer = layer;
+    /**
+     * This can be deleted now
+     * @type {number}
+     */
+    this.layer = layer;
 
-        /**
-         * @type {boolean}
-         */
-        this.routeable = routeable;
-        /**
-         * If the Cell has a track going through it.
-         * Defaults to false because at start of day we have no tracks
-         * @type {boolean}
-         */
-        this.tracked = false;
+    /**
+     * @type {boolean}
+     */
+    this.routeable = routeable;
+    /**
+     * If the Cell has a track going through it.
+     * Defaults to false because at start of day we have no tracks
+     * @type {boolean}
+     */
+    this.tracked = false;
+
+    this.controllingNetID = null;
 }
 
 
@@ -271,8 +274,11 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
  */
-Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false) {
-    this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = false});
+Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, controllingNetID=null) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+        neighbour.routeable = false;
+        neighbour.controllingNetID.push(controllingNetID);
+    });
 }
 
 Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false) {
