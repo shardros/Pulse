@@ -81,7 +81,7 @@ BoardRouter.prototype.flood = function(Cell) {
             //Gets the routeable neighbours and pushes them to the unchecked list
 
             this.board.getNeighbours(current).forEach(cell => {
-                if (cell.routeable) {unchecked.push(cell)}
+                if (cell.routeable) { unchecked.push(cell) }
             });
             
             current.routeable = false;
@@ -105,6 +105,12 @@ BoardRouter.prototype.route = function() {
     this.netList.sort((cellA, cellB) =>
         cellA.manhattanLength() - cellB.manhattanLength()
     );
+
+    this.netList.forEach(cell => console.log(cell));
+    this.netList.forEach(net => { 
+        this.board.markNeighboursAsUnrouteable(net.startCell,true)
+        this.board.markNeighboursAsUnrouteable(net.endCell,true)
+    });
 
     for (var i = 0; i < this.netList.length; i++) {
         try {        

@@ -193,19 +193,8 @@ Board.prototype.getNeighbours = function(Cell, diagonals) {
 }
 
 /**
- * Returns a list of the Neighbours of a Cell, if the cell is valid it will return the cell's neighbours object
- * if not it will return null in the place of the list
- * The function returns an list with the indexs as follows 
- * assuming that all the neighbouring cells are valid.
- * 
- * +---+---+---+
- * |   | 0 |   |
- * +---+---+---+
- * | 3 | X | 1 |
- * +---+---+---+
- * |   | 2 |   |
- * +---+---+---+
- * 
+ * Returns a list of the Neighbours of a Cell, if the 
+ * cell is valid it will return the cell's neighbours object
  * @param {Cell} Cell 
  */
 Board.prototype.getValidNeighbours = function (Cell){
@@ -260,12 +249,21 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
 }
 
 /**
- * Gets the manhattan distance (the smallest distance possible) between two cells
+ * Gets the manhattan distance between two cells
  * @param {BoardObject.Cell} cell1 Cells for distance to be found between
  * @param {BoardObject.Cell} cell2 Cells for distance to be found between
  */
 Board.prototype.getManhattan = function(cell1, cell2) {
     //Pythagouses theorem to get the Manhattan distance
+    return (Math.abs(cell1.x-cell2.x) + Math.abs(cell1.y-cell2.y));
+}
+
+/**
+ * 
+ * @param {BoardObject.Cell} cell1 
+ * @param {BoardObject.Cell} cell2 
+ */
+Board.prototype.getEuclidean = function(cell1, cell2) {
     return Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
 }
 
@@ -273,8 +271,12 @@ Board.prototype.getManhattan = function(cell1, cell2) {
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
  */
-Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals) {
+Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = false});
+}
+
+Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = true});
 }
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {
