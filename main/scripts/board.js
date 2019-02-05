@@ -271,8 +271,12 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
  */
-Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals) {
+Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = false});
+}
+
+Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {neighbour.routeable = true});
 }
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {

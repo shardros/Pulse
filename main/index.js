@@ -8,7 +8,7 @@ const b = require('./scripts/board');
 const svg = require('./scripts/svg'); 
 const colour = require('./scripts/colour');
 
-const port = 8080;
+const port = 1337;
 const debug = false;
 
 const indexLocation = "./index.html"

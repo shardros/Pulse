@@ -40,7 +40,12 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
+        B.markNeighboursAsRouteable(this.startCell,true);
+        B.markNeighboursAsRouteable(this.endCell,true);
+
+
         this._toCheck.push(this.net.startCell);
+
 
         //While there are still possible cells that there could be a route for.
         while (!this._toCheck.empty()) {

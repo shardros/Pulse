@@ -106,6 +106,12 @@ BoardRouter.prototype.route = function() {
         cellA.manhattanLength() - cellB.manhattanLength()
     );
 
+    this.netList.forEach(cell => console.log(cell));
+    this.netList.forEach(net => { 
+        this.board.markNeighboursAsUnrouteable(net.startCell,true)
+        this.board.markNeighboursAsUnrouteable(net.endCell,true)
+    });
+
     for (var i = 0; i < this.netList.length; i++) {
         try {        
             let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
