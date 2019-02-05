@@ -52,7 +52,6 @@ class Grid {
     */
     constructor (gridID, endPointContainerID, width, height, cellSize) {
         this.grid = document.getElementById(gridID);
-        console.log(endPointContainerID)
         this.endPointContainer = document.getElementById(endPointContainerID);
         this.width = width;
         this.height = height;
@@ -65,8 +64,10 @@ class Grid {
 
         var startx = cell.x * this.cellSize;
         var starty = cell.y * this.cellSize;
-        var newXPos = 0, newYPos = 0,
-        oldXPos = 0, oldYPos = 0;
+        var newXPos = 0;
+        var newYPos = 0;
+        var oldXPos = 0;
+        var oldYPos = 0;
         var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
 
         document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
@@ -79,46 +80,45 @@ class Grid {
                         + this.grid.getBoundingClientRect().left
                         + "px";
 
-        function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();   //Prevents the default method from running
-
-        // get the mouse cursor position at startup:
-        oldXPos = getRoundedMouseX(e);
-        oldYPos = getRoundedMouseY(e);
-
-        document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
-
-        document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
-        }
-
+                        
         function elementDrag(e) {
-        e = e || window.event; //Work out what this does
-        e.preventDefault();
-        
-        // calculate the new cursor position:
-        newXPos = oldXPos - getRoundedMouseX(e);
-        newYPos = oldYPos - getRoundedMouseY(e);
+            e.preventDefault();
             
-        // set the element's new position:
-        elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
+            // calculate the new cursor position:
+            newXPos = oldXPos - getRoundedMouseX(e);
+            newYPos = oldYPos - getRoundedMouseY(e);
+            
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - newYPos) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - newXPos) + "px";
+            
+            //Update the old positions
+            oldXPos = getRoundedMouseX(e);
+            oldYPos = getRoundedMouseY(e);
+        }
         
-        //Update the old positions
-        oldXPos = getRoundedMouseX(e);
-        oldYPos = getRoundedMouseY(e);
+        function dragMouseDown(e) {
+            e.preventDefault();   //Prevents the default method from running
+
+            // get the mouse cursor position at startup:
+            oldXPos = getRoundedMouseX(e);
+            oldYPos = getRoundedMouseY(e);
+
+            document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
+
+            document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
         }
 
-        function closeDragElement() {
-        /* stop moving when mouse button is released:*/
-        document.onmouseup = null;
-        document.onmousemove = null;
+            function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
 
-        //update the cells position.
-        cell.x = Math.ceil((elmnt.offsetLeft - grid.grid.getBoundingClientRect().left)/grid.cellSize  );
-        cell.y = Math.ceil((elmnt.offsetTop - grid.grid.getBoundingClientRect().top)/grid.cellSize) ;
+            //update the cells position.
+            cell.x = Math.ceil((elmnt.offsetLeft - grid.grid.getBoundingClientRect().left)/grid.cellSize  );
+            cell.y = Math.ceil((elmnt.offsetTop - grid.grid.getBoundingClientRect().top)/grid.cellSize) ;
 
-        grid.update();
+            grid.update();
         }
     }
 

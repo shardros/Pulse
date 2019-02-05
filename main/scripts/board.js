@@ -193,19 +193,8 @@ Board.prototype.getNeighbours = function(Cell, diagonals) {
 }
 
 /**
- * Returns a list of the Neighbours of a Cell, if the cell is valid it will return the cell's neighbours object
- * if not it will return null in the place of the list
- * The function returns an list with the indexs as follows 
- * assuming that all the neighbouring cells are valid.
- * 
- * +---+---+---+
- * |   | 0 |   |
- * +---+---+---+
- * | 3 | X | 1 |
- * +---+---+---+
- * |   | 2 |   |
- * +---+---+---+
- * 
+ * Returns a list of the Neighbours of a Cell, if the 
+ * cell is valid it will return the cell's neighbours object
  * @param {Cell} Cell 
  */
 Board.prototype.getValidNeighbours = function (Cell){
@@ -260,16 +249,20 @@ Board.prototype.getCellAndAllNeighbours = function(Cell) {
 }
 
 /**
- * Gets the manhattan distance (the smallest distance possible) between two cells
+ * Gets the manhattan distance between two cells
  * @param {BoardObject.Cell} cell1 Cells for distance to be found between
  * @param {BoardObject.Cell} cell2 Cells for distance to be found between
  */
 Board.prototype.getManhattan = function(cell1, cell2) {
     //Pythagouses theorem to get the Manhattan distance
-    console.log(abs(cell1.x-cell2.x) + abs(cell1.y-cell2.y));
-    return (abs(cell1.x-cell2.x) + abs(cell1.y-cell2.y));
+    return (Math.abs(cell1.x-cell2.x) + Math.abs(cell1.y-cell2.y));
 }
 
+/**
+ * 
+ * @param {BoardObject.Cell} cell1 
+ * @param {BoardObject.Cell} cell2 
+ */
 Board.prototype.getEuclidean = function(cell1, cell2) {
     return Math.sqrt(Math.pow(cell1.x-cell2.x, 2) + Math.pow(cell1.y-cell2.y, 2));
 }

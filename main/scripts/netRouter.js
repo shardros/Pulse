@@ -88,7 +88,7 @@ NetRouter = class {
                 let ng = cell.g + 1; //neighbough g -> ng
 
                 //Is there a route to that cell that we don't know about
-                if (!neighbour.checked || ng < neighbour.g) {
+                if (ng < neighbour.g || !neighbour.checked) {
                     neighbour.super = cell;
                     
                     
