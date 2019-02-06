@@ -273,6 +273,8 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
 /**
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
+ * 
+ * CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
  */
 Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, controllingNetID=null) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
@@ -281,10 +283,18 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, co
     });
 }
 
-Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false) {
+/**
+ * Change this to a for loop for SPEEEEEEEEEEEEEEED
+ * @param {*} Cell 
+ * @param {*} diagonals 
+ * @param {*} ID 
+ */
+Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
-        neighbour.routeable = true
-
+        if (neighbour.controllingNetID.includes(ID)) {
+            console.log('LOOK AT THIS', {neighbour});
+            neighbour.routeable = true;
+        }
     });
 }
 

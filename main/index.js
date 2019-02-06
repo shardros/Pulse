@@ -11,7 +11,8 @@ const colour = require('./scripts/colour');
 const port = 1337;
 const debug = false;
 
-const indexLocation = "./index.html"
+const path = "."
+const indexLocation = "/index.html"
 
 const fileTypes = {
     '.html' : 'text/html',
@@ -132,9 +133,9 @@ let server = http.createServer(function (req, res) {
 
     //Alows assignment specific urls to files. 
     switch (parsedURL.pathname) {
-        case '/':
+        case ('/'):
             
-            fs.readFile(indexLocation, function read(err, indexFile) {
+            fs.readFile(path + indexLocation, function read(err, indexFile) {
                 if (err) throw err;
                 res.writeHead(200, {"Content-Type": "text/html"});
                 res.write(indexFile);
@@ -143,7 +144,7 @@ let server = http.createServer(function (req, res) {
 
             break;
 
-        case '/route':
+        case ('/route'):
             console.log('Route API called with parameters: ', parsedURL.query);
             console.log('Getting body contents');
 
@@ -163,7 +164,7 @@ let server = http.createServer(function (req, res) {
 
             break;
         default:
-            fs.readFile('./' + req.url, function(err, data) {
+            fs.readFile('./' + path + req.url, function(err, data) {
                 if (err) {
                     console.log ('file not found: ' + req.url);
                     res.writeHead(404, "Not Found");

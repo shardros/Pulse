@@ -10,10 +10,11 @@ NetRouter = class {
      * @param {Net} net The net to be routed
      * @param {Number} heuristicWeight the weight of the heuristic
      */
-    constructor(board, net, heuristicWeight) {   
+    constructor(board, net, heuristicWeight, ID) {   
         this.board = board;
         this.net = net;
-        this.heuristicWeight = heuristicWeight; 
+        this.heuristicWeight = heuristicWeight;
+        this.ID = ID; 
 
         /** Create a new heap which sorts the entities by the difference in their f values,
          *  where f = g + h
@@ -40,8 +41,10 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
-        B.markNeighboursAsRouteable(this.startCell,true);
-        B.markNeighboursAsRouteable(this.endCell,true);
+        console.log(this.ID)
+
+        B.markNeighboursAsRouteable(this.startCell,true,this.ID);
+        B.markNeighboursAsRouteable(this.endCell,true,this.ID);
 
 
         this._toCheck.push(this.net.startCell);
@@ -64,7 +67,7 @@ NetRouter = class {
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markNeighboursAsUnrouteable(current, true);
+                    B.markNeighboursAsUnrouteable(current, true, this.ID);
                     
                     current = current.super;
                     
@@ -73,7 +76,7 @@ NetRouter = class {
                     
                 } while (current != this.startCell)
                 
-                B.markNeighboursAsUnrouteable(this.startCell, true);
+                B.markNeighboursAsUnrouteable(this.startCell, true, this.ID);
 
                 this.cleanUp();
                 

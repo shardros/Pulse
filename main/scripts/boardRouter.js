@@ -100,21 +100,29 @@ BoardRouter.prototype.flood = function(Cell) {
  * A function decide which order the nets are to be routed in
  */
 BoardRouter.prototype.route = function() {
+    const hurestristicWeight = 2; 
+    
     let tracks = new Array;
 
+    //If i have to go through the list any ways then this is linner time and I could
+    //Implement my own sorting algorithium
     this.netList.sort((cellA, cellB) =>
         cellA.manhattanLength() - cellB.manhattanLength()
     );
 
-    this.netList.forEach(cell => console.log(cell));
-    this.netList.forEach(net => { 
-        this.board.markNeighboursAsUnrouteable(net.startCell,true)
-        this.board.markNeighboursAsUnrouteable(net.endCell,true)
+    this.netList.forEach((net, i) => {
+        net.id = i;
+        this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id)
+        this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id)
     });
 
     for (var i = 0; i < this.netList.length; i++) {
         try {        
-            let myNetRouter = new NetRouter(this.board, this.netList[i], 2);
+            this.netList[i].id = i; 
+            let myNetRouter = new NetRouter(this.board, 
+                                            this.netList[i],
+                                            hurestristicWeight,
+                                            this.netList[i].id);
             tracks.push(myNetRouter.route());
         } catch (err) {
             console.log('Net Route Failed');
