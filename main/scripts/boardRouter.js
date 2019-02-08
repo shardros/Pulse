@@ -100,7 +100,7 @@ BoardRouter.prototype.flood = function(Cell) {
  * A function decide which order the nets are to be routed in
  */
 BoardRouter.prototype.route = function() {
-    const hurestristicWeight = 2; 
+    const hurestristicWeight = 100; //DO NOT TOUCH
     
     let tracks = new Array;
 

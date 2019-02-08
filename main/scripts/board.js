@@ -291,9 +291,13 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, co
  */
 Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
-        if (neighbour.controllingNetID.includes(ID)) {
-            console.log('LOOK AT THIS', {neighbour});
-            neighbour.routeable = true;
+        let pos = neighbour.controllingNetID.indexOf(ID);
+        if (pos > -1) {
+            neighbour.controllingNetID.splice(pos, 1);
+            console.log(neighbour.controllingNetID)
+            if (neighbour.controllingNetID.length == 0) {
+                neighbour.routeable = true;
+            }
         }
     });
 }

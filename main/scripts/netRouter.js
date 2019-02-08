@@ -41,8 +41,6 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
-        console.log(this.ID)
-
         B.markNeighboursAsRouteable(this.startCell,true,this.ID);
         B.markNeighboursAsRouteable(this.endCell,true,this.ID);
 
