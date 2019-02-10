@@ -48,11 +48,10 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
   }
 
   //Maybe make an abstract class for these two
-  class clientSideFlood {
+  class clientsideKeepout {
       constructor(start, end, id) {
         this.start = start;
         this.end = end;
-        this.id = id;
       }
   }
   
@@ -73,21 +72,23 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         this.cellSize = cellSize;
         this.netList = [];    
         this.floodList = [];
+        this.keepoutList = [];
     }
 
-    makeDragable(cell) {
+    makeInteractable(cell, deleteCallBack) {
         var grid = this;
-
         var startx = cell.x * this.cellSize;
         var starty = cell.y * this.cellSize;
         var newXPos = 0;
         var newYPos = 0;
         var oldXPos = 0;
         var oldYPos = 0;
-        var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
+        var elmnt = cell.el; //IS THIS LINE USED? el is standard shorthand for element in web frameoworks
 
+        //Overide default method
         document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
         
+        //Offset by the correct amount given css grid layout
         elmnt.style.top = (starty)
                         + this.grid.getBoundingClientRect().top
                         + "px";
@@ -95,9 +96,28 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         elmnt.style.left = (startx)
                         + this.grid.getBoundingClientRect().left
                         + "px";
-
                         
+        function dragMouseDown(e) {
+            e.preventDefault();   //Prevents the default method from running
+
+            // get the mouse cursor position at startup:
+            oldXPos = getRoundedMouseX(e);
+            oldYPos = getRoundedMouseY(e);
+
+            /**
+             * If the control key is down then the user wants to delete this item
+             */ 
+            if (e.ctrlKey) {
+                deleteCallBack()
+                grid.update();
+            } else {
+                document.onmouseup = stopDragging;  //Override the onmouseupmethod
+                document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
+            }
+        } 
+
         function elementDrag(e) {
+            //Does this do anything???
             e.preventDefault();
             
             // calculate the new cursor position:
@@ -113,19 +133,8 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             oldYPos = getRoundedMouseY(e);
         }
         
-        function dragMouseDown(e) {
-            e.preventDefault();   //Prevents the default method from running
 
-            // get the mouse cursor position at startup:
-            oldXPos = getRoundedMouseX(e);
-            oldYPos = getRoundedMouseY(e);
-
-            document.onmouseup = closeDragElement;  //Assign the on mouseup method to closeDragElement
-
-            document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
-        }
-
-            function closeDragElement() {
+        function stopDragging() {
             /* stop moving when mouse button is released:*/
             document.onmouseup = null;
             document.onmousemove = null;
@@ -144,21 +153,36 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     createNet(startx,starty,endx,endy) {
         let start = new clientSideCell(startx, starty);
         let end = new clientSideCell(endx, endy);
+        let startID = "start" + this.netList.length;
+        let endID = "end" + this.netList.length;
 
         this.endPointContainer.appendChild(
-            start.buildDOM("start" + this.netList.length)
+            start.buildDOM(startID)
         );
         
         this.endPointContainer.appendChild(
-            end.buildDOM("end" + this.netList.length)
+            end.buildDOM(endID)
         );
 
-        this.makeDragable(start);
-        this.makeDragable(end);
-
-        let net = new clientSideNet(start,end,this.netList.length);
+        let net = new clientSideNet(start,end);
         
-        this.netList.push(net);
+        this.makeInteractable(start,deleteCallBack);
+        this.makeInteractable(end,deleteCallBack);
+
+        let netList = this.netList
+        netList.push(net);
+
+        function deleteCallBack() {
+            console.log("delete call back called")
+            start.el.remove(); //Remove the Dom
+            end.el.remove();
+            var index = netList.indexOf(net);
+            if (index > -1) {
+                netList.splice(index, 1);
+            }
+        }
+        
+
     }
 
     createFlood(x,y) {
@@ -168,29 +192,29 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             cell.buildDOM("flood","flood")
         )
 
-        this.makeDragable(cell);
+        this.makeInteractable(cell);
 
         this.floodList.push(cell);
     }
 
-    createKeepout() {
+    createKeepout(startx, starty, endx, endy) {
         let start = new clientSideCell(startx, starty);
         let end = new clientSideCell(endx, endy);
 
-        this.endPointContainer.appendChild(
-            start.buildDOM("start" + this.keepoutList.length)
+        this.keepoutContainer.appendChild(
+            start.buildDOM("keepoutStart" + this.keepoutList.length,"keepout")
         );
         
-        this.endPointContainer.appendChild(
-            end.buildDOM("end" + this.keepoutList.length)
+        this.keepoutContainer.appendChild(
+            end.buildDOM("keepoutEnd" + this.keepoutList.length,"keepout")
         );
 
-        this.makeDragable(start);
-        this.makeDragable(end);
+        this.makeInteractable(start);
+        this.makeInteractable(end);
 
-        let net = new clientSideNet(start,end,this.netList.length);
+        let keepout = new clientsideKeepout(start,end,this.keepoutList.length);
         
-        this.netList.push(net);
+        this.keepoutList.push(keepout);
     }
 
     addNet(net) {
@@ -207,16 +231,17 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         //Fetch the SVG DOM from the server but store the value as a promise
         let bodyContent = {
             netList: this.netList,
-            floodList: this.floodList
+            floodList: this.floodList,
+            keepoutList: this.keepoutList
         }
         
         let resGrid = fetch('/route?cellSize=' + this.cellSize, {
-        
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bodyContent)
+            
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyContent)
         
         })
         
@@ -232,6 +257,11 @@ function addNetButtonListener() {
 
 function addFloodButtonListener() {
     grid.createFlood(5,5);
+    grid.update();
+}
+
+function addKeepoutButtonListener() {
+    grid.createKeepout(15,15,20,20);
     grid.update();
 }
 

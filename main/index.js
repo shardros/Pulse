@@ -29,6 +29,7 @@ var routeJSON = function(Data, cellSize) {
     let JSONData = JSON.parse(Data);
     JSONnetList = JSONData.netList;
     JSONFloodList = JSONData.floodList;
+    JSONKeepoutList = JSONData.keepoutList;
 
     const trackWidth = cellSize;
     //Make this come from client side
@@ -62,10 +63,19 @@ var routeJSON = function(Data, cellSize) {
 
     BR = new br.BoardRouter(board, netList);
 
+    //? Move this to clientside and to depend of the screen res
+    
     let topLeft = new b.Cell(0,0);
     let bottomRight = new b.Cell(boardWidth-1,boardHeight-1);
 
     BR.createKeepOut(topLeft,bottomRight);
+
+    JSONKeepoutList.forEach( keepout => {
+        let topLeft = new b.Cell(keepout.start.x,keepout.start.y);
+        let bottomRight = new b.Cell(keepout.end.x,keepout.end.y);
+    
+        BR.createKeepOut(topLeft,bottomRight);
+    });
 
     let tracks = BR.route();
         

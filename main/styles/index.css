@@ -31,6 +31,10 @@ button {
     background-color: #dada86;
 }
 
+.h3 {
+    margin: 20px;
+}
+
 .PointPadder {
     padding: 5px;
     cursor: move;
