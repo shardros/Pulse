@@ -16,17 +16,21 @@ button {
     width: 10vw; 
 }
 
-.control-pannel {
-
-}
-
 .Point {
     position: absolute;
     z-index: 9;
-    background-color: #f1f1f1;
+    background-color: #13e799;
     text-align: center;
 }
   
+.flood {
+    background-color: #ff0000;
+}
+
+.keepout {
+    background-color: #dada86;
+}
+
 .PointPadder {
     padding: 5px;
     cursor: move;

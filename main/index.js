@@ -24,11 +24,11 @@ const fileTypes = {
  * Converts a JSON netlist into an SVG represenation of the routed board.
  * @param {JSON} JSONData 
  */
-var routeJSON = function(JSONData, cellSize) {
+var routeJSON = function(Data, cellSize) {
 
-    let JSONnetList = JSON.parse(JSONData);
-    
-    console.log(JSONnetList);
+    let JSONData = JSON.parse(Data);
+    JSONnetList = JSONData.netList;
+    JSONFloodList = JSONData.floodList;
 
     const trackWidth = cellSize;
     //Make this come from client side
@@ -68,6 +68,14 @@ var routeJSON = function(JSONData, cellSize) {
     BR.createKeepOut(topLeft,bottomRight);
 
     let tracks = BR.route();
+        
+    try {
+        floodCell = JSONFloodList[0];
+        BR.flood(board.getCell(floodCell.x,floodCell.y));
+    } catch(err) {
+        //We might not always have something to route
+        console.log(err)
+    }
 
     var SvgMaker = new svg.Maker; 
 
@@ -98,16 +106,31 @@ var routeJSON = function(JSONData, cellSize) {
         console.log('Built non routeable sections');
     }
 
-    //Note to future me work out why this needs to be implemented like this.
-    //Display the areas on the board which represent the tracks
-    for (var track = 0; track < tracks.length; track++) {
-        for (var cell = 0; cell < tracks[track].length; cell++) {
-            let x = tracks[track][cell].x;
-            let y = tracks[track][cell].y;
+    if (JSONFloodList.length > 0) {
+        for (let x = 0; x < board.width; x++) {
+            for (let y = 0; y < board.height; y++) {
+                if (board.getCell(x,y).tracked) {
+                    let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+                    Rect.fillColour = new colour.Colour(0,0,124);
+                    SvgMaker.addElement(Rect); 
+                }
+            }
+        }    
+    } else {
+        //The default where we can effiecently draw along the tracks rather than scan the whole
+        //Board
 
-            let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
-            Rect.fillColour = new colour.Colour(0,0,124)
-            SvgMaker.addElement(Rect);
+        //Note to future me work out why this needs to be implemented like this.
+        //Display the areas on the board which represent the tracks
+        for (var track = 0; track < tracks.length; track++) {
+            for (var cell = 0; cell < tracks[track].length; cell++) {
+                let x = tracks[track][cell].x;
+                let y = tracks[track][cell].y;
+
+                let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
+                Rect.fillColour = new colour.Colour(0,0,124)
+                SvgMaker.addElement(Rect);
+            }
         }
     }
 
@@ -145,14 +168,12 @@ let server = http.createServer(function (req, res) {
             break;
 
         case ('/route'):
-            console.log('Route API called with parameters: ', parsedURL.query);
-            console.log('Getting body contents');
 
             let requestBody = new String;
             req.on('data', chunk => {
                 requestBody += chunk.toString(); // convert Buffer to string
             });
-            
+
             req.on('end', () => {
                 //The request has ended lets give them their new route
 

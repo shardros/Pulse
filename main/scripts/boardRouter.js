@@ -80,8 +80,8 @@ BoardRouter.prototype.flood = function(Cell) {
         if (current.routeable) {
             //Gets the routeable neighbours and pushes them to the unchecked list
 
-            this.board.getNeighbours(current).forEach(cell => {
-                if (cell.routeable) { unchecked.push(cell) }
+            this.board.getValidNeighbours(current).forEach(cell => {
+                    unchecked.push(cell)
             });
             
             current.routeable = false;

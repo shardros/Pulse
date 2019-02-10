@@ -294,7 +294,6 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) 
         let pos = neighbour.controllingNetID.indexOf(ID);
         if (pos > -1) {
             neighbour.controllingNetID.splice(pos, 1);
-            console.log(neighbour.controllingNetID)
             if (neighbour.controllingNetID.length == 0) {
                 neighbour.routeable = true;
             }

@@ -16,11 +16,15 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
       this.y = y; 
     }
   
-    buildDOM (elementID) {
+    buildDOM (elementID, ...classes) {
       var cellPadder = document.createElement("div");
       cellPadder.className = "PointPadder";
       cellPadder.id = elementID + "Padding";
-  
+
+      classes.forEach(DOMclass => {
+          cellPadder.classList.add(DOMclass);
+      });
+
       var cell = document.createElement("div");
       cell.className = "Point";
       cell.id = elementID;
@@ -42,6 +46,15 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
       this.id = id;
     }
   }
+
+  //Maybe make an abstract class for these two
+  class clientSideFlood {
+      constructor(start, end, id) {
+        this.start = start;
+        this.end = end;
+        this.id = id;
+      }
+  }
   
   //The names of the local varibles in this class are messy, this.grid describes the board etc.
   class Grid {
@@ -50,13 +63,16 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     @pram {Number} width the height in cell units
     @pram {Number} cellSize the size in cell units
     */
-    constructor (gridID, endPointContainerID, width, height, cellSize) {
+    constructor (gridID, endPointContainerID, floodContainerID ,keepoutContainerID, width, height, cellSize) {
         this.grid = document.getElementById(gridID);
         this.endPointContainer = document.getElementById(endPointContainerID);
+        this.floodContainer = document.getElementById(floodContainerID);
+        this.keepoutContainer = document.getElementById(keepoutContainerID);
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.netList = [];    
+        this.floodList = [];
     }
 
     makeDragable(cell) {
@@ -148,11 +164,33 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     createFlood(x,y) {
         let cell = new clientSideCell(x,y);
 
-        this.endPointContainer.appendChild(
-            cell.buildDOM("flood")
+        this.floodContainer.appendChild(
+            cell.buildDOM("flood","flood")
         )
 
         this.makeDragable(cell);
+
+        this.floodList.push(cell);
+    }
+
+    createKeepout() {
+        let start = new clientSideCell(startx, starty);
+        let end = new clientSideCell(endx, endy);
+
+        this.endPointContainer.appendChild(
+            start.buildDOM("start" + this.keepoutList.length)
+        );
+        
+        this.endPointContainer.appendChild(
+            end.buildDOM("end" + this.keepoutList.length)
+        );
+
+        this.makeDragable(start);
+        this.makeDragable(end);
+
+        let net = new clientSideNet(start,end,this.netList.length);
+        
+        this.netList.push(net);
     }
 
     addNet(net) {
@@ -167,13 +205,18 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
 
     async update() {
         //Fetch the SVG DOM from the server but store the value as a promise
+        let bodyContent = {
+            netList: this.netList,
+            floodList: this.floodList
+        }
+        
         let resGrid = fetch('/route?cellSize=' + this.cellSize, {
         
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(this.netList)
+        body: JSON.stringify(bodyContent)
         
         })
         
@@ -187,15 +230,29 @@ function addNetButtonListener() {
     grid.update();
 }
 
+function addFloodButtonListener() {
+    grid.createFlood(5,5);
+    grid.update();
+}
+
 //------------MAIN------------
 
 const cellSize = 10;
 const gridWidth = 100;
 const gridHeight = 100;
 const nodeContainerID = "node-container";
+const floodContainerID = "flood-container";
+const keepoutContainerID = "keepout-container"
+
 const gridID = "board";
 
-var grid = new Grid(gridID,nodeContainerID,gridWidth,gridHeight,cellSize);
+var grid = new Grid(gridID,
+                    nodeContainerID,
+                    floodContainerID,
+                    keepoutContainerID,
+                    gridWidth,
+                    gridHeight,
+                    cellSize);
 
 grid.createNet(2,2,3,8)
 grid.createNet(8,8,10,10)
