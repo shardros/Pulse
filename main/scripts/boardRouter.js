@@ -148,13 +148,13 @@ BoardRouter.prototype.route = function() {
                 
                 //There should only ever be one net belonging to a cell why does this support multiple?
                 for (let x = smallX; x < bigX; x++) {
-                    let netIDs = this.board.getCell(x,start.y).controllingNetID;
-                    netIDs.forEach(netID => netsToRipup.add(netID));                
+                    let netIDs = this.board.getCell(x,start.y).controllingNet;
+                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
                 }
 
                 for (let y = smallY; y < bigY; y++) {
-                    let netIDs = this.board.getCell(y,end.x).controllingNetID;
-                    netIDs.forEach(netID => netsToRipup.add(netID));                
+                    let netIDs = this.board.getCell(y,end.x).controllingNet;
+                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
                 }
 
                 //Remove the traces that are blocking our net from being routed
@@ -164,7 +164,8 @@ BoardRouter.prototype.route = function() {
                     for(traceCellIndex = 0; traceCellIndex < currentTraceLength; traceCellIndex++) {
                         this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
                                                             true,
-                                                            netIndex);
+                                                            netIndex,
+                                                            1);
                         this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
                         //currentTrace[traceCellIndex].tracked = false;
                     }
@@ -192,8 +193,9 @@ BoardRouter.prototype.route = function() {
             netsToRipup = new Set;
 
            } catch (err) {
+               console.log(err.stack)
                 //route impossibe
-                console.log(err)
+                
             }
         }
     }

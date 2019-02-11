@@ -41,8 +41,8 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
-        B.markNeighboursAsRouteable(this.startCell,true,this.ID);
-        B.markNeighboursAsRouteable(this.endCell,true,this.ID);
+        B.markNeighboursAsRouteable(this.startCell,true,this.ID,0);
+        B.markNeighboursAsRouteable(this.endCell,true,this.ID,0);
 
 
         this._toCheck.push(this.net.startCell);
