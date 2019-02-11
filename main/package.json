@@ -4,7 +4,7 @@
   "description": "Software for autorouting of PCB's",
   "main": "main.js",
   "devDependencies": {
-    "electron": "^4.0.1"
+    "electron": "^4.0.4"
   },
   "scripts": {
     "test": "node boardRouter.js",

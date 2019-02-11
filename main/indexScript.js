@@ -173,7 +173,6 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         netList.push(net);
 
         function deleteCallBack() {
-            console.log("delete call back called")
             start.el.remove(); //Remove the Dom
             end.el.remove();
             var index = netList.indexOf(net);
@@ -192,9 +191,19 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             cell.buildDOM("flood","flood")
         )
 
-        this.makeInteractable(cell);
+        this.makeInteractable(cell, deleteCallBack);
 
         this.floodList.push(cell);
+
+        let floodList = this.floodList;
+
+        function deleteCallBack() {
+            cell.el.remove(); //Remove the Dom
+            var index = floodList.indexOf(cell);
+            if (index > -1) {
+                floodList.splice(index, 1);
+            }
+        }
     }
 
     createKeepout(startx, starty, endx, endy) {
@@ -209,12 +218,23 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             end.buildDOM("keepoutEnd" + this.keepoutList.length,"keepout")
         );
 
-        this.makeInteractable(start);
-        this.makeInteractable(end);
+        this.makeInteractable(start,deleteCallBack);
+        this.makeInteractable(end,deleteCallBack);
 
         let keepout = new clientsideKeepout(start,end,this.keepoutList.length);
         
         this.keepoutList.push(keepout);
+
+        let keepoutList = this.keepoutList;
+
+        function deleteCallBack() {
+            start.el.remove(); //Remove the Dom
+            end.el.remove();
+            var index = keepoutList.indexOf(keepout);
+            if (index > -1) {
+                keepoutList.splice(index, 1);
+            }
+        }
     }
 
     addNet(net) {
