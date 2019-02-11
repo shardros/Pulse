@@ -2,45 +2,46 @@
 
 //All all of the Cell class to be acessed from other files
 
-/**
- * 
- * @param {Number} x 
- * @param {Number} y 
- * @param {Number} layer
- * @param {Boolean} routeable 
- */
-function Cell (x,y,layer=1,routeable=true) {
-    
+class Cell {
     /**
-     * @type {number}
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @param {Number} layer
+     * @param {Boolean} routeable 
      */
-    this.x = x;
-    
-    /**
-     * @type {number}
-     */
-    this.y = y;
+    constructor (x,y,layer=1,routeable=true) {
+        
+        /**
+         * @type {number}
+         */
+        this.x = x;
+        
+        /**
+         * @type {number}
+         */
+        this.y = y;
 
-    /**
-     * This can be deleted now
-     * @type {number}
-     */
-    this.layer = layer;
+        /**
+         * This can be deleted now
+         * @type {number}
+         */
+        this.layer = layer;
 
-    /**
-     * @type {boolean}
-     */
-    this.routeable = routeable;
-    /**
-     * If the Cell has a track going through it.
-     * Defaults to false because at start of day we have no tracks
-     * @type {boolean}
-     */
-    this.tracked = false;
+        /**
+         * @type {boolean}
+         */
+        this.routeable = routeable;
+        /**
+         * If the Cell has a track going through it.
+         * Defaults to false because at start of day we have no tracks
+         * @type {boolean}
+         */
+        this.tracked = false;
 
-    this.controllingNetID = new Array;
+        this.controllingNetID = new Array;
+    }
 }
-
 
 //Alow all of the Net class to be acessed from other files
 /**
@@ -67,11 +68,13 @@ function Net (start, end) {
 /**
  * This maybe too similar to the get manhattan distance board method
  * and theere may be a way of subcalssing these to make more sense
+ * !This is the Euclidian length need to refactor
  */
 Net.prototype.manhattanLength = function() {
     return Math.sqrt(Math.pow(this.startCell.x-this.endCell.x, 2) + Math.pow(this.startCell.y-this.endCell.y, 2));
-
 }
+
+
 
 //Allow all of the board class to be accessed from other files
 
@@ -84,49 +87,50 @@ Net.prototype.manhattanLength = function() {
  */
 var Board = function(boardWidth, boardHeight, routeMask=[[]]) {
         
-        /**
-         * @type {number}
-         */
-        this.width = boardWidth;
-        
-        /**
-         * @type {number}
-         */
-        this.height = boardHeight;
+    /**
+     * @type {number}
+     */
+    this.width = boardWidth;
+    
+    /**
+     * @type {number}
+     */
+    this.height = boardHeight;
 
-        /**Create a matrix for the grid to be stored in then go through and 
-         * populate it with cells
-         */        
+    /**Create a matrix for the grid to be stored in then go through and 
+     * populate it with cells
+     */        
 
-        this.grid = new Array(this.height);
+    this.grid = new Array(this.height);
 
-        for (let y = 0; y < this.height; y++) {
-            this.grid[y] = new Array(this.width);
+    for (let y = 0; y < this.height; y++) {
+        this.grid[y] = new Array(this.width);
 
-            for (let x = 0; x < this.width; x++) {
-                this.grid[y][x] = new Cell(x, y);
+        for (let x = 0; x < this.width; x++) {
+            this.grid[y][x] = new Cell(x, y);
+        }
+
+    }
+
+    /**
+     * Check if each of the cells are routeable according to the inputted routing guide.
+     */
+
+    if ((routeMask != undefined)
+    && (routeMask.length > this.height)
+    && (routeMask[0].length > this.width)) {
+
+        //NOTE TO SELF - Possibly look at merging this and the for loop above together
+
+        for (let y = 0; y < routeMask.length; y++) {
+            for (let x = 0; x < routeMask[y].length; x++) {
+                if (routeMask[x][y] = 1) grid[y][x].routeable = false;
             }
+        } 
+    }
 
-        }
+};
 
-        /**
-         * Check if each of the cells are routeable according to the inputted routing guide.
-         */
-
-        if ((routeMask != undefined)
-        && (routeMask.length > this.height)
-        && (routeMask[0].length > this.width)) {
-
-            //NOTE TO SELF - Possibly look at merging this and the for loop above together
-
-            for (let y = 0; y < routeMask.length; y++) {
-                for (let x = 0; x < routeMask[y].length; x++) {
-                    if (routeMask[x][y] = 1) grid[y][x].routeable = false;
-                }
-            } 
-        }
-
-    };
 
 /**
  * Checks if a cell is on the board
@@ -291,6 +295,10 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, co
  */
 Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+        /**Need to check weather this is the only net that
+         * Controlls this cell, if not then we don't want to
+         * remove it from this nets trace
+         */ 
         let pos = neighbour.controllingNetID.indexOf(ID);
         if (pos > -1) {
             neighbour.controllingNetID.splice(pos, 1);
@@ -307,6 +315,10 @@ Board.prototype.markCordsAsUnrouteable = function(x,y) {
 
 Board.prototype.markCordsAsTracked = function(x,y) {
     this.grid[y][x].tracked = true;
+}
+
+Board.prototype.markCellAsUntracked = function(cell) {
+    this.grid[cell.y][cell.x].tracked = false;
 }
 
 Board.prototype.getCell = function(x,y) {

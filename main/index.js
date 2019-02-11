@@ -84,7 +84,6 @@ var routeJSON = function(Data, cellSize) {
         BR.flood(board.getCell(floodCell.x,floodCell.y));
     } catch(err) {
         //We might not always have something to route
-        console.log(err)
     }
 
     var SvgMaker = new svg.Maker; 
@@ -162,7 +161,6 @@ var routeJSON = function(Data, cellSize) {
 let server = http.createServer(function (req, res) {
 
     var parsedURL = url.parse(req.url, true);
-    console.log('Requested: ', parsedURL.pathname);
 
     //Alows assignment specific urls to files. 
     switch (parsedURL.pathname) {
@@ -192,8 +190,8 @@ let server = http.createServer(function (req, res) {
                 res.end(svgRes);
             });
 
-
             break;
+
         default:
             fs.readFile('./' + path + req.url, function(err, data) {
                 if (err) {
