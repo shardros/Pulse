@@ -32,6 +32,8 @@ class Cell {
          * @type {boolean}
          */
         this.routeable = routeable;
+
+        this.hardRouteable = true;
         /**
          * If the Cell has a track going through it.
          * Defaults to false because at start of day we have no tracks
@@ -300,7 +302,7 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) 
          * remove it from this nets trace
          */ 
         let pos = neighbour.controllingNetID.indexOf(ID);
-        if (pos > -1) {
+        if (pos > -1 && !neighbour.hardRouteable) {
             neighbour.controllingNetID.splice(pos, 1);
             if (neighbour.controllingNetID.length == 0) {
                 neighbour.routeable = true;
@@ -308,6 +310,30 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) 
         }
     });
 }
+
+Board.prototype.markNeighboursAsHardUnrouteable = function(Cell, diagonals=false, controllingNetID=null) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+        neighbour.hardRouteable = false;
+        neighbour.hardControllingNetID.push(hardControllingNetID);
+    });
+}
+
+Board.prototype.markNeighboursAsHardRouteable = function(Cell, diagonals=false, ID) {
+    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+        /**Need to check weather this is the only net that
+         * Controlls this cell, if not then we don't want to
+         * remove it from this nets trace
+         */ 
+        let pos = neighbour.hardControllingNetID.indexOf(ID);
+        if (pos > -1) {
+            neighbour.hardControllingNetID.splice(pos, 1);
+            if (neighbour.hardControllingNetID.length == 0) {
+                neighbour.hardRouteable = true;
+            }
+        }
+    });
+}
+
 
 Board.prototype.markCordsAsUnrouteable = function(x,y) {
     this.grid[y][x].routeable = false;
@@ -318,7 +344,9 @@ Board.prototype.markCordsAsTracked = function(x,y) {
 }
 
 Board.prototype.markCellAsUntracked = function(cell) {
-    this.grid[cell.y][cell.x].tracked = false;
+    if (cell.controllingNetID.length == 0) {
+        this.grid[cell.y][cell.x].tracked = false;
+    }
 }
 
 Board.prototype.getCell = function(x,y) {
