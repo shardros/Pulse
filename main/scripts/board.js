@@ -68,11 +68,13 @@ function Net (start, end) {
 /**
  * This maybe too similar to the get manhattan distance board method
  * and theere may be a way of subcalssing these to make more sense
+ * !This is the Euclidian length need to refactor
  */
 Net.prototype.manhattanLength = function() {
     return Math.sqrt(Math.pow(this.startCell.x-this.endCell.x, 2) + Math.pow(this.startCell.y-this.endCell.y, 2));
-
 }
+
+
 
 //Allow all of the board class to be accessed from other files
 
@@ -317,7 +319,6 @@ Board.prototype.markCordsAsTracked = function(x,y) {
 
 Board.prototype.markCellAsUntracked = function(cell) {
     this.grid[cell.y][cell.x].tracked = false;
-    console.log(this.grid[cell.y][cell.x])
 }
 
 Board.prototype.getCell = function(x,y) {

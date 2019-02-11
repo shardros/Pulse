@@ -59,10 +59,6 @@ NetRouter = class {
                 
                 let current = cell; 
 
-                if (current == null) {
-                    console.log("")
-                }
-
                 this.net.trace.push(current);
                 
                 /** Starting from the endCell perform a trace back to
@@ -104,7 +100,7 @@ NetRouter = class {
                     
                     
                     neighbour.g = ng;
-                    neighbour.h = this.heuristicWeight * B.getManhattan(neighbour, this.endCell); 
+                    neighbour.h = this.heuristicWeight * B.getEuclidean(neighbour, this.endCell); 
                     neighbour.f = neighbour.g + neighbour.h;
 
                     neighbour.checked = true;
