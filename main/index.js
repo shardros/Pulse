@@ -11,7 +11,7 @@ const colour = require('./scripts/colour');
 const port = 1337;
 const debug = false;
 
-const path = "./main"
+const path = "."
 const indexLocation = "/index.html"
 
 const fileTypes = {

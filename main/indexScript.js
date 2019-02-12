@@ -76,40 +76,50 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     }
 
     makeInteractable(cell, deleteCallBack) {
-        var grid = this;
+        var board = this;
         var startx = cell.x * this.cellSize;
+        console.log({startx})
         var starty = cell.y * this.cellSize;
         var newXPos = 0;
         var newYPos = 0;
         var oldXPos = 0;
         var oldYPos = 0;
-        var elmnt = cell.el; //IS THIS LINE USED? el is standard shorthand for element in web frameoworks
+        var elmnt = cell.el; //!IS THIS LINE USED? el is standard shorthand for element in web frameoworks
+        var mouseDownPos = {
+            x: startx,
+            y: starty
+        } 
+
 
         //Overide default method
         document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
         
-        //Offset by the correct amount given css grid layout
+        //Offset by the correct amount given css board layout
         elmnt.style.top = (starty)
-                        + this.grid.getBoundingClientRect().top
+                        + board.grid.getBoundingClientRect().top
                         + "px";
         
         elmnt.style.left = (startx)
-                        + this.grid.getBoundingClientRect().left
+                        + board.grid.getBoundingClientRect().left
                         + "px";
                         
         function dragMouseDown(e) {
             e.preventDefault();   //Prevents the default method from running
 
+            
             // get the mouse cursor position at startup:
             oldXPos = getRoundedMouseX(e);
             oldYPos = getRoundedMouseY(e);
+            
+            mouseDownPos.x = elmnt.offsetLeft;
+            mouseDownPos.y = elmnt.offsetTop;
 
             /**
              * If the control key is down then the user wants to delete this item
              */ 
             if (e.ctrlKey) {
                 deleteCallBack()
-                grid.update();
+                board.update();
             } else {
                 document.onmouseup = stopDragging;  //Override the onmouseupmethod
                 document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
@@ -117,7 +127,6 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         } 
 
         function elementDrag(e) {
-            //Does this do anything???
             e.preventDefault();
             
             // calculate the new cursor position:
@@ -139,11 +148,32 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             document.onmouseup = null;
             document.onmousemove = null;
 
-            //update the cells position.
-            cell.x = Math.ceil((elmnt.offsetLeft - grid.grid.getBoundingClientRect().left)/grid.cellSize  );
-            cell.y = Math.ceil((elmnt.offsetTop - grid.grid.getBoundingClientRect().top)/grid.cellSize) ;
+            //find new the cells position in grid terms.
+            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
+            let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
-            grid.update();
+            //Test weather the cell is touching any other cells, if so this could cause a problem
+            let isCellInvalid = (element) => {
+                return (element.start.x == newCellX
+                || element.end.x == newCellX)
+                && (element.start.y == newCellY
+                || element.end.y == newCellY);
+            }; 
+
+            if ((board.netList.some(isCellInvalid))
+                || (board.floodList.some(isCellInvalid))
+                || (board.keepoutList.some(isCellInvalid))) 
+            {
+                alert('Can not place cell on cell!');
+
+                elmnt.style.top = (mouseDownPos.y) + "px";
+                elmnt.style.left = (mouseDownPos.x) + "px";
+            } else {
+                cell.x = newCellX;
+                cell.y = newCellY;
+            }
+
+            board.update();
         }
     }
 
