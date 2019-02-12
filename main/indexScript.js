@@ -78,7 +78,6 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     makeInteractable(cell, deleteCallBack) {
         var board = this;
         var startx = cell.x * this.cellSize;
-        console.log({startx})
         var starty = cell.y * this.cellSize;
         var newXPos = 0;
         var newYPos = 0;
@@ -152,19 +151,35 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
             let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
-            //Test weather the cell is touching any other cells, if so this could cause a problem
-            let isCellInvalid = (element) => {
-                return (element.start.x == newCellX
-                || element.end.x == newCellX)
-                && (element.start.y == newCellY
-                || element.end.y == newCellY);
+            /**Test if the new position for the cell is where any other cells are, or
+             * if it is adjacent to any other cells
+             * !NB will not work with floods as they would be element.x 
+             */
+            let isCellInvalid = (net) => {
+ 
+                for (let x = - 1; x <= 1; x++) {
+                    for (let y = - 1; y <= 1; y++) {
+                        if ((net.start.x - x == newCellX
+                            && net.start.y - y == newCellY)
+                            || (net.end.x - x == newCellX
+                            && net.end.y - y == newCellY))
+                        {
+                            return true
+                        }
+               
+                    }
+                }
+                return false 
             }; 
 
             if ((board.netList.some(isCellInvalid))
                 || (board.floodList.some(isCellInvalid))
                 || (board.keepoutList.some(isCellInvalid))) 
             {
-                alert('Can not place cell on cell!');
+                //!This interaction with the user possibly shouldn't be in this function
+                document.getElementById('warning').innerHTML = "Nodes too close!";
+                let clearWarning = () => document.getElementById('warning').innerHTML = "";
+                setTimeout(clearWarning, 2000);
 
                 elmnt.style.top = (mouseDownPos.y) + "px";
                 elmnt.style.left = (mouseDownPos.x) + "px";

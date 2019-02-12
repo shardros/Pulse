@@ -35,6 +35,10 @@ button {
     margin: 20px;
 }
 
+#warning {
+    color: #790202;
+}
+
 .PointPadder {
     padding: 5px;
     cursor: move;
