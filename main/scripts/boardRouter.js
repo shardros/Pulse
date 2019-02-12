@@ -112,8 +112,8 @@ BoardRouter.prototype.route = function() {
 
     this.netList.forEach((net, i) => {
         net.id = i;
-        this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id)
-        this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id)
+        this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1,)
+        this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id,1)
     });
 
     for (var i = 0; i < this.netList.length; i++) {
@@ -169,7 +169,6 @@ BoardRouter.prototype.route = function() {
                         this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
                         //currentTrace[traceCellIndex].tracked = false;
                     }
-                    this.netList[netIndex].trace = currentTrace;
                 })
 
             
@@ -187,13 +186,13 @@ BoardRouter.prototype.route = function() {
                         hurestristicWeight,
                         this.netList[netIndex].id);
                     myNetRouter.reset(); //need to reset as have already made this route
+                    tracks[netIndex] = [];//We know that the old trace is rubish so lets not use that
                     tracks[netIndex] =  myNetRouter.route();
 
                 })
-            netsToRipup = new Set;
+            netsToRipup = new Set; //Reset the ripup nets for the next one
 
            } catch (err) {
-               console.log(err.stack)
                 //route impossibe
                 
             }

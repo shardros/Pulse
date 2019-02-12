@@ -41,8 +41,8 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
-        B.markNeighboursAsRouteable(this.startCell,true,this.ID,0);
-        B.markNeighboursAsRouteable(this.endCell,true,this.ID,0);
+        B.markNeighboursAsRouteable(this.startCell,true,this.ID,1);
+        B.markNeighboursAsRouteable(this.endCell,true,this.ID,1);
 
 
         this._toCheck.push(this.net.startCell);
@@ -66,7 +66,7 @@ NetRouter = class {
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markNeighboursAsUnrouteable(current, true, this.ID);
+                    B.markNeighboursAsUnrouteable(current, true, this.ID,0);
                     
                     current = current.super;
                     
@@ -75,7 +75,7 @@ NetRouter = class {
                     
                 } while (current != this.startCell)
                 
-                B.markNeighboursAsUnrouteable(this.startCell, true, this.ID);
+                B.markNeighboursAsUnrouteable(this.startCell, true, this.ID, 1);
 
                 this.cleanUp();
                 

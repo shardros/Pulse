@@ -325,7 +325,7 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID, 
     });
 };
 
-//!Check weather this is ever called if yes it could break stuff
+//!Check weather this is ever called if yes it could break hard routing
 Board.prototype.markCordsAsUnrouteable = function(x,y) {
     this.grid[y][x].routeable = false;
 }
