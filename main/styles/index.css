@@ -35,7 +35,7 @@ button {
     margin: 20px;
 }
 
-#warning {
+#warning #errors {
     color: #790202;
 }
 

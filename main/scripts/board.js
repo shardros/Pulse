@@ -326,8 +326,13 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID, 
 };
 
 //!Check weather this is ever called if yes it could break hard routing
-Board.prototype.markCordsAsUnrouteable = function(x,y) {
-    this.grid[y][x].routeable = false;
+Board.prototype.markCordsAsUnrouteable = function(x,y, ID=null, overide=0) {
+    let cell = this.getCell(x,y)
+    cell.routeable = false;
+    cell.controllingNet.push({
+        controllingNetID: ID,
+        routingOverrideLevel: overide    
+    });
 }
 
 Board.prototype.markCordsAsTracked = function(x,y) {

@@ -26,6 +26,8 @@ const fileTypes = {
  */
 var routeJSON = function(Data, cellSize) {
 
+    let errors = []
+
     let JSONData = JSON.parse(Data);
     JSONnetList = JSONData.netList;
     JSONFloodList = JSONData.floodList;
@@ -74,10 +76,12 @@ var routeJSON = function(Data, cellSize) {
         let topLeft = new b.Cell(keepout.start.x,keepout.start.y);
         let bottomRight = new b.Cell(keepout.end.x,keepout.end.y);
     
-        BR.createKeepOut(topLeft,bottomRight);
+        BR.createKeepOut(topLeft,bottomRight,"keepout",1);
     });
 
-    let tracks = BR.route();
+    let route = BR.route();
+    route.errors.forEach(error => errors.push(error));
+    let tracks = route.tracks;
         
     try {
         floodCell = JSONFloodList[0];
@@ -143,7 +147,10 @@ var routeJSON = function(Data, cellSize) {
         }
     }
 
-    return SvgMaker.getImage();
+    return {
+        DOM: SvgMaker.getImage(),
+        errors: errors
+    };
     
 }
 
@@ -185,9 +192,16 @@ let server = http.createServer(function (req, res) {
             req.on('end', () => {
                 //The request has ended lets give them their new route
 
-                let svgRes = routeJSON(requestBody, parseInt(parsedURL.query.cellSize));
+                let route = routeJSON(requestBody, parseInt(parsedURL.query.cellSize));
+                let svg = route.DOM;
+                let errors = route.errors;
 
-                res.end(svgRes);
+                responseContent = JSON.stringify({
+                    board: svg,
+                    errors: errors
+                })
+
+                res.end(responseContent);
             });
 
             break;

@@ -65,7 +65,7 @@ BoardRouter.prototype.createKeepOut = function(cell1, cell2, borderOnly = true) 
  * @returns {<Cell>} Returns list of cells in the flood
  */
 BoardRouter.prototype.flood = function(Cell) {
-    
+
     //Must check this as we use weather cell is defined in the while loop later
     if (typeof(Cell) == undefined) {
         throw Error ("Flood method passed undefined cell");
@@ -100,6 +100,8 @@ BoardRouter.prototype.flood = function(Cell) {
  * A function decide which order the nets are to be routed in
  */
 BoardRouter.prototype.route = function() {
+    let errors = [];
+
     const hurestristicWeight = 1.5; //DO NOT TOUCH
     
     let tracks = new Array;
@@ -110,95 +112,113 @@ BoardRouter.prototype.route = function() {
         cellA.manhattanLength() - cellB.manhattanLength()
     );
 
-    this.netList.forEach((net, i) => {
-        net.id = i;
-        this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1,)
-        this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id,1)
-    });
 
-    for (var i = 0; i < this.netList.length; i++) {
-        try {        
 
-            //The default case where the route is possible
-            this.netList[i].id = i; 
-            let myNetRouter = new NetRouter(this.board, 
-                                            this.netList[i],
-                                            hurestristicWeight,
-                                            this.netList[i].id);
-            let trace = myNetRouter.route();
-            tracks.push(trace);
+    try {
+        this.netList.forEach((net, i) => {
+            net.id = i;
+            this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1,)
+            this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id,1)
+        });
+   
+    } catch (err) {
+        if (err.name == "TypeError") {
+            //The user selected a node on the edge of the board.
+        } else {
+            //This *should* never happen but if it does we want to know what happened
+            throw err;
+        }
+    } 
 
-        } catch (err) {
-            try {
-                
-                console.log(err.message)
+        for (var i = 0; i < this.netList.length; i++) {
+            try {        
 
-                //The net route failed
-                //!Use of a set!
-                let netsToRipup = new Set;
-                start = this.netList[i].startCell;
-                end = this.netList[i].endCell;
-
-                bigX = Math.max(start.x, end.x);
-                smallX = Math.min(start.x, end.x);
-
-                bigY = Math.max(start.y, end.y);
-                smallY = Math.min(start.y, end.y);
-
-                
-                //There should only ever be one net belonging to a cell why does this support multiple?
-                for (let x = smallX; x < bigX; x++) {
-                    let netIDs = this.board.getCell(x,start.y).controllingNet;
-                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-                for (let y = smallY; y < bigY; y++) {
-                    let netIDs = this.board.getCell(y,end.x).controllingNet;
-                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-                //Remove the traces that are blocking our net from being routed
-                netsToRipup.forEach(netIndex => {
-                    let currentTrace = this.netList[netIndex].trace;
-                    currentTraceLength = currentTrace.length;
-                    for(traceCellIndex = 0; traceCellIndex < currentTraceLength; traceCellIndex++) {
-                        this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
-                                                            true,
-                                                            netIndex,
-                                                            1);
-                        this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
-                        //currentTrace[traceCellIndex].tracked = false;
-                    }
-                })
-
-            
-                //Retry routing our route
+                //The default case where the route is possible
+                this.netList[i].id = i; 
                 let myNetRouter = new NetRouter(this.board, 
                                                 this.netList[i],
                                                 hurestristicWeight,
                                                 this.netList[i].id);
-                tracks.push(myNetRouter.route());
+                let trace = myNetRouter.route();
+                tracks.push(trace);
 
-                //Reroute the ones that weren't routed right the first time
-                netsToRipup.forEach(netIndex => {
-                    let myNetRouter = new NetRouter(this.board, 
-                        this.netList[netIndex],
-                        hurestristicWeight,
-                        this.netList[netIndex].id);
-                    myNetRouter.reset(); //need to reset as have already made this route
-                    tracks[netIndex] = [];//We know that the old trace is rubish so lets not use that
-                    tracks[netIndex] =  myNetRouter.route();
+            } catch (err) {
+                try {
+                    
+                    console.log(err.message)
 
-                })
-            netsToRipup = new Set; //Reset the ripup nets for the next one
+                    //The net route failed
+                    //!Use of a set!
+                    let netsToRipup = new Set;
+                    start = this.netList[i].startCell;
+                    end = this.netList[i].endCell;
 
-           } catch (err) {
-                //route impossibe
+                    bigX = Math.max(start.x, end.x);
+                    smallX = Math.min(start.x, end.x);
+
+                    bigY = Math.max(start.y, end.y);
+                    smallY = Math.min(start.y, end.y);
+
+                    
+                    //There should only ever be one net belonging to a cell why does this support multiple?
+                    for (let x = smallX; x < bigX; x++) {
+                        let netIDs = this.board.getCell(x,start.y).controllingNet;
+                        netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
+                    }
+
+                    for (let y = smallY; y < bigY; y++) {
+                        let netIDs = this.board.getCell(y,end.x).controllingNet;
+                        netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
+                    }
+
+                    //Remove the traces that are blocking our net from being routed
+                    netsToRipup.forEach(netIndex => {
+                        let currentTrace = this.netList[netIndex].trace;
+                        currentTraceLength = currentTrace.length;
+                        for(traceCellIndex = 0; traceCellIndex < currentTraceLength; traceCellIndex++) {
+                            this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
+                                                                true,
+                                                                netIndex,
+                                                                1);
+                            this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
+                            //currentTrace[traceCellIndex].tracked = false;
+                        }
+                    })
+
                 
+                    //Retry routing our route
+                    let myNetRouter = new NetRouter(this.board, 
+                                                    this.netList[i],
+                                                    hurestristicWeight,
+                                                    this.netList[i].id);
+                    tracks.push(myNetRouter.route());
+
+                    //Reroute the ones that weren't routed right the first time
+                    netsToRipup.forEach(netIndex => {
+                        let myNetRouter = new NetRouter(this.board, 
+                            this.netList[netIndex],
+                            hurestristicWeight,
+                            this.netList[netIndex].id);
+                        myNetRouter.reset(); //need to reset as have already made this route
+                        tracks[netIndex] = [];//We know that the old trace is rubish so lets not use that
+                        tracks[netIndex] =  myNetRouter.route();
+
+                    })
+                netsToRipup = new Set; //Reset the ripup nets for the next one
+
+            } catch (err) {
+                    errors.push("FAILED TO ROUTE TRACKS ROUTED. Board has errors");
+                    //route impossibe
+                    
+                }
             }
         }
-    }
-    return tracks;
+
+ 
+    return {
+        tracks: tracks,
+        errors: errors
+    };
 }
 
 

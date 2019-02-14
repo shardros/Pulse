@@ -155,14 +155,14 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
              * if it is adjacent to any other cells
              * !NB will not work with floods as they would be element.x 
              */
-            let isCellInvalid = (net) => {
- 
+            let isCellInvalid = (cell) => {
+
                 for (let x = - 1; x <= 1; x++) {
                     for (let y = - 1; y <= 1; y++) {
-                        if ((net.start.x - x == newCellX
-                            && net.start.y - y == newCellY)
-                            || (net.end.x - x == newCellX
-                            && net.end.y - y == newCellY))
+                        if ((cell.x - x == newCellX
+                            && cell.y - y == newCellY)
+                            || (cell.x - x == newCellX
+                            && cell.y - y == newCellY))
                         {
                             return true
                         }
@@ -172,14 +172,23 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
                 return false 
             }; 
 
-            if ((board.netList.some(isCellInvalid))
+            if (
+                (board.netList.some(net => {
+                    return isCellInvalid(net.start)
+                    || isCellInvalid(net.end)
+                } ))
+
                 || (board.floodList.some(isCellInvalid))
-                || (board.keepoutList.some(isCellInvalid))) 
-            {
+
+                || (board.keepoutList.forEach(keepout => {
+                    return isCellInvalid(keepout.start) 
+                    || isCellInvalid(keepout.end)
+                } ))
+            
+            ){
                 //!This interaction with the user possibly shouldn't be in this function
                 document.getElementById('warning').innerHTML = "Nodes too close!";
-                let clearWarning = () => document.getElementById('warning').innerHTML = "";
-                setTimeout(clearWarning, 2000);
+                setTimeout(() => document.getElementById('warning').innerHTML = "", 2500);
 
                 elmnt.style.top = (mouseDownPos.y) + "px";
                 elmnt.style.left = (mouseDownPos.x) + "px";
@@ -244,10 +253,8 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
 
         function deleteCallBack() {
             cell.el.remove(); //Remove the Dom
-            var index = floodList.indexOf(cell);
-            if (index > -1) {
-                floodList.splice(index, 1);
-            }
+            document.getElementById("addFlood").disabled = false;
+            floodList.pop();
         }
     }
 
@@ -311,7 +318,17 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         })
         
         //Await for the promise to be fullied when it is set the value of the dom to be that
-        this.grid.innerHTML = await resGrid.then(response => response.text());
+        let response = await resGrid.then(response => response.text());
+        response = JSON.parse(response)
+        this.grid.innerHTML = response.board;
+        //!Example of reduce
+        if (response.errors.length > 0) { 
+            let errorHeader = "Warning: <br/>"
+            let groupedErrors = errorHeader + response.errors.reduce((accumulator, current) => accumulator + "<br/>" + current);
+            document.getElementById('errors').innerHTML = groupedErrors; 
+        } else {
+            document.getElementById('errors').innerHTML = "";
+        }
     }
 }
 
@@ -321,6 +338,7 @@ function addNetButtonListener() {
 }
 
 function addFloodButtonListener() {
+    document.getElementById("addFlood").disabled = true;
     grid.createFlood(5,5);
     grid.update();
 }
