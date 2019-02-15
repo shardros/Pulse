@@ -67,6 +67,7 @@ BoardRouter.prototype.createKeepOut = function(cell1, cell2, borderOnly = true) 
 BoardRouter.prototype.flood = function(Cell) {
 
     //Must check this as we use weather cell is defined in the while loop later
+    //!EXAMPLE OF ERROR HANDELING
     if (typeof(Cell) == undefined) {
         throw Error ("Flood method passed undefined cell");
     } 
@@ -204,6 +205,7 @@ BoardRouter.prototype.route = function() {
 
                     })
                 netsToRipup = new Set; //Reset the ripup nets for the next one
+                //!Probally an inbuilt method for doing this
 
             } catch (err) {
                     errors.push("FAILED TO ROUTE TRACKS ROUTED. Board has errors");

@@ -2,61 +2,61 @@
 //Does cellsize work up here?
 function getRoundedMouseX (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
-  }
-  
-  function getRoundedMouseY (event, roundToNearest = cellSize) {
+}
+
+function getRoundedMouseY (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
-  }
-  
-  //Make this just a data strucuture
-  class clientSideCell {
+}
+
+//Make this just a data strucuture
+class clientSideCell {
     constructor(x,y){
-      //Initalize parameters
-      this.x = x;
-      this.y = y; 
+        //Initalize parameters
+        this.x = x;
+        this.y = y; 
     }
-  
+
     buildDOM (elementID, ...classes) {
-      var cellPadder = document.createElement("div");
-      cellPadder.className = "PointPadder";
-      cellPadder.id = elementID + "Padding";
+        var cellPadder = document.createElement("div");
+        cellPadder.className = "PointPadder";
+        cellPadder.id = elementID + "Padding";
 
-      classes.forEach(DOMclass => {
-          cellPadder.classList.add(DOMclass);
-      });
+        classes.forEach(DOMclass => {
+            cellPadder.classList.add(DOMclass);
+        });
 
-      var cell = document.createElement("div");
-      cell.className = "Point";
-      cell.id = elementID;
-  
-      cell.appendChild(cellPadder);
-      
-      this.el = cell;
-      this.elementID = elementID;
-  
-      return cell;
+        var cell = document.createElement("div");
+        cell.className = "Point";
+        cell.id = elementID;
+
+        cell.appendChild(cellPadder);
+        
+        this.el = cell;
+        this.elementID = elementID;
+
+        return cell;
     }
-  }
-  
-  //Make this just a data strucuture
-  class clientSideNet {
+}
+
+//Make this just a data strucuture
+class clientSideNet {
     constructor(start, end, id) {
-      this.start = start;
-      this.end = end;
-      this.id = id;
-    }
-  }
-
-  //Maybe make an abstract class for these two
-  class clientsideKeepout {
-      constructor(start, end, id) {
         this.start = start;
         this.end = end;
-      }
-  }
+        this.id = id;
+    }
+}
+
+//Maybe make an abstract class for these two
+class clientsideKeepout {
+    constructor(start, end, id) {
+        this.start = start;
+        this.end = end;
+    }
+}
   
   //The names of the local varibles in this class are messy, this.grid describes the board etc.
-  class Grid {
+class Grid {
     /**
     @pram {Number} width the width cell units
     @pram {Number} width the height in cell units
@@ -153,7 +153,7 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             document.onmousemove = null;
 
             //find new the cells position in grid terms.
-            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
+            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize) - 1;
             let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
             /**Test if the new position for the cell is where any other cells are, or
@@ -162,8 +162,6 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
              */
             let isCellInvalid = (cell) => {
                 //Check weather it was the orginal cell
-                console.log(mouseDownPos.celly)
-                console.log(cell.y)
                 if ((mouseDownPos.celly) != cell.y || (mouseDownPos.cellx) != cell.x) {
                     for (let x = - 1; x <= 1; x++) {
                         for (let y = - 1; y <= 1; y++) {
@@ -313,7 +311,7 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
 
     async update() {
         //Fetch the SVG DOM from the server but store the value as a promise
-        let bodyContent = {
+        let responseContent = {
             netList: this.netList,
             floodList: this.floodList,
             keepoutList: this.keepoutList
@@ -325,7 +323,7 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(bodyContent)
+            body: JSON.stringify(responseContent)
         
         })
         

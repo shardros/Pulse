@@ -21,7 +21,7 @@ NetRouter = class {
          *  g - Shortest known path from start
          *  h - Manhattan distance
          */ 
-        this._toCheck = new Heap(function(cellA, cellB) {
+        this.toCheck = new Heap(function(cellA, cellB) {
             return cellA.f - cellB.f;
         })
         
@@ -45,13 +45,13 @@ NetRouter = class {
         B.markNeighboursAsRouteable(this.endCell,true,this.ID,1);
 
 
-        this._toCheck.push(this.net.startCell);
+        this.toCheck.push(this.net.startCell);
 
 
         //While there are still possible cells that there could be a route for.
-        while (!this._toCheck.empty()) {
+        while (!this.toCheck.empty()) {
             
-            let cell = this._toCheck.pop();
+            let cell = this.toCheck.pop();
             cell.checked = true;
             
             //Have we found the endCell yet?
@@ -109,7 +109,7 @@ NetRouter = class {
 
                     neighbour.checked = true;
                                       
-                    this._toCheck.push(neighbour);
+                    this.toCheck.push(neighbour);
                 } 
             }
         }
