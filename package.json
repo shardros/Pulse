@@ -1,0 +1,26 @@
+{
+  "name": "tracer",
+  "version": "1.0.0",
+  "description": "JS based PCB autorouting software",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shardros/Tracer.git"
+  },
+  "keywords": [
+    "np-complete"
+  ],
+  "author": "Edwin Shepherd",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shardros/Tracer/issues"
+  },
+  "homepage": "https://github.com/shardros/Tracer#readme",
+  "dependencies": {
+    "mermaid": "^8.0.0",
+    "mermaid.cli": "^0.5.1"
+  }
+}

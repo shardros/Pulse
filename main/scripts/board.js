@@ -279,7 +279,7 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
  * It then specifies the reason why they are not routeable and the level
  * of overide required to make it routebale
  * 
- * CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
+ * !CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
  */
 Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, NetID=null, overide=0) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
@@ -292,13 +292,12 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, Ne
 }
 
 /**
- * Change this to a for loop for SPEEEEEEEEEEEEEEED
+ * !Change this to a for loop for SPEEEEEEEEEEEEEEED
  * @param {*} Cell 
  * @param {*} diagonals 
  * @param {*} ID 
  */
 Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID, overide=0) {
-    //Maybe move this to a seperate file with all the other constants
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
         /**Need to check weather this is the only net that
          * Controlls this cell, if not then we don't want to
@@ -325,7 +324,6 @@ Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID, 
     });
 };
 
-//!Check weather this is ever called if yes it could break hard routing
 Board.prototype.markCordsAsUnrouteable = function(x,y, ID=null, overide=0) {
     let cell = this.getCell(x,y)
     cell.routeable = false;

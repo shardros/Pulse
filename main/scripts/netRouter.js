@@ -60,13 +60,16 @@ NetRouter = class {
                 let current = cell; 
 
                 this.net.trace.push(current);
+
+                B.markNeighboursAsUnrouteable(current, true, this.ID, 1);
+
                 
                 /** Starting from the endCell perform a trace back to
                  *  the start, adding the cells that are on the trace to a list and marking 
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markNeighboursAsUnrouteable(current, true, this.ID,0);
+                    B.markNeighboursAsUnrouteable(current, true, this.ID, 0);
                     
                     current = current.super;
                     
@@ -116,9 +119,6 @@ NetRouter = class {
         
     }
 
-    /**
-     * This can be made more efficent by pushing the checked items to a list
-     */
     cleanUp() {
         for (let x = 0; x < this.board.width; x++) {
             for (let y = 0; y < this.board.height; y++) {

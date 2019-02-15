@@ -85,8 +85,10 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         var oldYPos = 0;
         var elmnt = cell.el; //!IS THIS LINE USED? el is standard shorthand for element in web frameoworks
         var mouseDownPos = {
-            x: startx,
-            y: starty
+            cellx: cell.x,
+            celly: cell.y,
+            mousex: startx,
+            mousey: starty
         } 
 
 
@@ -110,8 +112,10 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             oldXPos = getRoundedMouseX(e);
             oldYPos = getRoundedMouseY(e);
             
-            mouseDownPos.x = elmnt.offsetLeft;
-            mouseDownPos.y = elmnt.offsetTop;
+            mouseDownPos.mousex = elmnt.offsetLeft;
+            mouseDownPos.mousey = elmnt.offsetTop;
+            mouseDownPos.cellx = cell.x;
+            mouseDownPos.celly = cell.y;
 
             /**
              * If the control key is down then the user wants to delete this item
@@ -156,17 +160,21 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
              * !NB will not work with floods as they would be element.x 
              */
             let isCellInvalid = (cell) => {
-
-                for (let x = - 1; x <= 1; x++) {
-                    for (let y = - 1; y <= 1; y++) {
-                        if ((cell.x - x == newCellX
-                            && cell.y - y == newCellY)
-                            || (cell.x - x == newCellX
-                            && cell.y - y == newCellY))
-                        {
-                            return true
+                //Check weather it was the orginal cell
+                console.log(mouseDownPos.celly)
+                console.log(cell.y)
+                if ((mouseDownPos.celly) != cell.y || (mouseDownPos.cellx) != cell.x) {
+                    for (let x = - 1; x <= 1; x++) {
+                        for (let y = - 1; y <= 1; y++) {
+                            if ((cell.x - x == newCellX
+                                && cell.y - y == newCellY)
+                                || (cell.x - x == newCellX
+                                && cell.y - y == newCellY))
+                            {
+                                return true
+                            }
+                
                         }
-               
                     }
                 }
                 return false 
@@ -190,8 +198,8 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
                 document.getElementById('warning').innerHTML = "Nodes too close!";
                 setTimeout(() => document.getElementById('warning').innerHTML = "", 2500);
 
-                elmnt.style.top = (mouseDownPos.y) + "px";
-                elmnt.style.left = (mouseDownPos.x) + "px";
+                elmnt.style.top = (mouseDownPos.mousey) + "px";
+                elmnt.style.left = (mouseDownPos.mousex) + "px";
             } else {
                 cell.x = newCellX;
                 cell.y = newCellY;
