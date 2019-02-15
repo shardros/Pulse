@@ -73,6 +73,7 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         this.netList = [];    
         this.floodList = [];
         this.keepoutList = [];
+        this.cellCounter = 0;
     }
 
     makeInteractable(cell, deleteCallBack) {
@@ -215,8 +216,9 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     createNet(startx,starty,endx,endy) {
         let start = new clientSideCell(startx, starty);
         let end = new clientSideCell(endx, endy);
-        let startID = "start" + this.netList.length;
-        let endID = "end" + this.netList.length;
+        let startID = "start" + this.cellCounter;
+        let endID = "end" + this.cellCounter;
+        this.cellCounter++;
 
         this.endPointContainer.appendChild(
             start.buildDOM(startID)
@@ -271,17 +273,19 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         let end = new clientSideCell(endx, endy);
 
         this.keepoutContainer.appendChild(
-            start.buildDOM("keepoutStart" + this.keepoutList.length,"keepout")
+            start.buildDOM("keepoutStart" + this.cellCounter,"keepout")
         );
         
         this.keepoutContainer.appendChild(
-            end.buildDOM("keepoutEnd" + this.keepoutList.length,"keepout")
+            end.buildDOM("keepoutEnd" + this.cellCounter,"keepout")
         );
 
+        let keepout = new clientsideKeepout(start,end,this.cellCounter);
+        
+        this.cellCounter++;
+        
         this.makeInteractable(start,deleteCallBack);
         this.makeInteractable(end,deleteCallBack);
-
-        let keepout = new clientsideKeepout(start,end,this.keepoutList.length);
         
         this.keepoutList.push(keepout);
 

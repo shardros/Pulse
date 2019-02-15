@@ -59,10 +59,9 @@ NetRouter = class {
                 
                 let current = cell; 
 
-                this.net.trace.push(current);
-
                 B.markNeighboursAsUnrouteable(current, true, this.ID, 1);
 
+                this.net.trace.push(current);
                 
                 /** Starting from the endCell perform a trace back to
                  *  the start, adding the cells that are on the trace to a list and marking 
@@ -79,6 +78,8 @@ NetRouter = class {
                 } while (current != this.startCell)
                 
                 B.markNeighboursAsUnrouteable(this.startCell, true, this.ID, 1);
+
+                let n = B.getNeighbours(this.startCell);
 
                 this.cleanUp();
                 

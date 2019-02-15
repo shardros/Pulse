@@ -159,7 +159,6 @@ BoardRouter.prototype.route = function() {
                     bigY = Math.max(start.y, end.y);
                     smallY = Math.min(start.y, end.y);
 
-                    
                     //There should only ever be one net belonging to a cell why does this support multiple?
                     for (let x = smallX; x < bigX; x++) {
                         let netIDs = this.board.getCell(x,start.y).controllingNet;
@@ -179,7 +178,7 @@ BoardRouter.prototype.route = function() {
                             this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
                                                                 true,
                                                                 netIndex,
-                                                                1);
+                                                                0);
                             this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
                             //currentTrace[traceCellIndex].tracked = false;
                         }

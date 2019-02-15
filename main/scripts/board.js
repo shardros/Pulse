@@ -282,7 +282,7 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
  * !CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
  */
 Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, NetID=null, overide=0) {
-    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+    this.getNeighbours(Cell, diagonals).forEach((neighbour,i) => {
         neighbour.routeable = false;
         neighbour.controllingNet.push({
             controllingNetID: NetID,

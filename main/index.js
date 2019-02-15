@@ -121,7 +121,16 @@ var BuildDOM = function(tracks, trackWidth) {
         for (var y = 0; y < board.height; y++) {
             if (!board.getCell(x,y).routeable) {
                 let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
-                Rect.fillColour = new colour.Colour(0,124,174);
+                
+                if (board.getCell(x,y).controllingNet.map((i) => {
+                    return i.routingOverrideLevel;
+                }).reduce((a,c) => {
+                    return a + c;
+                })) { 
+                    Rect.fillColour = new colour.Colour(124,0,0);
+                } else {
+                    Rect.fillColour = new colour.Colour(0,124,174);
+                }
                 SvgMaker.addElement(Rect); 
             }
         }
