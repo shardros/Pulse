@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shardros/Pulse.git"
+    "url": "git+https://github.com/shardros/Tracer.git"
   },
   "keywords": [
     "pcb"
@@ -25,9 +25,9 @@
   "author": "Edwin Shepherd",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shardros/Pulse/issues"
+    "url": "https://github.com/shardros/tracer/issues"
   },
-  "homepage": "https://github.com/shardros/Pulse#readme",
+  "homepage": "https://github.com/shardros/tracer#readme",
   "dependencies": {
     "browserfy": "^1.0.0"
   }

@@ -2,61 +2,61 @@
 //Does cellsize work up here?
 function getRoundedMouseX (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
-  }
-  
-  function getRoundedMouseY (event, roundToNearest = cellSize) {
+}
+
+function getRoundedMouseY (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
-  }
-  
-  //Make this just a data strucuture
-  class clientSideCell {
+}
+
+//Make this just a data strucuture
+class clientSideCell {
     constructor(x,y){
-      //Initalize parameters
-      this.x = x;
-      this.y = y; 
+        //Initalize parameters
+        this.x = x;
+        this.y = y; 
     }
-  
+
     buildDOM (elementID, ...classes) {
-      var cellPadder = document.createElement("div");
-      cellPadder.className = "PointPadder";
-      cellPadder.id = elementID + "Padding";
+        var cellPadder = document.createElement("div");
+        cellPadder.className = "PointPadder";
+        cellPadder.id = elementID + "Padding";
 
-      classes.forEach(DOMclass => {
-          cellPadder.classList.add(DOMclass);
-      });
+        classes.forEach(DOMclass => {
+            cellPadder.classList.add(DOMclass);
+        });
 
-      var cell = document.createElement("div");
-      cell.className = "Point";
-      cell.id = elementID;
-  
-      cell.appendChild(cellPadder);
-      
-      this.el = cell;
-      this.elementID = elementID;
-  
-      return cell;
+        var cell = document.createElement("div");
+        cell.className = "Point";
+        cell.id = elementID;
+
+        cell.appendChild(cellPadder);
+        
+        this.el = cell;
+        this.elementID = elementID;
+
+        return cell;
     }
-  }
-  
-  //Make this just a data strucuture
-  class clientSideNet {
+}
+
+//Make this just a data strucuture
+class clientSideNet {
     constructor(start, end, id) {
-      this.start = start;
-      this.end = end;
-      this.id = id;
-    }
-  }
-
-  //Maybe make an abstract class for these two
-  class clientsideKeepout {
-      constructor(start, end, id) {
         this.start = start;
         this.end = end;
-      }
-  }
+        this.id = id;
+    }
+}
+
+//Maybe make an abstract class for these two
+class clientsideKeepout {
+    constructor(start, end, id) {
+        this.start = start;
+        this.end = end;
+    }
+}
   
   //The names of the local varibles in this class are messy, this.grid describes the board etc.
-  class Grid {
+class Grid {
     /**
     @pram {Number} width the width cell units
     @pram {Number} width the height in cell units
@@ -73,43 +73,57 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         this.netList = [];    
         this.floodList = [];
         this.keepoutList = [];
+        this.cellCounter = 0;
     }
 
     makeInteractable(cell, deleteCallBack) {
-        var grid = this;
+        var board = this;
         var startx = cell.x * this.cellSize;
         var starty = cell.y * this.cellSize;
         var newXPos = 0;
         var newYPos = 0;
         var oldXPos = 0;
         var oldYPos = 0;
-        var elmnt = cell.el; //IS THIS LINE USED? el is standard shorthand for element in web frameoworks
+        var elmnt = cell.el; //!IS THIS LINE USED? el is standard shorthand for element in web frameoworks
+        var mouseDownPos = {
+            cellx: cell.x,
+            celly: cell.y,
+            mousex: startx,
+            mousey: starty
+        } 
+
 
         //Overide default method
         document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
         
-        //Offset by the correct amount given css grid layout
+        //Offset by the correct amount given css board layout
         elmnt.style.top = (starty)
-                        + this.grid.getBoundingClientRect().top
+                        + board.grid.getBoundingClientRect().top
                         + "px";
         
         elmnt.style.left = (startx)
-                        + this.grid.getBoundingClientRect().left
+                        + board.grid.getBoundingClientRect().left
                         + "px";
                         
         function dragMouseDown(e) {
             e.preventDefault();   //Prevents the default method from running
 
+            
             // get the mouse cursor position at startup:
             oldXPos = getRoundedMouseX(e);
             oldYPos = getRoundedMouseY(e);
+            
+            mouseDownPos.mousex = elmnt.offsetLeft;
+            mouseDownPos.mousey = elmnt.offsetTop;
+            mouseDownPos.cellx = cell.x;
+            mouseDownPos.celly = cell.y;
 
             /**
              * If the control key is down then the user wants to delete this item
              */ 
             if (e.ctrlKey) {
                 deleteCallBack()
-                grid.update();
+                board.update();
             } else {
                 document.onmouseup = stopDragging;  //Override the onmouseupmethod
                 document.onmousemove = elementDrag;     //Assign the on mousemove elementDrag method to elementDrag
@@ -117,7 +131,6 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         } 
 
         function elementDrag(e) {
-            //Does this do anything???
             e.preventDefault();
             
             // calculate the new cursor position:
@@ -139,11 +152,59 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             document.onmouseup = null;
             document.onmousemove = null;
 
-            //update the cells position.
-            cell.x = Math.ceil((elmnt.offsetLeft - grid.grid.getBoundingClientRect().left)/grid.cellSize  );
-            cell.y = Math.ceil((elmnt.offsetTop - grid.grid.getBoundingClientRect().top)/grid.cellSize) ;
+            //find new the cells position in grid terms.
+            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize) - 1;
+            let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
-            grid.update();
+            /**Test if the new position for the cell is where any other cells are, or
+             * if it is adjacent to any other cells
+             * !NB will not work with floods as they would be element.x 
+             */
+            let isCellInvalid = (cell) => {
+                //Check weather it was the orginal cell
+                if ((mouseDownPos.celly) != cell.y || (mouseDownPos.cellx) != cell.x) {
+                    for (let x = - 1; x <= 1; x++) {
+                        for (let y = - 1; y <= 1; y++) {
+                            if ((cell.x - x == newCellX
+                                && cell.y - y == newCellY)
+                                || (cell.x - x == newCellX
+                                && cell.y - y == newCellY))
+                            {
+                                return true
+                            }
+                
+                        }
+                    }
+                }
+                return false 
+            }; 
+
+            if (
+                (board.netList.some(net => {
+                    return isCellInvalid(net.start)
+                    || isCellInvalid(net.end)
+                } ))
+
+                || (board.floodList.some(isCellInvalid))
+
+                || (board.keepoutList.forEach(keepout => {
+                    return isCellInvalid(keepout.start) 
+                    || isCellInvalid(keepout.end)
+                } ))
+            
+            ){
+                //!This interaction with the user possibly shouldn't be in this function
+                document.getElementById('warning').innerHTML = "Nodes too close!";
+                setTimeout(() => document.getElementById('warning').innerHTML = "", 2500);
+
+                elmnt.style.top = (mouseDownPos.mousey) + "px";
+                elmnt.style.left = (mouseDownPos.mousex) + "px";
+            } else {
+                cell.x = newCellX;
+                cell.y = newCellY;
+            }
+
+            board.update();
         }
     }
 
@@ -153,8 +214,9 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
     createNet(startx,starty,endx,endy) {
         let start = new clientSideCell(startx, starty);
         let end = new clientSideCell(endx, endy);
-        let startID = "start" + this.netList.length;
-        let endID = "end" + this.netList.length;
+        let startID = "start" + this.cellCounter;
+        let endID = "end" + this.cellCounter;
+        this.cellCounter++;
 
         this.endPointContainer.appendChild(
             start.buildDOM(startID)
@@ -199,10 +261,8 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
 
         function deleteCallBack() {
             cell.el.remove(); //Remove the Dom
-            var index = floodList.indexOf(cell);
-            if (index > -1) {
-                floodList.splice(index, 1);
-            }
+            document.getElementById("addFlood").disabled = false;
+            floodList.pop();
         }
     }
 
@@ -211,17 +271,19 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
         let end = new clientSideCell(endx, endy);
 
         this.keepoutContainer.appendChild(
-            start.buildDOM("keepoutStart" + this.keepoutList.length,"keepout")
+            start.buildDOM("keepoutStart" + this.cellCounter,"keepout")
         );
         
         this.keepoutContainer.appendChild(
-            end.buildDOM("keepoutEnd" + this.keepoutList.length,"keepout")
+            end.buildDOM("keepoutEnd" + this.cellCounter,"keepout")
         );
 
+        let keepout = new clientsideKeepout(start,end,this.cellCounter);
+        
+        this.cellCounter++;
+        
         this.makeInteractable(start,deleteCallBack);
         this.makeInteractable(end,deleteCallBack);
-
-        let keepout = new clientsideKeepout(start,end,this.keepoutList.length);
         
         this.keepoutList.push(keepout);
 
@@ -249,7 +311,7 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
 
     async update() {
         //Fetch the SVG DOM from the server but store the value as a promise
-        let bodyContent = {
+        let responseContent = {
             netList: this.netList,
             floodList: this.floodList,
             keepoutList: this.keepoutList
@@ -261,12 +323,22 @@ function getRoundedMouseX (event, roundToNearest = cellSize) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(bodyContent)
+            body: JSON.stringify(responseContent)
         
         })
         
         //Await for the promise to be fullied when it is set the value of the dom to be that
-        this.grid.innerHTML = await resGrid.then(response => response.text());
+        let response = await resGrid.then(response => response.text());
+        response = JSON.parse(response)
+        this.grid.innerHTML = response.board;
+        //!Example of reduce
+        if (response.errors.length > 0) { 
+            let errorHeader = "Warning: <br/>"
+            let groupedErrors = errorHeader + response.errors.reduce((accumulator, current) => accumulator + "<br/>" + current);
+            document.getElementById('errors').innerHTML = groupedErrors; 
+        } else {
+            document.getElementById('errors').innerHTML = "";
+        }
     }
 }
 
@@ -276,6 +348,7 @@ function addNetButtonListener() {
 }
 
 function addFloodButtonListener() {
+    document.getElementById("addFlood").disabled = true;
     grid.createFlood(5,5);
     grid.update();
 }

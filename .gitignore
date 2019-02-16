@@ -9,4 +9,5 @@
 .vscode/settings.json
 
 /main/node_modules
+/node_modules
 /.idea

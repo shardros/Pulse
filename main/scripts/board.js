@@ -32,6 +32,8 @@ class Cell {
          * @type {boolean}
          */
         this.routeable = routeable;
+
+        this.hardRouteable = true;
         /**
          * If the Cell has a track going through it.
          * Defaults to false because at start of day we have no tracks
@@ -39,7 +41,9 @@ class Cell {
          */
         this.tracked = false;
 
-        this.controllingNetID = new Array;
+        this.controllingNet = new Array;
+        
+        this.hardControllingNetID = new Array;
     }
 }
 
@@ -154,11 +158,6 @@ Board.prototype.validCord = function (x,y) {
 }
 
 
-/**
- * TODO:
- * ?Maybe use this to make the rest of the methods in this class functional using reduce
- * ?Need to ensure though that we do not hit a significant performace penalty
- */
 Board.prototype.getNeighbours = function(Cell, diagonals) {
     let neighbours = new Array;
 
@@ -277,40 +276,61 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
 /**
  * Finds all of the cells which are neighbours (that are also on the)
  * board and marks them and all of their neighours as not routeable.
+ * It then specifies the reason why they are not routeable and the level
+ * of overide required to make it routebale
  * 
- * CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
+ * !CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
  */
-Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, controllingNetID=null) {
-    this.getNeighbours(Cell, diagonals).forEach(neighbour => {
+Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, NetID=null, overide=0) {
+    this.getNeighbours(Cell, diagonals).forEach((neighbour,i) => {
         neighbour.routeable = false;
-        neighbour.controllingNetID.push(controllingNetID);
+        neighbour.controllingNet.push({
+            controllingNetID: NetID,
+            routingOverrideLevel: overide    
+        });
     });
 }
 
 /**
- * Change this to a for loop for SPEEEEEEEEEEEEEEED
+ * !Change this to a for loop for SPEEEEEEEEEEEEEEED
  * @param {*} Cell 
  * @param {*} diagonals 
  * @param {*} ID 
  */
-Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID) {
+Board.prototype.markNeighboursAsRouteable = function(Cell, diagonals=false, ID, overide=0) {
     this.getNeighbours(Cell, diagonals).forEach(neighbour => {
         /**Need to check weather this is the only net that
          * Controlls this cell, if not then we don't want to
          * remove it from this nets trace
-         */ 
-        let pos = neighbour.controllingNetID.indexOf(ID);
-        if (pos > -1) {
-            neighbour.controllingNetID.splice(pos, 1);
-            if (neighbour.controllingNetID.length == 0) {
-                neighbour.routeable = true;
+         * 
+         * If it is the only one we remove it from the controlling array
+         * 
+         * If the controlling array is then empty then we the demark it
+         */     
+        for (let pos = 0; pos < neighbour.controllingNet.length; pos++) {
+            if (neighbour.controllingNet[pos].controllingNetID == ID) {   
+                if (overide >= neighbour.controllingNet[pos].routingOverrideLevel) {
+                   
+                    neighbour.controllingNet.splice(pos, 1);
+                    if (neighbour.controllingNet.length == 0) {
+                        neighbour.routeable = true;
+                    };
+                };
+
+                break; //No point to continue itteration
             }
         }
-    });
-}
 
-Board.prototype.markCordsAsUnrouteable = function(x,y) {
-    this.grid[y][x].routeable = false;
+    });
+};
+
+Board.prototype.markCordsAsUnrouteable = function(x,y, ID=null, overide=0) {
+    let cell = this.getCell(x,y)
+    cell.routeable = false;
+    cell.controllingNet.push({
+        controllingNetID: ID,
+        routingOverrideLevel: overide    
+    });
 }
 
 Board.prototype.markCordsAsTracked = function(x,y) {
@@ -318,7 +338,9 @@ Board.prototype.markCordsAsTracked = function(x,y) {
 }
 
 Board.prototype.markCellAsUntracked = function(cell) {
-    this.grid[cell.y][cell.x].tracked = false;
+    if (cell.controllingNet.length == 0) {
+        this.grid[cell.y][cell.x].tracked = false;
+    }
 }
 
 Board.prototype.getCell = function(x,y) {

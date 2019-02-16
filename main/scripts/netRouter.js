@@ -21,7 +21,7 @@ NetRouter = class {
          *  g - Shortest known path from start
          *  h - Manhattan distance
          */ 
-        this._toCheck = new Heap(function(cellA, cellB) {
+        this.toCheck = new Heap(function(cellA, cellB) {
             return cellA.f - cellB.f;
         })
         
@@ -41,23 +41,25 @@ NetRouter = class {
 
         this.startCell.checked = true;
 
-        B.markNeighboursAsRouteable(this.startCell,true,this.ID);
-        B.markNeighboursAsRouteable(this.endCell,true,this.ID);
+        B.markNeighboursAsRouteable(this.startCell,true,this.ID,1);
+        B.markNeighboursAsRouteable(this.endCell,true,this.ID,1);
 
 
-        this._toCheck.push(this.net.startCell);
+        this.toCheck.push(this.net.startCell);
 
 
         //While there are still possible cells that there could be a route for.
-        while (!this._toCheck.empty()) {
+        while (!this.toCheck.empty()) {
             
-            let cell = this._toCheck.pop();
+            let cell = this.toCheck.pop();
             cell.checked = true;
             
             //Have we found the endCell yet?
             if (cell.x == this.endCell.x && this.endCell.y == cell.y) {
                 
                 let current = cell; 
+
+                B.markNeighboursAsUnrouteable(current, true, this.ID, 1);
 
                 this.net.trace.push(current);
                 
@@ -66,7 +68,7 @@ NetRouter = class {
                  *  all of the neighbours as unrouteable
                  */ 
                 do {
-                    B.markNeighboursAsUnrouteable(current, true, this.ID);
+                    B.markNeighboursAsUnrouteable(current, true, this.ID, 0);
                     
                     current = current.super;
                     
@@ -75,7 +77,9 @@ NetRouter = class {
                     
                 } while (current != this.startCell)
                 
-                B.markNeighboursAsUnrouteable(this.startCell, true, this.ID);
+                B.markNeighboursAsUnrouteable(this.startCell, true, this.ID, 1);
+
+                let n = B.getNeighbours(this.startCell);
 
                 this.cleanUp();
                 
@@ -105,7 +109,7 @@ NetRouter = class {
 
                     neighbour.checked = true;
                                       
-                    this._toCheck.push(neighbour);
+                    this.toCheck.push(neighbour);
                 } 
             }
         }
@@ -116,9 +120,6 @@ NetRouter = class {
         
     }
 
-    /**
-     * This can be made more efficent by pushing the checked items to a list
-     */
     cleanUp() {
         for (let x = 0; x < this.board.width; x++) {
             for (let y = 0; y < this.board.height; y++) {
