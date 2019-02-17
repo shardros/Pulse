@@ -102,7 +102,6 @@ NetRouter = class {
                 if (ng < neighbour.g || !neighbour.checked) {
                     neighbour.super = cell;
                     
-                    
                     neighbour.g = ng;
                     neighbour.h = this.heuristicWeight * B.getEuclidean(neighbour, this.endCell); 
                     neighbour.f = neighbour.g + neighbour.h;

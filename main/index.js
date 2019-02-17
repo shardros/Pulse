@@ -126,7 +126,7 @@ var BuildDOM = function(tracks, trackWidth) {
                     return i.routingOverrideLevel;
                 }).reduce((a,c) => {
                     return a + c;
-                })) { 
+                },0)) { 
                     Rect.fillColour = new colour.Colour(124,0,0);
                 } else {
                     Rect.fillColour = new colour.Colour(0,124,174);
