@@ -44,20 +44,19 @@ NetRouter = class {
         B.markNeighboursAsRouteable(this.startCell,true,this.ID,1);
         B.markNeighboursAsRouteable(this.endCell,true,this.ID,1);
 
-
         this.toCheck.push(this.net.startCell);
-
 
         //While there are still possible cells that there could be a route for.
         while (!this.toCheck.empty()) {
             
             let cell = this.toCheck.pop();
+                    
             cell.checked = true;
             
             //Have we found the endCell yet?
             if (cell.x == this.endCell.x && this.endCell.y == cell.y) {
                 
-                let current = cell; 
+               let current = cell; 
 
                 B.markNeighboursAsUnrouteable(current, true, this.ID, 1);
 
@@ -98,7 +97,7 @@ NetRouter = class {
                 let neighbour = neighbours[i];
                 let ng = cell.g + 1; //neighbough g -> ng
 
-                //Is there a route to that cell that we don't know about
+                //Is there a route to that cell that we don't know abouts
                 if (ng < neighbour.g || !neighbour.checked) {
                     neighbour.super = cell;
                     

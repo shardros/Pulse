@@ -361,8 +361,8 @@ function addKeepoutButtonListener() {
 //------------MAIN------------
 
 const cellSize = 10;
-const gridWidth = 100;
-const gridHeight = 100;
+const gridWidth = 10;
+const gridHeight = 10;
 const nodeContainerID = "node-container";
 const floodContainerID = "flood-container";
 const keepoutContainerID = "keepout-container"
@@ -377,7 +377,6 @@ var grid = new Grid(gridID,
                     gridHeight,
                     cellSize);
 
-grid.createNet(2,2,3,8)
-grid.createNet(8,8,10,10)
+grid.createNet(2,2,3,3)
 
 grid.update();

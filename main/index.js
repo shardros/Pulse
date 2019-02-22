@@ -14,8 +14,8 @@ const path = "."
 const indexLocation = "/index.html"
 
 //Make this come from client side
-const boardWidth = 80;
-const boardHeight = 80;
+const boardWidth = 20;
+const boardHeight = 20;
 
 //!Use of a dictionary
 const fileTypes = {

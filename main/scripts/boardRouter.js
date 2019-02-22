@@ -1,6 +1,8 @@
 const nr = require('./netRouter');
 const b = require('./board');
 
+const errorThreshold = 2;
+
 /**
  * The class for routing a whole board
  * @param {Board} board
@@ -117,6 +119,7 @@ BoardRouter.prototype.route = function() {
 
     try {
         this.netList.forEach((net, i) => {
+            net.routingErrors = 0;
             net.id = i;
             this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1,)
             this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id,1)
@@ -132,13 +135,13 @@ BoardRouter.prototype.route = function() {
         }
     } 
 
-    //!There is almost certainly a better way to do this
-    let toRoute = this.netList.map((i) => {return i})
+    let toRoute = this.netList.slice();
 
+    //for (let c = 0; c < 3; c++) {
     while (toRoute.length > 0) {
         try {
-            
             currentNet = toRoute.shift();
+            console.log(currentNet.id);
             let myNetRouter = new NetRouter(this.board, 
                                             currentNet,
                                             hurestristicWeight,
@@ -148,154 +151,91 @@ BoardRouter.prototype.route = function() {
 
         } catch (err) {
 
-            let netIDsToClear = function(net) {
-                let netIDsToRipup = new Set;
+            currentNet.routingErrors++;
 
-                start = net.startCell;
-                end = net.endCell;
-
-                bigX = Math.max(start.x, end.x);
-                smallX = Math.min(start.x, end.x);
-
-                bigY = Math.max(start.y, end.y);
-                smallY = Math.min(start.y, end.y);
-
-                for (let x = smallX; x < bigX; x++) {
-                    let netIDs = this.board.getCell(x,start.y).controllingNet;
-                    netIDs.forEach(controllingNet => netIDsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-                for (let y = smallY; y < bigY; y++) {
-                    let netIDs = this.board.getCell(y,end.x).controllingNet;
-                    netIDs.forEach(controllingNet => netIDsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-            
-                //Convert the set to an array
-                return [...netIDsToRipup]
-
-            }
-            
-            console.log(err.message);
-
-            //Make the net that just failed the first net to try again
-            toRoute.unshift(currentNet)
-
-            //Converts the net ID's to actual net objects
-            let netsToClear = netIDsToClear(currentNet).map((ID) => {
-                return this.netList[ID]    
-            }, this)
-            
-            //RipUp the nets
-            netsToClear.forEach(net => { 
-                toRoute.push(net)
-
-                var currentTrace = net.trace;
+            if (currentNet.routingErrors < errorThreshold) {
                 
-                //This could get slow with alot of nets
-                //Delete the trace from the trace array
-                tracks.splice(tracks.findIndex((value) => {return (currentTrace == value)}),1);
+                let getNetIDsToClear = function(net) {
+                    let netIDsToRipup = new Set;
 
-                currentTraceLength = currentTrace.length;
-                for(traceCellIndex = 0; traceCellIndex < currentTraceLength; traceCellIndex++) {
+                    start = net.startCell;
+                    end = net.endCell;
+
+                    bigX = Math.max(start.x, end.x);
+                    smallX = Math.min(start.x, end.x);
+
+                    bigY = Math.max(start.y, end.y);
+                    smallY = Math.min(start.y, end.y);
+
+                    for (let x = smallX; x < bigX; x++) {
+                        let netIDs = this.board.getCell(x,start.y).controllingNet;
+                        netIDs.forEach(controllingNet => netIDsToRipup.add(controllingNet.controllingNetID));                
+                    }
+
+                    for (let y = smallY; y < bigY; y++) {
+                        let netIDs = this.board.getCell(y,end.x).controllingNet;
+                        netIDs.forEach(controllingNet => netIDsToRipup.add(controllingNet.controllingNetID));                
+                    }
+
+                    //Convert the set to an array
+                    netIDsToRipup = [...netIDsToRipup];
+
+                    //remove the current net from the array
+                    var index = netIDsToRipup.indexOf(net);
+                    if (index > -1) {
+                        netIDsToRipup.splice(index, 1);
+                    }
+
+                    return netIDsToRipup
+
+                }
+                
+                console.log(err.message);
+
+                //Make the net that just failed the first net to try again
+                let toReRoute = [currentNet];
+
+                //Converts the net ID's to actual net objects
+                let netIDsToClear = getNetIDsToClear(currentNet);
+                
+                let netsToClear = netIDsToClear.map((ID) => {
+                    return this.netList[ID];
+                }, this)
+
+                netIDsToClear.map((ID) => {
+                    this.netList.splice(ID,1);
+                })
+                
+                //RipUp the nets
+                netsToClear.forEach(net => { 
+                    toReRoute.push(net)
+
+                    var currentTrace = net.trace;
                     
-                    this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
-                                                        true,
-                                                        net.id,
-                                                        0);
-                    //Remove the tracks from the board
-                    this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
-                }
+                    //This could get slow with alot of nets
+                    //Delete the trace from the trace array
+                    tracks.splice(tracks.findIndex((value) => {return (currentTrace == value)}),1);
 
-                net.trace = [];
-            })
-        }
-    }
-
-/**
-    for (var i = 0; i < this.netList.length; i++) {
-        try {        
-
-            //The default case where the route is possible
-            this.netList[i].id = i; 
-            let myNetRouter = new NetRouter(this.board, 
-                                            this.netList[i],
-                                            hurestristicWeight,
-                                            this.netList[i].id);
-            let trace = myNetRouter.route();
-            tracks.push(trace);
-
-        } catch (err) {
-            try {
-                
-                console.log(err.message)
-
-                //The net route failed
-                //!Use of a set!
-                let netsToRipup = new Set;
-                start = this.netList[i].startCell;
-                end = this.netList[i].endCell;
-
-                bigX = Math.max(start.x, end.x);
-                smallX = Math.min(start.x, end.x);
-
-                bigY = Math.max(start.y, end.y);
-                smallY = Math.min(start.y, end.y);
-
-                for (let x = smallX; x < bigX; x++) {
-                    let netIDs = this.board.getCell(x,start.y).controllingNet;
-                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-                for (let y = smallY; y < bigY; y++) {
-                    let netIDs = this.board.getCell(y,end.x).controllingNet;
-                    netIDs.forEach(controllingNet => netsToRipup.add(controllingNet.controllingNetID));                
-                }
-
-                //Remove the traces that are blocking our net from being routed
-                netsToRipup.forEach(netIndex => {
-                    let currentTrace = this.netList[netIndex].trace;
                     currentTraceLength = currentTrace.length;
                     for(traceCellIndex = 0; traceCellIndex < currentTraceLength; traceCellIndex++) {
+                        
                         this.board.markNeighboursAsRouteable(currentTrace[traceCellIndex],
                                                             true,
-                                                            netIndex,
+                                                            net.id,
                                                             0);
+                        //Remove the tracks from the board
                         this.board.markCellAsUntracked(currentTrace[traceCellIndex]);
-                        //currentTrace[traceCellIndex].tracked = false;
                     }
+
+                    net.trace = [];
                 })
 
-            
-                //Retry routing our route
-                let myNetRouter = new NetRouter(this.board, 
-                                                this.netList[i],
-                                                hurestristicWeight,
-                                                this.netList[i].id);
-                tracks.push(myNetRouter.route());
-
-                //Reroute the ones that weren't routed right the first time
-                netsToRipup.forEach(netIndex => {
-                    let myNetRouter = new NetRouter(this.board, 
-                        this.netList[netIndex],
-                        hurestristicWeight,
-                        this.netList[netIndex].id);
-                    myNetRouter.reset(); //need to reset as have already made this route
-                    tracks[netIndex] = [];//We know that the old trace is rubish so lets not use that
-                    tracks[netIndex] =  myNetRouter.route();
-
-                })
-            netsToRipup = new Set; //Reset the ripup nets for the next one
-            //!Probally an inbuilt method for doing this
-
-        } catch (err) {
-                errors.push("FAILED TO ROUTE TRACKS ROUTED. Board has errors");
-                //route impossibe
-                
+                toRoute.unshift(...toReRoute);
+            }  else {
+                errors.push("max routing tries exceeded")
             }
         }
     }
-    */
  
     return {
         tracks: tracks,

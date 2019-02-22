@@ -321,12 +321,12 @@ Board.prototype.markCellAsRouteable = function(cell, ID=null, overide) {
 }
 
 Board.prototype.markCellAsUnrouteable = function(cell, ID=null, overide=0) {
-    cell.routeable = false;
     //Convert to set
-    for (let i = 0; i < cell.controllingNet; i++) {
-        if (cell.controllingNet[i].controllingNetID == ID) {
+    for (let i = 0; i < cell.controllingNet.length; i++) {
+        if (cell.controllingNet[i].controllingNetID == ID)   {
             if (cell.controllingNet[i].controllingNetID < overide) {
                 cell.controllingNet[i].controllingNetID = overide;
+                cell.routeable = false;
             } 
             return;
         }
@@ -337,7 +337,7 @@ Board.prototype.markCellAsUnrouteable = function(cell, ID=null, overide=0) {
         controllingNetID: ID,
         overide: overide
     })
-
+    cell.routeable = false;
 }
 
 //!This should be removed but needs to have uses removed first
