@@ -14,8 +14,8 @@ const path = "."
 const indexLocation = "/index.html"
 
 //Make this come from client side
-const boardWidth = 80;
-const boardHeight = 80;
+const boardWidth = 20;
+const boardHeight = 20;
 
 //!Use of a dictionary
 const fileTypes = {
@@ -126,7 +126,7 @@ var BuildDOM = function(tracks, trackWidth) {
                     return i.routingOverrideLevel;
                 }).reduce((a,c) => {
                     return a + c;
-                })) { 
+                },0)) { 
                     Rect.fillColour = new colour.Colour(124,0,0);
                 } else {
                     Rect.fillColour = new colour.Colour(0,124,174);
