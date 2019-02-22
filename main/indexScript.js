@@ -153,7 +153,7 @@ class Grid {
             document.onmousemove = null;
 
             //find new the cells position in grid terms.
-            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
+            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize) - 1;
             let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
             /**Test if the new position for the cell is where any other cells are, or

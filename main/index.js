@@ -10,7 +10,7 @@ const colour = require('./scripts/colour');
 const port = 1337;
 const debug = false;
 
-const path = "."
+const path = "./main"
 const indexLocation = "/index.html"
 
 //Make this come from client side
@@ -86,6 +86,18 @@ var routeJSON = function(JSONData, cellSize) {
         BR.createKeepOut(topLeft,bottomRight,"keepout",1);
     });
 
+    try {
+        let floodCellJSON = JSONFloodList[0];
+        var floodCell = board.getCell(floodCellJSON.x,floodCellJSON.y)
+        board.markNeighboursAsUnrouteable(floodCell, "Flood", 1);
+    } catch(err) {
+        if (err.name == "TypeError") {
+            //This is to be expected if we have nothing to route
+        } else {
+            throw err
+        }
+    }  
+
     //Find a route for all of the specified objects
     let route = BR.route();
 
@@ -94,8 +106,7 @@ var routeJSON = function(JSONData, cellSize) {
 
     //Apply the flood now we know where the nets are going.
     try {
-        floodCell = JSONFloodList[0];
-        BR.flood(board.getCell(floodCell.x,floodCell.y));
+        BR.flood(floodCell);
     } catch(err) {
         if (err.name == "TypeError") {
             //This is to be expected if we have nothing to route

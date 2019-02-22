@@ -355,7 +355,15 @@ Board.prototype.markCellAsUntracked = function(cell) {
 }
 
 Board.prototype.getCell = function(x,y) {
-    return this.grid[y][x];
+    try {
+        return this.grid[y][x];
+    } catch (err) {
+        if (err.message == "TypeError") {
+            throw new err ("Cords not on Board")
+        } else { 
+            throw err
+        }
+    }
 }
 
 
