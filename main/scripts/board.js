@@ -275,8 +275,6 @@ Board.prototype.getEuclidean = function(cell1, cell2) {
  * board and marks them and all of their neighours as not routeable.
  * It then specifies the reason why they are not routeable and the level
  * of overide required to make it routebale
- * 
- * !CHANGE THIS TO USE A FOR LOOP FOR SPEEEEEEEEEEEEEEEEEEED
  */
 Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, NetID=null, overide=0) {
     this.getNeighbours(Cell, diagonals).forEach((neighbour) => {
@@ -285,7 +283,6 @@ Board.prototype.markNeighboursAsUnrouteable = function(Cell, diagonals=false, Ne
 }
 
 /**
- * !Change this to a for loop for SPEEEEEEEEEEEEEEED
  * @param {*} Cell 
  * @param {*} diagonals 
  * @param {*} ID 

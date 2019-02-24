@@ -122,6 +122,10 @@ BoardRouter.prototype.route = function() {
         cellA.manhattanLength() - cellB.manhattanLength()
     );
 
+    /**
+     * PRE PROCESSING
+     */
+    
     try {
 
         this.netList = this.netList.filter((net) => {  
@@ -157,7 +161,6 @@ BoardRouter.prototype.route = function() {
     while (toRoute.length > 0) {
         try {
             currentNet = toRoute.shift();
-            console.log(currentNet.id);
             let myNetRouter = new NetRouter(this.board, 
                 currentNet,
                 hurestristicWeight,
@@ -167,7 +170,6 @@ BoardRouter.prototype.route = function() {
                 
             } catch (err) {
                 
-            console.log(err.message);
             currentNet.routingErrors++;
 
             if (currentNet.routingErrors < errorThreshold) {
@@ -253,9 +255,10 @@ BoardRouter.prototype.route = function() {
                     net.trace = [];
                 })
 
+                //Prepend the nets that need to be ReRouted to the front of the array
                 toRoute.unshift(...toReRoute);
             }  else {
-                console.log(currentNet)
+                //Compile the error message for the user
                 errors.push("Routing failed on: {start: (" + currentNet.startCell.x + ',' + currentNet.startCell.y +
                              '), end: ('+ currentNet.endCell.x + ',' + currentNet.endCell.y + ')}')
             }

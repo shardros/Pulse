@@ -10,12 +10,12 @@ const colour = require('./scripts/colour');
 const port = 1337;
 const debug = false;
 
-const path = "./main"
+const path = "."
 const indexLocation = "/index.html"
 
 //Make this come from client side
-const boardWidth = 20;
-const boardHeight = 20;
+const boardWidth = 140;
+const boardHeight = 80;
 
 //!Use of a dictionary
 const fileTypes = {
