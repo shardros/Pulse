@@ -215,6 +215,7 @@ BoardRouter.prototype.route = function() {
 
                 //Converts the net ID's to actual net objects and filter out the undefineds
                 //caused when netList is empty
+                //!Example of Functional programing
                 let netIDsToClear = getNetIDsToClear(currentNet);
                 
                 let netsToClear = netIDsToClear.map((ID) => {

@@ -10,6 +10,7 @@ const colour = require('./scripts/colour');
 const port = 1337;
 const debug = false;
 
+//When running in debug the path is different
 const path = "."
 const indexLocation = "/index.html"
 
