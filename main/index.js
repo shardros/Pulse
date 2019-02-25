@@ -14,7 +14,7 @@ const path = "."
 const indexLocation = "/index.html"
 
 //Make this come from client side
-const boardWidth = 80;
+const boardWidth = 140;
 const boardHeight = 80;
 
 //!Use of a dictionary
@@ -86,6 +86,18 @@ var routeJSON = function(JSONData, cellSize) {
         BR.createKeepOut(topLeft,bottomRight,"keepout",1);
     });
 
+    try {
+        let floodCellJSON = JSONFloodList[0];
+        var floodCell = board.getCell(floodCellJSON.x,floodCellJSON.y)
+        board.markNeighboursAsUnrouteable(floodCell, "Flood", 1);
+    } catch(err) {
+        if (err.name == "TypeError") {
+            //This is to be expected if we have nothing to route
+        } else {
+            throw err
+        }
+    }  
+
     //Find a route for all of the specified objects
     let route = BR.route();
 
@@ -94,8 +106,7 @@ var routeJSON = function(JSONData, cellSize) {
 
     //Apply the flood now we know where the nets are going.
     try {
-        floodCell = JSONFloodList[0];
-        BR.flood(board.getCell(floodCell.x,floodCell.y));
+        BR.flood(floodCell);
     } catch(err) {
         if (err.name == "TypeError") {
             //This is to be expected if we have nothing to route
@@ -126,7 +137,7 @@ var BuildDOM = function(tracks, trackWidth) {
                     return i.routingOverrideLevel;
                 }).reduce((a,c) => {
                     return a + c;
-                })) { 
+                },0)) { 
                     Rect.fillColour = new colour.Colour(124,0,0);
                 } else {
                     Rect.fillColour = new colour.Colour(0,124,174);

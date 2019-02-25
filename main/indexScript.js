@@ -74,6 +74,7 @@ class Grid {
         this.floodList = [];
         this.keepoutList = [];
         this.cellCounter = 0;
+        this.svg = null;
     }
 
     makeInteractable(cell, deleteCallBack) {
@@ -84,7 +85,7 @@ class Grid {
         var newYPos = 0;
         var oldXPos = 0;
         var oldYPos = 0;
-        var elmnt = cell.el; //!IS THIS LINE USED? el is standard shorthand for element in web frameoworks
+        var elmnt = cell.el; //el is standard shorthand for element in web frameoworks
         var mouseDownPos = {
             cellx: cell.x,
             celly: cell.y,
@@ -94,10 +95,10 @@ class Grid {
 
 
         //Overide default method
-        document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown;
+        document.getElementById(cell.elementID + "Padding").onmousedown = dragMouseDown ;
         
-        //Offset by the correct amount given css board layout
-        elmnt.style.top = (starty)
+        //Offset by the correct amount given css grid layout
+        elmnt.style.top = (starty)  
                         + board.grid.getBoundingClientRect().top
                         + "px";
         
@@ -153,7 +154,7 @@ class Grid {
             document.onmousemove = null;
 
             //find new the cells position in grid terms.
-            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize) - 1;
+            let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
             let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
             /**Test if the new position for the cell is where any other cells are, or
@@ -311,7 +312,7 @@ class Grid {
 
     async update() {
         //Fetch the SVG DOM from the server but store the value as a promise
-        let responseContent = {
+        let requestContent = {
             netList: this.netList,
             floodList: this.floodList,
             keepoutList: this.keepoutList
@@ -323,7 +324,7 @@ class Grid {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(responseContent)
+            body: JSON.stringify(requestContent)
         
         })
         
@@ -331,6 +332,7 @@ class Grid {
         let response = await resGrid.then(response => response.text());
         response = JSON.parse(response)
         this.grid.innerHTML = response.board;
+        this.svg = response.board;
         //!Example of reduce
         if (response.errors.length > 0) { 
             let errorHeader = "Warning: <br/>"
@@ -358,11 +360,24 @@ function addKeepoutButtonListener() {
     grid.update();
 }
 
+function downloadButtonListener() {
+    var a = window.document.createElement('a');
+    console.log(grid.grid.innerHTML)
+    a.href = window.URL.createObjectURL(new Blob([grid.grid.innerHTML], {type: 'text/svg'}));
+    a.download = 'board.svg';
+
+    // Append anchor to body.
+    document.body.appendChild(a);
+    a.click();
+
+    // Remove anchor from body
+    document.body.removeChild(a);
+}
 //------------MAIN------------
 
 const cellSize = 10;
-const gridWidth = 100;
-const gridHeight = 100;
+const gridWidth = 10;
+const gridHeight = 10;
 const nodeContainerID = "node-container";
 const floodContainerID = "flood-container";
 const keepoutContainerID = "keepout-container"
@@ -377,7 +392,6 @@ var grid = new Grid(gridID,
                     gridHeight,
                     cellSize);
 
-grid.createNet(2,2,3,8)
-grid.createNet(8,8,10,10)
+grid.createNet(2,2,3,3)
 
 grid.update();
