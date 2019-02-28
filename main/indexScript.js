@@ -1,5 +1,4 @@
 //Define some functions for use just here 
-//Does cellsize work up here?
 function getRoundedMouseX (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientX / roundToNearest) * roundToNearest;
 }
@@ -8,10 +7,8 @@ function getRoundedMouseY (event, roundToNearest = cellSize) {
     return Math.ceil(event.clientY / roundToNearest) * roundToNearest;
 }
 
-//Make this just a data strucuture
 class clientSideCell {
     constructor(x,y){
-        //Initalize parameters
         this.x = x;
         this.y = y; 
     }
@@ -38,7 +35,6 @@ class clientSideCell {
     }
 }
 
-//Make this just a data strucuture
 class clientSideNet {
     constructor(start, end, id) {
         this.start = start;
@@ -47,7 +43,6 @@ class clientSideNet {
     }
 }
 
-//Maybe make an abstract class for these two
 class clientsideKeepout {
     constructor(start, end, id) {
         this.start = start;
@@ -55,12 +50,11 @@ class clientsideKeepout {
     }
 }
   
-  //The names of the local varibles in this class are messy, this.grid describes the board etc.
 class Grid {
     /**
-    @pram {Number} width the width cell units
-    @pram {Number} width the height in cell units
-    @pram {Number} cellSize the size in cell units
+    * @pram {Number} width the width cell units
+    * @pram {Number} width the height in cell units
+    * @pram {Number} cellSize the size in cell units
     */
     constructor (gridID, endPointContainerID, floodContainerID ,keepoutContainerID, width, height, cellSize) {
         this.grid = document.getElementById(gridID);
@@ -157,9 +151,8 @@ class Grid {
             let newCellX = Math.ceil((elmnt.offsetLeft - board.grid.getBoundingClientRect().left)/board.cellSize);
             let newCellY = Math.ceil((elmnt.offsetTop - board.grid.getBoundingClientRect().top)/board.cellSize);
 
-            /**Test if the new position for the cell is where any other cells are, or
-             * if it is adjacent to any other cells
-             * !NB will not work with floods as they would be element.x 
+            /**Test if the new position for the cell is where any of the current ends of nets
+             * keepouts and floods are, or if it is adjacent to any other cells 
              */
             let isCellInvalid = (cell) => {
                 //Check weather it was the orginal cell
@@ -194,7 +187,7 @@ class Grid {
                 } ))
             
             ){
-                //!This interaction with the user possibly shouldn't be in this function
+                //Raise the error
                 document.getElementById('warning').innerHTML = "Nodes too close!";
                 setTimeout(() => document.getElementById('warning').innerHTML = "", 2500);
 
@@ -361,17 +354,14 @@ function addKeepoutButtonListener() {
 }
 
 function downloadButtonListener() {
-    var a = window.document.createElement('a');
-    console.log(grid.grid.innerHTML)
-    a.href = window.URL.createObjectURL(new Blob([grid.grid.innerHTML], {type: 'text/svg'}));
-    a.download = 'board.svg';
+    var anchor = window.document.createElement('a');
+    anchor.download = 'board.svg';
+    anchor.href = window.URL.createObjectURL(new Blob([grid.grid.innerHTML], {type: 'text/svg'}));
 
-    // Append anchor to body.
-    document.body.appendChild(a);
-    a.click();
+    document.body.appendChild(anchor);
+    anchor.click();
 
-    // Remove anchor from body
-    document.body.removeChild(a);
+    document.body.removeChild(anchor);
 }
 //------------MAIN------------
 
