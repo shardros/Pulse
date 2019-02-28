@@ -1,7 +1,3 @@
-//var ADT = require('./test')
-
-//All all of the Cell class to be acessed from other files
-
 class Cell {
     /**
      * 

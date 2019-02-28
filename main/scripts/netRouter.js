@@ -1,5 +1,4 @@
 var BoardObject = require('./board');
-//var ADT = require('./test');
 var Heap = require('../Modules/Heap');
 
 NetRouter = class {
@@ -77,8 +76,6 @@ NetRouter = class {
                 } while (current != this.startCell)
                 
                 B.markNeighboursAsUnrouteable(this.startCell, true, this.ID, 1);
-
-                let n = B.getNeighbours(this.startCell);
 
                 this.cleanUp();
                 

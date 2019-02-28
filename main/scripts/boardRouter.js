@@ -1,6 +1,7 @@
 const nr = require('./netRouter');
 const b = require('./board');
 
+const hurestristicWeight = 1.5;
 const errorThreshold = 2;
 
 /**
@@ -66,7 +67,7 @@ BoardRouter.prototype.createKeepOut = function(cell1, cell2, borderOnly = true) 
  * Floods all of the cells possible from a cell
  * This could have been made recursively in theory however
  * JS doesn't support tail optimaisation and so it would have caused
- * StackOver Flows left right and center
+ * StackOver Flows left right and center.
  * @param {Cell} Cell Where we start the flood from
  * @returns {<Cell>} Returns list of cells in the flood
  */
@@ -91,7 +92,7 @@ BoardRouter.prototype.flood = function(Cell) {
             //Gets the routeable neighbours and pushes them to the unchecked list
 
             this.board.getValidNeighbours(current).forEach(cell => {
-                    unchecked.push(cell)
+                unchecked.push(cell)
             });
             
             current.routeable = false;
@@ -111,8 +112,6 @@ BoardRouter.prototype.flood = function(Cell) {
  */
 BoardRouter.prototype.route = function() {
     let errors = [];
-
-    const hurestristicWeight = 1.5; //DO NOT TOUCH
     
     let tracks = new Array;
 
@@ -148,16 +147,17 @@ BoardRouter.prototype.route = function() {
        
     } catch (err) {
         if (err.name == "TypeError") {
-            //*I am sliencing this error, maybe raise it to the user later           
+            //This is to be expected if there are no items on the board and we don't need to tell the user that          
         } else {
             //This *should* never happen but if it does we want to know what happened
             throw err;
         }
     } 
 
+    //Clone the array
+    //use of a queue
     let toRoute = this.netList.slice();
 
-    //for (let c = 0; c < 3; c++) {
     while (toRoute.length > 0) {
         try {
             currentNet = toRoute.shift();
@@ -172,9 +172,13 @@ BoardRouter.prototype.route = function() {
                 
             currentNet.routingErrors++;
 
+            //It is possible to build a set of nets that will cause tracks to be ripped up in a loop
+            //This says just give up on a net after it has caused so many problems so we don't run forever
             if (currentNet.routingErrors < errorThreshold) {
                 
+                //Draws an L shape to find which nets that it should rip up
                 let getNetIDsToClear = function(net) {
+                    //Use of set
                     let netIDsToRipup = new Set;
 
                     start = net.startCell;
@@ -212,6 +216,8 @@ BoardRouter.prototype.route = function() {
 
                 //Make the net that just failed the first net to try again
                 let toReRoute = [currentNet];
+
+                //Use of alot of functional methods
 
                 //Converts the net ID's to actual net objects and filter out the undefineds
                 //caused when netList is empty

@@ -13,7 +13,7 @@ const debug = false;
 const path = "."
 const indexLocation = "/index.html"
 
-//Make this come from client side
+//Define board width and height
 const boardWidth = 140;
 const boardHeight = 80;
 
@@ -41,9 +41,6 @@ var routeJSON = function(JSONData, cellSize) {
 
     /**This is where we take the JSON inputed into the system and turn it into objects
      * that we can manipulate
-     * 
-     * If all goes to plan then this should be an array but we don't know
-     * Maybe someone evil is using the API
      */
     try {
 
@@ -70,8 +67,6 @@ var routeJSON = function(JSONData, cellSize) {
     board = new b.Board(boardWidth,boardHeight);
 
     BR = new br.BoardRouter(board, netList);
-
-    //? Move this to clientside and to depend of the screen res&size
     
     //Create the boarder of the board
     let topLeft = new b.Cell(0,0);
@@ -92,8 +87,9 @@ var routeJSON = function(JSONData, cellSize) {
         board.markNeighboursAsUnrouteable(floodCell, "Flood", 1);
     } catch(err) {
         if (err.name == "TypeError") {
-            //This is to be expected if we have nothing to route
+            //This is to be expected if we have nothing to route, nothing needs to be done here
         } else {
+            //This is unexpected
             throw err
         }
     }  
@@ -133,11 +129,21 @@ var BuildDOM = function(tracks, trackWidth) {
             if (!board.getCell(x,y).routeable) {
                 let Rect = new svg.Rectangle(x*trackWidth,y*trackWidth,trackWidth,trackWidth);
                 
-                if (board.getCell(x,y).controllingNet.map((i) => {
-                    return i.routingOverrideLevel;
-                }).reduce((a,c) => {
-                    return a + c;
-                },0)) { 
+                /**
+                 * Example of Map Reduce used for debuging,
+                 * Shows which of the cells have at least one cell with a routing overide level of
+                 * at least 1.
+                 * Map - Go through all of the controlling cells and get the overide level 
+                 * Reduce - Sum these overide levels if any of them are 1 then it will total to a non-zero
+                 * number and the statement will evaluate to true.
+                 */
+                if (debug &&
+                    board.getCell(x,y).controllingNet.map((i) => {
+                        return i.overide;
+                    }).reduce((a,c) => {
+                        return a + c;
+                    },0)) 
+                { 
                     Rect.fillColour = new colour.Colour(124,0,0);
                 } else {
                     Rect.fillColour = new colour.Colour(0,124,174);
