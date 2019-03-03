@@ -141,7 +141,7 @@ BoardRouter.prototype.route = function() {
         this.netList.forEach((net, i) => {
             net.routingErrors = 0;
             net.id = i;
-            this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1,)
+            this.board.markNeighboursAsUnrouteable(net.startCell,true,net.id,1)
             this.board.markNeighboursAsUnrouteable(net.endCell,true,net.id,1)
         });
         
